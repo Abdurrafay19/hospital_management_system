@@ -4,8 +4,8 @@
 
 Patient::Patient() : Person() {
     age = 0;
-    gender[0] = '\0';
-    contact[0] = '\0';
+    gender = 0;
+    contact = 0;
     balance = 0.0f;
 }
 
@@ -18,8 +18,8 @@ Patient::Patient(int patientID,
                  float patientBalance)
     : Person(patientID, patientName, patientPassword) {
     age = 0;
-    gender[0] = '\0';
-    contact[0] = '\0';
+    gender = 0;
+    contact = 0;
     balance = 0.0f;
 
     setAge(patientAge);
@@ -29,6 +29,13 @@ Patient::Patient(int patientID,
     if (patientBalance > 0.0f) {
         balance = patientBalance;
     }
+}
+
+Patient::~Patient() {
+    delete[] gender;
+    delete[] contact;
+    gender = 0;
+    contact = 0;
 }
 
 void Patient::displayDashboard() {
@@ -62,7 +69,7 @@ void Patient::setAge(int patientAge) {
 }
 
 void Patient::setGender(const char* patientGender) {
-    copyText(gender, patientGender, 10);
+    copyText(gender, patientGender);
 }
 
 bool Patient::setContact(const char* patientContact) {
@@ -70,7 +77,7 @@ bool Patient::setContact(const char* patientContact) {
         return false;
     }
 
-    copyText(contact, patientContact, 12);
+    copyText(contact, patientContact);
     return true;
 }
 

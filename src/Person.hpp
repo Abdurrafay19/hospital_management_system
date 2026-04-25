@@ -3,10 +3,10 @@
 class Person {
 protected:
     int id;
-    char name[50];
-    char password[50];
+    char* name;
+    char* password;
 
-    void copyText(char* destination, const char* source, int maxLength);
+    void copyText(char*& destination, const char* source);
 
 public:
     Person();

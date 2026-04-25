@@ -4,14 +4,14 @@
 
 Person::Person() {
     id = 0;
-    name[0] = '\0';
-    password[0] = '\0';
+    name = 0;
+    password = 0;
 }
 
 Person::Person(int personID, const char* personName, const char* personPassword) {
     id = 0;
-    name[0] = '\0';
-    password[0] = '\0';
+    name = 0;
+    password = 0;
 
     setID(personID);
     setName(personName);
@@ -19,26 +19,39 @@ Person::Person(int personID, const char* personName, const char* personPassword)
 }
 
 Person::~Person() {
+    delete[] name;
+    delete[] password;
+    name = 0;
+    password = 0;
 }
 
-void Person::copyText(char* destination, const char* source, int maxLength) {
+void Person::copyText(char*& destination, const char* source) {
     int i;
+    int length;
 
-    if (destination == 0 || maxLength <= 0) {
-        return;
-    }
+    // Delete existing memory
+    delete[] destination;
+    destination = 0;
 
     if (source == 0) {
-        destination[0] = '\0';
         return;
     }
 
+    // Calculate length
+    length = 0;
+    while (source[length] != '\0') {
+        length++;
+    }
+
+    // Allocate memory
+    destination = new char[length + 1];
+
+    // Copy string
     i = 0;
-    while (source[i] != '\0' && i < maxLength - 1) {
+    while (i < length) {
         destination[i] = source[i];
         i++;
     }
-
     destination[i] = '\0';
 }
 
@@ -61,7 +74,7 @@ void Person::setID(int personID) {
 }
 
 void Person::setName(const char* personName) {
-    copyText(name, personName, 50);
+    copyText(name, personName);
 }
 
 bool Person::setPassword(const char* personPassword) {
@@ -69,6 +82,6 @@ bool Person::setPassword(const char* personPassword) {
         return false;
     }
 
-    copyText(password, personPassword, 50);
+    copyText(password, personPassword);
     return true;
 }

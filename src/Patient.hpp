@@ -7,8 +7,8 @@
 class Patient : public Person {
 private:
     int age;
-    char gender[10];
-    char contact[12];
+    char* gender;
+    char* contact;
     float balance;
 
 public:
@@ -20,6 +20,7 @@ public:
             const char* patientGender,
             const char* patientContact,
             float patientBalance);
+    ~Patient();
 
     void displayDashboard();
     void showProfile() const;

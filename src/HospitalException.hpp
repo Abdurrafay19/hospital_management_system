@@ -5,10 +5,11 @@
 class HospitalException : public std::exception
 {
 protected:
-    char message[200];
+    char* message;
 
 public:
     HospitalException(const char *msg);
+    ~HospitalException();
     virtual const char *what() const throw();
 };
 
