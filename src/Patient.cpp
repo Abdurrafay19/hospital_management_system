@@ -6,7 +6,7 @@ Patient::Patient() : Person() {
     age = 0;
     gender = 0;
     contact = 0;
-    balance = 0.0f;
+    balance = 0;
 }
 
 Patient::Patient(int patientID,
@@ -15,18 +15,18 @@ Patient::Patient(int patientID,
                  int patientAge,
                  const char* patientGender,
                  const char* patientContact,
-                 float patientBalance)
+                 double patientBalance)
     : Person(patientID, patientName, patientPassword) {
     age = 0;
     gender = 0;
     contact = 0;
-    balance = 0.0f;
+    balance = 0;
 
     setAge(patientAge);
     setGender(patientGender);
     setContact(patientContact);
 
-    if (patientBalance > 0.0f) {
+    if (patientBalance > 0) {
         balance = patientBalance;
     }
 }
@@ -58,7 +58,7 @@ const char* Patient::getContact() const {
     return contact;
 }
 
-float Patient::getBalance() const {
+double Patient::getBalance() const {
     return balance;
 }
 
@@ -81,15 +81,15 @@ bool Patient::setContact(const char* patientContact) {
     return true;
 }
 
-Patient& Patient::operator+=(float amount) {
-    if (amount > 0.0f) {
+Patient& Patient::operator+=(double amount) {
+    if (amount > 0) {
         balance = balance + amount;
     }
     return *this;
 }
 
-Patient& Patient::operator-=(float amount) {
-    if (amount > 0.0f && amount <= balance) {
+Patient& Patient::operator-=(double amount) {
+    if (amount > 0 && amount <= balance) {
         balance = balance - amount;
     }
     return *this;

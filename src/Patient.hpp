@@ -9,7 +9,7 @@ private:
     int age;
     char* gender;
     char* contact;
-    float balance;
+    double balance;
 
 public:
     Patient();
@@ -19,7 +19,7 @@ public:
             int patientAge,
             const char* patientGender,
             const char* patientContact,
-            float patientBalance);
+            double patientBalance);
     ~Patient();
 
     void displayDashboard();
@@ -28,14 +28,14 @@ public:
     int getAge() const;
     const char* getGender() const;
     const char* getContact() const;
-    float getBalance() const;
+    double getBalance() const;
 
     void setAge(int patientAge);
     void setGender(const char* patientGender);
     bool setContact(const char* patientContact);
 
-    Patient& operator+=(float amount);
-    Patient& operator-=(float amount);
+    Patient& operator+=(double amount);
+    Patient& operator-=(double amount);
     bool operator==(const Patient& other) const;
 
     friend std::ostream& operator<<(std::ostream& out, const Patient& patient);
