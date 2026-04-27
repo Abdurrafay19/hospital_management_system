@@ -145,6 +145,10 @@ int Appointment::getAppointmentID() const {
     return appointmentID;
 }
 
+int Appointment::getID() const {
+    return appointmentID;
+}
+
 int Appointment::getPatientID() const {
     return patientID;
 }

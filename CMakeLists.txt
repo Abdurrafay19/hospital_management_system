@@ -14,9 +14,8 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-# 3. Automatically find all your OOP files (.cpp and .hpp)
-# This means you don't have to edit this file every time you add a new class!
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.hpp")
+# 3. Automatically find all files in the src/ directory
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp" "src/*.hpp")
 
 # 4. Create the executable using the project name
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -25,7 +24,6 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 # 6. Link SFML components 
-# Added Audio and Window explicitly for a more robust OOP project
 target_link_libraries(${PROJECT_NAME} PRIVATE 
     SFML::Graphics 
     SFML::Audio 

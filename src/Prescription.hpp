@@ -29,6 +29,7 @@ public:
     Prescription& operator=(const Prescription& other);
 
     int getPrescriptionID() const;
+    int getID() const;
     int getAppointmentID() const;
     int getPatientID() const;
     int getDoctorID() const;

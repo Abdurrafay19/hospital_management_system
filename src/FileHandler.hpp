@@ -25,6 +25,14 @@ public:
     static void saveAppointment(const Appointment& appointment, bool append = true);
     static void saveBill(const Bill& bill, bool append = true);
     static void savePrescription(const Prescription& prescription, bool append = true);
+    static void saveDischargedPatient(const Patient& patient, bool append = true);
+
+    static void saveAllPatients(Storage<Patient>& storage);
+    static void saveAllDoctors(Storage<Doctor>& storage);
+    static void saveAllAdmins(Storage<Admin>& storage);
+    static void saveAllAppointments(Storage<Appointment>& storage);
+    static void saveAllBills(Storage<Bill>& storage);
+    static void saveAllPrescriptions(Storage<Prescription>& storage);
 
     // Utility methods
     static void splitByComma(const char* line, char** fields, int maxFields, int& fieldCount);

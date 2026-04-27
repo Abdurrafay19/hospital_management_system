@@ -1,7 +1,6 @@
 #include "FileHandler.hpp"
 
 #include <fstream>
-#include <cstdio>
 
 int FileHandler::stringLength(const char* str) {
     int length;
@@ -602,4 +601,97 @@ void FileHandler::savePrescription(const Prescription& prescription, bool append
          << prescription.getNotes() << "\n";
 
     file.close();
+}
+
+void FileHandler::saveDischargedPatient(const Patient& patient, bool append) {
+    std::ofstream file;
+    char amountBuffer[32];
+
+    if (append) {
+        file.open("discharged.txt", std::ios::app);
+    } else {
+        file.open("discharged.txt");
+    }
+
+    if (!file.is_open()) {
+        return;
+    }
+
+    doubleToString(patient.getBalance(), amountBuffer);
+
+    file << patient.getID() << ","
+         << patient.getName() << ","
+         << patient.getAge() << ","
+         << patient.getGender() << ","
+         << patient.getContact() << ","
+         << patient.getPassword() << ","
+         << amountBuffer << "\n";
+
+    file.close();
+}
+
+void FileHandler::saveAllPatients(Storage<Patient>& storage) {
+    std::ofstream file("patients.txt", std::ios::trunc);
+    int i;
+
+    file.close();
+
+    for (i = 0; i < storage.size(); i++) {
+        savePatient(storage.getAll()[i], true);
+    }
+}
+
+void FileHandler::saveAllDoctors(Storage<Doctor>& storage) {
+    std::ofstream file("doctors.txt", std::ios::trunc);
+    int i;
+
+    file.close();
+
+    for (i = 0; i < storage.size(); i++) {
+        saveDoctor(storage.getAll()[i], true);
+    }
+}
+
+void FileHandler::saveAllAdmins(Storage<Admin>& storage) {
+    std::ofstream file("admin.txt", std::ios::trunc);
+    int i;
+
+    file.close();
+
+    for (i = 0; i < storage.size(); i++) {
+        saveAdmin(storage.getAll()[i], true);
+    }
+}
+
+void FileHandler::saveAllAppointments(Storage<Appointment>& storage) {
+    std::ofstream file("appointments.txt", std::ios::trunc);
+    int i;
+
+    file.close();
+
+    for (i = 0; i < storage.size(); i++) {
+        saveAppointment(storage.getAll()[i], true);
+    }
+}
+
+void FileHandler::saveAllBills(Storage<Bill>& storage) {
+    std::ofstream file("bills.txt", std::ios::trunc);
+    int i;
+
+    file.close();
+
+    for (i = 0; i < storage.size(); i++) {
+        saveBill(storage.getAll()[i], true);
+    }
+}
+
+void FileHandler::saveAllPrescriptions(Storage<Prescription>& storage) {
+    std::ofstream file("prescriptions.txt", std::ios::trunc);
+    int i;
+
+    file.close();
+
+    for (i = 0; i < storage.size(); i++) {
+        savePrescription(storage.getAll()[i], true);
+    }
 }

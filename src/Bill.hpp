@@ -27,6 +27,7 @@ public:
     Bill& operator=(const Bill& other);
 
     int getBillID() const;
+    int getID() const;
     int getPatientID() const;
     int getAppointmentID() const;
     double getAmount() const;

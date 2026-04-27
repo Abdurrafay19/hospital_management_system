@@ -27,6 +27,7 @@ public:
     Appointment& operator=(const Appointment& other);
 
     int getAppointmentID() const;
+    int getID() const;
     int getPatientID() const;
     int getDoctorID() const;
     const char* getDate() const;

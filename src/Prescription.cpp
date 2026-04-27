@@ -108,6 +108,10 @@ int Prescription::getPrescriptionID() const {
     return prescriptionID;
 }
 
+int Prescription::getID() const {
+    return prescriptionID;
+}
+
 int Prescription::getAppointmentID() const {
     return appointmentID;
 }

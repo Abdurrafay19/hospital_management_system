@@ -117,6 +117,10 @@ int Bill::getBillID() const {
     return billID;
 }
 
+int Bill::getID() const {
+    return billID;
+}
+
 int Bill::getPatientID() const {
     return patientID;
 }
