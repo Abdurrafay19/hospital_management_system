@@ -36,6 +36,24 @@ Prescription::Prescription(int newPrescriptionID,
     setNotes(newNotes);
 }
 
+Prescription::Prescription(const Prescription& other) {
+    prescriptionID = 0;
+    appointmentID = 0;
+    patientID = 0;
+    doctorID = 0;
+    date = nullptr;
+    medicines = nullptr;
+    notes = nullptr;
+
+    prescriptionID = other.prescriptionID;
+    appointmentID = other.appointmentID;
+    patientID = other.patientID;
+    doctorID = other.doctorID;
+    copyText(date, other.date);
+    setMedicines(other.medicines);
+    setNotes(other.notes);
+}
+
 Prescription::~Prescription() {
     delete[] date;
     delete[] medicines;
@@ -44,6 +62,20 @@ Prescription::~Prescription() {
     date = nullptr;
     medicines = nullptr;
     notes = nullptr;
+}
+
+Prescription& Prescription::operator=(const Prescription& other) {
+    if (this != &other) {
+        prescriptionID = other.prescriptionID;
+        appointmentID = other.appointmentID;
+        patientID = other.patientID;
+        doctorID = other.doctorID;
+        copyText(date, other.date);
+        setMedicines(other.medicines);
+        setNotes(other.notes);
+    }
+
+    return *this;
 }
 
 void Prescription::copyText(char*& destination, const char* source) {

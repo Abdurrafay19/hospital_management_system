@@ -18,11 +18,31 @@ Person::Person(int personID, const char* personName, const char* personPassword)
     setPassword(personPassword);
 }
 
+Person::Person(const Person& other) {
+    id = 0;
+    name = 0;
+    password = 0;
+
+    id = other.id;
+    copyText(name, other.name);
+    copyText(password, other.password);
+}
+
 Person::~Person() {
     delete[] name;
     delete[] password;
     name = 0;
     password = 0;
+}
+
+Person& Person::operator=(const Person& other) {
+    if (this != &other) {
+        id = other.id;
+        copyText(name, other.name);
+        copyText(password, other.password);
+    }
+
+    return *this;
 }
 
 void Person::copyText(char*& destination, const char* source) {

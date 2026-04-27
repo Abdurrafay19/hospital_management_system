@@ -21,7 +21,10 @@ public:
          double newAmount,
          const char* newStatus,
          const char* newDate);
+    Bill(const Bill& other);
     ~Bill();
+
+    Bill& operator=(const Bill& other);
 
     int getBillID() const;
     int getPatientID() const;

@@ -11,7 +11,10 @@ protected:
 public:
     Person();
     Person(int personID, const char* personName, const char* personPassword);
+    Person(const Person& other);
     virtual ~Person();
+
+    Person& operator=(const Person& other);
 
     int getID() const;
     const char* getName() const;

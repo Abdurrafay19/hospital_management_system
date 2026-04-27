@@ -24,11 +24,31 @@ Doctor::Doctor(int doctorID,
     setFee(doctorFee);
 }
 
+Doctor::Doctor(const Doctor& other) : Person(other) {
+    specialization = nullptr;
+    contact = nullptr;
+    fee = other.fee;
+
+    copyText(specialization, other.specialization);
+    copyText(contact, other.contact);
+}
+
 Doctor::~Doctor() {
     delete[] specialization;
     delete[] contact;
     specialization = nullptr;
     contact = nullptr;
+}
+
+Doctor& Doctor::operator=(const Doctor& other) {
+    if (this != &other) {
+        Person::operator=(other);
+        fee = other.fee;
+        copyText(specialization, other.specialization);
+        copyText(contact, other.contact);
+    }
+
+    return *this;
 }
 
 void Doctor::displayDashboard() {

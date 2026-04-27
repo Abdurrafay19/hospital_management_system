@@ -20,7 +20,10 @@ public:
             const char* patientGender,
             const char* patientContact,
             double patientBalance);
+    Patient(const Patient& other);
     ~Patient();
+
+    Patient& operator=(const Patient& other);
 
     void displayDashboard();
     void showProfile() const;

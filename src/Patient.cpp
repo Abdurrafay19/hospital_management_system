@@ -31,11 +31,33 @@ Patient::Patient(int patientID,
     }
 }
 
+Patient::Patient(const Patient& other) : Person(other) {
+    age = other.age;
+    gender = 0;
+    contact = 0;
+    balance = other.balance;
+
+    copyText(gender, other.gender);
+    copyText(contact, other.contact);
+}
+
 Patient::~Patient() {
     delete[] gender;
     delete[] contact;
     gender = 0;
     contact = 0;
+}
+
+Patient& Patient::operator=(const Patient& other) {
+    if (this != &other) {
+        Person::operator=(other);
+        age = other.age;
+        balance = other.balance;
+        copyText(gender, other.gender);
+        copyText(contact, other.contact);
+    }
+
+    return *this;
 }
 
 void Patient::displayDashboard() {

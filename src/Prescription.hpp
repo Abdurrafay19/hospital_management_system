@@ -23,7 +23,10 @@ public:
                  const char* newDate,
                  const char* newMedicines,
                  const char* newNotes);
+    Prescription(const Prescription& other);
     ~Prescription();
+
+    Prescription& operator=(const Prescription& other);
 
     int getPrescriptionID() const;
     int getAppointmentID() const;

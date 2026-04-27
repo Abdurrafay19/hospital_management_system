@@ -18,7 +18,10 @@ public:
            const char* doctorSpecialization,
            const char* doctorContact,
            double doctorFee);
+    Doctor(const Doctor& other);
     ~Doctor();
+
+    Doctor& operator=(const Doctor& other);
 
     void displayDashboard();
     void showProfile() const;

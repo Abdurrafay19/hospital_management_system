@@ -76,6 +76,22 @@ Appointment::Appointment(int newAppointmentID,
     setStatus(newStatus);
 }
 
+Appointment::Appointment(const Appointment& other) {
+    appointmentID = 0;
+    patientID = 0;
+    doctorID = 0;
+    date = nullptr;
+    timeSlot = nullptr;
+    status = nullptr;
+
+    appointmentID = other.appointmentID;
+    patientID = other.patientID;
+    doctorID = other.doctorID;
+    copyText(date, other.date);
+    copyText(timeSlot, other.timeSlot);
+    copyText(status, other.status);
+}
+
 Appointment::~Appointment() {
     delete[] date;
     delete[] timeSlot;
@@ -84,6 +100,19 @@ Appointment::~Appointment() {
     date = nullptr;
     timeSlot = nullptr;
     status = nullptr;
+}
+
+Appointment& Appointment::operator=(const Appointment& other) {
+    if (this != &other) {
+        appointmentID = other.appointmentID;
+        patientID = other.patientID;
+        doctorID = other.doctorID;
+        copyText(date, other.date);
+        copyText(timeSlot, other.timeSlot);
+        copyText(status, other.status);
+    }
+
+    return *this;
 }
 
 void Appointment::copyText(char*& destination, const char* source) {

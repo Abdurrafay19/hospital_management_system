@@ -21,7 +21,10 @@ public:
                 const char* newDate,
                 const char* newTimeSlot,
                 const char* newStatus);
+    Appointment(const Appointment& other);
     ~Appointment();
+
+    Appointment& operator=(const Appointment& other);
 
     int getAppointmentID() const;
     int getPatientID() const;

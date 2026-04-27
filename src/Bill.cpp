@@ -50,12 +50,41 @@ Bill::Bill(int newBillID,
     setDate(newDate);
 }
 
+Bill::Bill(const Bill& other) {
+    billID = 0;
+    patientID = 0;
+    appointmentID = 0;
+    amount = 0.0;
+    status = nullptr;
+    date = nullptr;
+
+    billID = other.billID;
+    patientID = other.patientID;
+    appointmentID = other.appointmentID;
+    amount = other.amount;
+    copyText(status, other.status);
+    copyText(date, other.date);
+}
+
 Bill::~Bill() {
     delete[] status;
     delete[] date;
 
     status = nullptr;
     date = nullptr;
+}
+
+Bill& Bill::operator=(const Bill& other) {
+    if (this != &other) {
+        billID = other.billID;
+        patientID = other.patientID;
+        appointmentID = other.appointmentID;
+        amount = other.amount;
+        copyText(status, other.status);
+        copyText(date, other.date);
+    }
+
+    return *this;
 }
 
 void Bill::copyText(char*& destination, const char* source) {
