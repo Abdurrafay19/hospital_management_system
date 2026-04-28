@@ -1,237 +1,18 @@
 #include "FileHandler.hpp"
+#include "helpers/FilePathHelper.hpp"
+#include "helpers/DataHelper.hpp"
+#include "helpers/ConversionHelper.hpp"
 
 #include <fstream>
 
-int FileHandler::stringLength(const char* str) {
-    int length;
-
-    if (str == nullptr) {
-        return 0;
-    }
-
-    length = 0;
-    while (str[length] != '\0') {
-        length++;
-    }
-
-    return length;
-}
-
-void FileHandler::stringCopy(char* destination, const char* source, int maxLength) {
-    int i;
-
-    if (destination == nullptr || source == nullptr) {
-        return;
-    }
-
-    i = 0;
-    while (i < maxLength && source[i] != '\0') {
-        destination[i] = source[i];
-        i++;
-    }
-    destination[i] = '\0';
-}
-
-int FileHandler::stringToInt(const char* str) {
-    int result;
-    int i;
-    int isNegative;
-
-    if (str == nullptr) {
-        return 0;
-    }
-
-    result = 0;
-    isNegative = 0;
-    i = 0;
-
-    if (str[0] == '-') {
-        isNegative = 1;
-        i = 1;
-    }
-
-    while (str[i] >= '0' && str[i] <= '9') {
-        result = result * 10 + (str[i] - '0');
-        i++;
-    }
-
-    return isNegative ? -result : result;
-}
-
-double FileHandler::stringToDouble(const char* str) {
-    double result;
-    double decimalPlace;
-    int i;
-    int isNegative;
-    int foundDot;
-
-    if (str == nullptr) {
-        return 0.0;
-    }
-
-    result = 0.0;
-    isNegative = 0;
-    foundDot = 0;
-    decimalPlace = 1.0;
-    i = 0;
-
-    if (str[0] == '-') {
-        isNegative = 1;
-        i = 1;
-    }
-
-    while (str[i] != '\0') {
-        if (str[i] == '.' && !foundDot) {
-            foundDot = 1;
-            decimalPlace = 0.1;
-        } else if (str[i] >= '0' && str[i] <= '9') {
-            if (foundDot) {
-                result = result + (double)(str[i] - '0') * decimalPlace;
-                decimalPlace = decimalPlace * 0.1;
-            } else {
-                result = result * 10.0 + (double)(str[i] - '0');
-            }
-        }
-        i++;
-    }
-
-    return isNegative ? -result : result;
-}
-
-void FileHandler::intToString(int value, char* buffer) {
-    int i;
-    int length;
-    int temp;
-
-    if (buffer == nullptr) {
-        return;
-    }
-
-    if (value == 0) {
-        buffer[0] = '0';
-        buffer[1] = '\0';
-        return;
-    }
-
-    if (value < 0) {
-        buffer[0] = '-';
-        value = -value;
-        i = 1;
-    } else {
-        i = 0;
-    }
-
-    length = 0;
-    temp = value;
-    while (temp > 0) {
-        length++;
-        temp = temp / 10;
-    }
-
-    temp = value;
-    while (temp > 0) {
-        buffer[i + length - 1] = static_cast<char>('0' + (temp % 10));
-        temp = temp / 10;
-        length--;
-    }
-
-    if (value < 0) {
-        buffer[i + length] = '\0';
-    } else {
-        buffer[i] = '\0';
-    }
-}
-
-void FileHandler::doubleToString(double value, char* buffer) {
-    int intPart;
-    double decPart;
-    int i;
-    int digits;
-
-    if (buffer == nullptr) {
-        return;
-    }
-
-    if (value < 0.0) {
-        buffer[0] = '-';
-        value = -value;
-        i = 1;
-    } else {
-        i = 0;
-    }
-
-    intPart = static_cast<int>(value);
-    decPart = value - intPart;
-
-    intToString(intPart, buffer + i);
-
-    i = 0;
-    while (buffer[i] != '\0') {
-        i++;
-    }
-
-    buffer[i] = '.';
-    i++;
-
-    digits = 0;
-    while (digits < 2 && decPart > 0.0) {
-        decPart = decPart * 10.0;
-        buffer[i] = static_cast<char>('0' + static_cast<int>(decPart));
-        decPart = decPart - static_cast<int>(decPart);
-        i++;
-        digits++;
-    }
-
-    buffer[i] = '\0';
-}
-
-void FileHandler::splitByComma(const char* line, char** fields, int maxFields, int& fieldCount) {
-    int i;
-    int j;
-    int fieldIndex;
-
-    if (line == nullptr || fields == nullptr) {
-        fieldCount = 0;
-        return;
-    }
-
-    fieldIndex = 0;
-    i = 0;
-    j = 0;
-
-    while (fieldIndex < maxFields && line[i] != '\0') {
-        if (line[i] == ',') {
-            fields[fieldIndex][j] = '\0';
-            fieldIndex++;
-            j = 0;
-            i++;
-        } else if (line[i] == '\n' || line[i] == '\r') {
-            fields[fieldIndex][j] = '\0';
-            fieldIndex++;
-            break;
-        } else {
-            fields[fieldIndex][j] = line[i];
-            j++;
-            i++;
-        }
-    }
-
-    if (fieldIndex < maxFields && line[i] == '\0') {
-        fields[fieldIndex][j] = '\0';
-        fieldIndex++;
-    }
-
-    fieldCount = fieldIndex;
-}
-
 void FileHandler::loadPatients(Storage<Patient>& storage) {
-    std::ifstream file("patients.txt");
+    std::ifstream file;
     char line[1024];
     char* fields[7];
     int fieldCount;
     int i;
 
-    if (!file.is_open()) {
+    if (!FilePathHelper::openInputDataFile(file, "patients.txt")) {
         return;
     }
 
@@ -240,17 +21,17 @@ void FileHandler::loadPatients(Storage<Patient>& storage) {
     }
 
     while (file.getline(line, 1024)) {
-        splitByComma(line, fields, 7, fieldCount);
+        DataHelper::splitByComma(line, fields, 7, fieldCount);
 
         if (fieldCount == 7) {
             Patient* patient = new Patient(
-                stringToInt(fields[0]),
+                ConversionHelper::stringToInt(fields[0]),
                 fields[1],
                 fields[5],
-                stringToInt(fields[2]),
+                ConversionHelper::stringToInt(fields[2]),
                 fields[3],
                 fields[4],
-                stringToDouble(fields[6])
+                ConversionHelper::stringToDouble(fields[6])
             );
             storage.add(*patient);
             delete patient;
@@ -265,13 +46,13 @@ void FileHandler::loadPatients(Storage<Patient>& storage) {
 }
 
 void FileHandler::loadDoctors(Storage<Doctor>& storage) {
-    std::ifstream file("doctors.txt");
+    std::ifstream file;
     char line[1024];
     char* fields[6];
     int fieldCount;
     int i;
 
-    if (!file.is_open()) {
+    if (!FilePathHelper::openInputDataFile(file, "doctors.txt")) {
         return;
     }
 
@@ -280,16 +61,16 @@ void FileHandler::loadDoctors(Storage<Doctor>& storage) {
     }
 
     while (file.getline(line, 1024)) {
-        splitByComma(line, fields, 6, fieldCount);
+        DataHelper::splitByComma(line, fields, 6, fieldCount);
 
         if (fieldCount == 6) {
             Doctor* doctor = new Doctor(
-                stringToInt(fields[0]),
+                ConversionHelper::stringToInt(fields[0]),
                 fields[1],
                 fields[4],
                 fields[2],
                 fields[3],
-                stringToDouble(fields[5])
+                ConversionHelper::stringToDouble(fields[5])
             );
             storage.add(*doctor);
             delete doctor;
@@ -304,13 +85,13 @@ void FileHandler::loadDoctors(Storage<Doctor>& storage) {
 }
 
 void FileHandler::loadAdmin(Storage<Admin>& storage) {
-    std::ifstream file("admin.txt");
+    std::ifstream file;
     char line[1024];
     char* fields[3];
     int fieldCount;
     int i;
 
-    if (!file.is_open()) {
+    if (!FilePathHelper::openInputDataFile(file, "admin.txt")) {
         return;
     }
 
@@ -319,11 +100,11 @@ void FileHandler::loadAdmin(Storage<Admin>& storage) {
     }
 
     while (file.getline(line, 1024)) {
-        splitByComma(line, fields, 3, fieldCount);
+        DataHelper::splitByComma(line, fields, 3, fieldCount);
 
         if (fieldCount == 3) {
             Admin* admin = new Admin(
-                stringToInt(fields[0]),
+                ConversionHelper::stringToInt(fields[0]),
                 fields[1],
                 fields[2]
             );
@@ -340,13 +121,13 @@ void FileHandler::loadAdmin(Storage<Admin>& storage) {
 }
 
 void FileHandler::loadAppointments(Storage<Appointment>& storage) {
-    std::ifstream file("appointments.txt");
+    std::ifstream file;
     char line[1024];
     char* fields[6];
     int fieldCount;
     int i;
 
-    if (!file.is_open()) {
+    if (!FilePathHelper::openInputDataFile(file, "appointments.txt")) {
         return;
     }
 
@@ -355,13 +136,13 @@ void FileHandler::loadAppointments(Storage<Appointment>& storage) {
     }
 
     while (file.getline(line, 1024)) {
-        splitByComma(line, fields, 6, fieldCount);
+        DataHelper::splitByComma(line, fields, 6, fieldCount);
 
         if (fieldCount == 6) {
             Appointment* appointment = new Appointment(
-                stringToInt(fields[0]),
-                stringToInt(fields[1]),
-                stringToInt(fields[2]),
+                ConversionHelper::stringToInt(fields[0]),
+                ConversionHelper::stringToInt(fields[1]),
+                ConversionHelper::stringToInt(fields[2]),
                 fields[3],
                 fields[4],
                 fields[5]
@@ -379,13 +160,13 @@ void FileHandler::loadAppointments(Storage<Appointment>& storage) {
 }
 
 void FileHandler::loadBills(Storage<Bill>& storage) {
-    std::ifstream file("bills.txt");
+    std::ifstream file;
     char line[1024];
     char* fields[6];
     int fieldCount;
     int i;
 
-    if (!file.is_open()) {
+    if (!FilePathHelper::openInputDataFile(file, "bills.txt")) {
         return;
     }
 
@@ -394,14 +175,14 @@ void FileHandler::loadBills(Storage<Bill>& storage) {
     }
 
     while (file.getline(line, 1024)) {
-        splitByComma(line, fields, 6, fieldCount);
+        DataHelper::splitByComma(line, fields, 6, fieldCount);
 
         if (fieldCount == 6) {
             Bill* bill = new Bill(
-                stringToInt(fields[0]),
-                stringToInt(fields[1]),
-                stringToInt(fields[2]),
-                stringToDouble(fields[3]),
+                ConversionHelper::stringToInt(fields[0]),
+                ConversionHelper::stringToInt(fields[1]),
+                ConversionHelper::stringToInt(fields[2]),
+                ConversionHelper::stringToDouble(fields[3]),
                 fields[4],
                 fields[5]
             );
@@ -418,13 +199,13 @@ void FileHandler::loadBills(Storage<Bill>& storage) {
 }
 
 void FileHandler::loadPrescriptions(Storage<Prescription>& storage) {
-    std::ifstream file("prescriptions.txt");
+    std::ifstream file;
     char line[2048];
     char* fields[7];
     int fieldCount;
     int i;
 
-    if (!file.is_open()) {
+    if (!FilePathHelper::openInputDataFile(file, "prescriptions.txt")) {
         return;
     }
 
@@ -433,14 +214,14 @@ void FileHandler::loadPrescriptions(Storage<Prescription>& storage) {
     }
 
     while (file.getline(line, 2048)) {
-        splitByComma(line, fields, 7, fieldCount);
+        DataHelper::splitByComma(line, fields, 7, fieldCount);
 
         if (fieldCount == 7) {
             Prescription* prescription = new Prescription(
-                stringToInt(fields[0]),
-                stringToInt(fields[1]),
-                stringToInt(fields[2]),
-                stringToInt(fields[3]),
+                ConversionHelper::stringToInt(fields[0]),
+                ConversionHelper::stringToInt(fields[1]),
+                ConversionHelper::stringToInt(fields[2]),
+                ConversionHelper::stringToInt(fields[3]),
                 fields[4],
                 fields[5],
                 fields[6]
@@ -462,16 +243,16 @@ void FileHandler::savePatient(const Patient& patient, bool append) {
     char amountBuffer[32];
 
     if (append) {
-        file.open("patients.txt", std::ios::app);
+        FilePathHelper::openOutputDataFile(file, "patients.txt", std::ios::app);
     } else {
-        file.open("patients.txt");
+        FilePathHelper::openOutputDataFile(file, "patients.txt", std::ios::out);
     }
 
     if (!file.is_open()) {
         return;
     }
 
-    doubleToString(patient.getBalance(), amountBuffer);
+    ConversionHelper::doubleToString(patient.getBalance(), amountBuffer);
 
     file << patient.getID() << ","
          << patient.getName() << ","
@@ -489,16 +270,16 @@ void FileHandler::saveDoctor(const Doctor& doctor, bool append) {
     char feeBuffer[32];
 
     if (append) {
-        file.open("doctors.txt", std::ios::app);
+        FilePathHelper::openOutputDataFile(file, "doctors.txt", std::ios::app);
     } else {
-        file.open("doctors.txt");
+        FilePathHelper::openOutputDataFile(file, "doctors.txt", std::ios::out);
     }
 
     if (!file.is_open()) {
         return;
     }
 
-    doubleToString(doctor.getFee(), feeBuffer);
+    ConversionHelper::doubleToString(doctor.getFee(), feeBuffer);
 
     file << doctor.getID() << ","
          << doctor.getName() << ","
@@ -514,9 +295,9 @@ void FileHandler::saveAdmin(const Admin& admin, bool append) {
     std::ofstream file;
 
     if (append) {
-        file.open("admin.txt", std::ios::app);
+        FilePathHelper::openOutputDataFile(file, "admin.txt", std::ios::app);
     } else {
-        file.open("admin.txt");
+        FilePathHelper::openOutputDataFile(file, "admin.txt", std::ios::out);
     }
 
     if (!file.is_open()) {
@@ -534,9 +315,9 @@ void FileHandler::saveAppointment(const Appointment& appointment, bool append) {
     std::ofstream file;
 
     if (append) {
-        file.open("appointments.txt", std::ios::app);
+        FilePathHelper::openOutputDataFile(file, "appointments.txt", std::ios::app);
     } else {
-        file.open("appointments.txt");
+        FilePathHelper::openOutputDataFile(file, "appointments.txt", std::ios::out);
     }
 
     if (!file.is_open()) {
@@ -558,16 +339,16 @@ void FileHandler::saveBill(const Bill& bill, bool append) {
     char amountBuffer[32];
 
     if (append) {
-        file.open("bills.txt", std::ios::app);
+        FilePathHelper::openOutputDataFile(file, "bills.txt", std::ios::app);
     } else {
-        file.open("bills.txt");
+        FilePathHelper::openOutputDataFile(file, "bills.txt", std::ios::out);
     }
 
     if (!file.is_open()) {
         return;
     }
 
-    doubleToString(bill.getAmount(), amountBuffer);
+    ConversionHelper::doubleToString(bill.getAmount(), amountBuffer);
 
     file << bill.getBillID() << ","
          << bill.getPatientID() << ","
@@ -583,9 +364,9 @@ void FileHandler::savePrescription(const Prescription& prescription, bool append
     std::ofstream file;
 
     if (append) {
-        file.open("prescriptions.txt", std::ios::app);
+        FilePathHelper::openOutputDataFile(file, "prescriptions.txt", std::ios::app);
     } else {
-        file.open("prescriptions.txt");
+        FilePathHelper::openOutputDataFile(file, "prescriptions.txt", std::ios::out);
     }
 
     if (!file.is_open()) {
@@ -608,16 +389,16 @@ void FileHandler::saveDischargedPatient(const Patient& patient, bool append) {
     char amountBuffer[32];
 
     if (append) {
-        file.open("discharged.txt", std::ios::app);
+        FilePathHelper::openOutputDataFile(file, "discharged.txt", std::ios::app);
     } else {
-        file.open("discharged.txt");
+        FilePathHelper::openOutputDataFile(file, "discharged.txt", std::ios::out);
     }
 
     if (!file.is_open()) {
         return;
     }
 
-    doubleToString(patient.getBalance(), amountBuffer);
+    ConversionHelper::doubleToString(patient.getBalance(), amountBuffer);
 
     file << patient.getID() << ","
          << patient.getName() << ","
@@ -631,10 +412,13 @@ void FileHandler::saveDischargedPatient(const Patient& patient, bool append) {
 }
 
 void FileHandler::saveAllPatients(Storage<Patient>& storage) {
-    std::ofstream file("patients.txt", std::ios::trunc);
+    std::ofstream file;
     int i;
 
-    file.close();
+    FilePathHelper::openOutputDataFile(file, "patients.txt", std::ios::trunc);
+    if (file.is_open()) {
+        file.close();
+    }
 
     for (i = 0; i < storage.size(); i++) {
         savePatient(storage.getAll()[i], true);
@@ -642,10 +426,13 @@ void FileHandler::saveAllPatients(Storage<Patient>& storage) {
 }
 
 void FileHandler::saveAllDoctors(Storage<Doctor>& storage) {
-    std::ofstream file("doctors.txt", std::ios::trunc);
+    std::ofstream file;
     int i;
 
-    file.close();
+    FilePathHelper::openOutputDataFile(file, "doctors.txt", std::ios::trunc);
+    if (file.is_open()) {
+        file.close();
+    }
 
     for (i = 0; i < storage.size(); i++) {
         saveDoctor(storage.getAll()[i], true);
@@ -653,10 +440,13 @@ void FileHandler::saveAllDoctors(Storage<Doctor>& storage) {
 }
 
 void FileHandler::saveAllAdmins(Storage<Admin>& storage) {
-    std::ofstream file("admin.txt", std::ios::trunc);
+    std::ofstream file;
     int i;
 
-    file.close();
+    FilePathHelper::openOutputDataFile(file, "admin.txt", std::ios::trunc);
+    if (file.is_open()) {
+        file.close();
+    }
 
     for (i = 0; i < storage.size(); i++) {
         saveAdmin(storage.getAll()[i], true);
@@ -664,10 +454,13 @@ void FileHandler::saveAllAdmins(Storage<Admin>& storage) {
 }
 
 void FileHandler::saveAllAppointments(Storage<Appointment>& storage) {
-    std::ofstream file("appointments.txt", std::ios::trunc);
+    std::ofstream file;
     int i;
 
-    file.close();
+    FilePathHelper::openOutputDataFile(file, "appointments.txt", std::ios::trunc);
+    if (file.is_open()) {
+        file.close();
+    }
 
     for (i = 0; i < storage.size(); i++) {
         saveAppointment(storage.getAll()[i], true);
@@ -675,10 +468,13 @@ void FileHandler::saveAllAppointments(Storage<Appointment>& storage) {
 }
 
 void FileHandler::saveAllBills(Storage<Bill>& storage) {
-    std::ofstream file("bills.txt", std::ios::trunc);
+    std::ofstream file;
     int i;
 
-    file.close();
+    FilePathHelper::openOutputDataFile(file, "bills.txt", std::ios::trunc);
+    if (file.is_open()) {
+        file.close();
+    }
 
     for (i = 0; i < storage.size(); i++) {
         saveBill(storage.getAll()[i], true);
@@ -686,10 +482,13 @@ void FileHandler::saveAllBills(Storage<Bill>& storage) {
 }
 
 void FileHandler::saveAllPrescriptions(Storage<Prescription>& storage) {
-    std::ofstream file("prescriptions.txt", std::ios::trunc);
+    std::ofstream file;
     int i;
 
-    file.close();
+    FilePathHelper::openOutputDataFile(file, "prescriptions.txt", std::ios::trunc);
+    if (file.is_open()) {
+        file.close();
+    }
 
     for (i = 0; i < storage.size(); i++) {
         savePrescription(storage.getAll()[i], true);

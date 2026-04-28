@@ -7,6 +7,10 @@
 #include "Appointment.hpp"
 #include "Bill.hpp"
 #include "Prescription.hpp"
+#include "helpers/StringHelper.hpp"
+#include "helpers/ConversionHelper.hpp"
+#include "helpers/FilePathHelper.hpp"
+#include "helpers/DataHelper.hpp"
 
 class FileHandler {
 public:
@@ -33,15 +37,4 @@ public:
     static void saveAllAppointments(Storage<Appointment>& storage);
     static void saveAllBills(Storage<Bill>& storage);
     static void saveAllPrescriptions(Storage<Prescription>& storage);
-
-    // Utility methods
-    static void splitByComma(const char* line, char** fields, int maxFields, int& fieldCount);
-
-private:
-    static int stringToInt(const char* str);
-    static double stringToDouble(const char* str);
-    static void intToString(int value, char* buffer);
-    static void doubleToString(double value, char* buffer);
-    static int stringLength(const char* str);
-    static void stringCopy(char* destination, const char* source, int maxLength);
 };
