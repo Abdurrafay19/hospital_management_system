@@ -1,7 +1,7 @@
 #include "Prescription.hpp"
-#include "helpers/StringHelper.hpp"
+#include "../helpers/StringHelper.hpp"
 
-#include "Validator.hpp"
+#include "../core/Validator.hpp"
 
 Prescription::Prescription() {
     prescriptionID = 0;

@@ -142,12 +142,13 @@ void UITextBox::setFont(const sf::Font& boxFont) {
 void UITextBox::setPosition(sf::Vector2f position) {
     box.setPosition(position);
     if (text != 0) {
-        text->setPosition(sf::Vector2f(position.x + 10.f, position.y + 8.f));
+        text->setPosition(sf::Vector2f(position.x + 10.f, position.y + 10.f));
     }
 }
 
 void UITextBox::setSize(sf::Vector2f size) {
     box.setSize(size);
+    box.setOutlineThickness(1.f);
 }
 
 void UITextBox::setFillColor(const sf::Color& color) {

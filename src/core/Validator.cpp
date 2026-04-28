@@ -1,7 +1,7 @@
 #include "Validator.hpp"
-#include "helpers/CharHelper.hpp"
-#include "helpers/ConversionHelper.hpp"
-#include "helpers/DataHelper.hpp"
+#include "../helpers/CharHelper.hpp"
+#include "../helpers/ConversionHelper.hpp"
+#include "../helpers/DataHelper.hpp"
 
 bool Validator::isValidID(int id) {
     return id > 0;

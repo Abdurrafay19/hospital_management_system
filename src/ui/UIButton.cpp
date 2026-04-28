@@ -69,9 +69,14 @@ void UIButton::updateLabelPosition() {
         return;
     }
 
-    label->setPosition(sf::Vector2f(
-        box.getPosition().x + 12.f,
-        box.getPosition().y + (box.getSize().y * 0.5f) - 12.f));
+    sf::FloatRect labelBounds;
+    float targetX;
+    float targetY;
+
+    labelBounds = label->getLocalBounds();
+    targetX = box.getPosition().x + (box.getSize().x * 0.5f) - (labelBounds.size.x * 0.5f) - labelBounds.position.x;
+    targetY = box.getPosition().y + (box.getSize().y * 0.5f) - (labelBounds.size.y * 0.5f) - labelBounds.position.y;
+    label->setPosition(sf::Vector2f(targetX, targetY));
 }
 
 void UIButton::setFont(const sf::Font& buttonFont) {
@@ -107,6 +112,7 @@ void UIButton::setPosition(sf::Vector2f position) {
 
 void UIButton::setSize(sf::Vector2f size) {
     box.setSize(size);
+    box.setOutlineThickness(1.f);
     updateLabelPosition();
 }
 

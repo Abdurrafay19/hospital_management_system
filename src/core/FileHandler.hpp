@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Storage.hpp"
-#include "Patient.hpp"
-#include "Doctor.hpp"
-#include "Admin.hpp"
-#include "Appointment.hpp"
-#include "Bill.hpp"
-#include "Prescription.hpp"
-#include "helpers/StringHelper.hpp"
-#include "helpers/ConversionHelper.hpp"
-#include "helpers/FilePathHelper.hpp"
-#include "helpers/DataHelper.hpp"
+#include "../entities/Storage.hpp"
+#include "../entities/Patient.hpp"
+#include "../entities/Doctor.hpp"
+#include "../entities/Admin.hpp"
+#include "../entities/Appointment.hpp"
+#include "../entities/Bill.hpp"
+#include "../entities/Prescription.hpp"
+#include "../helpers/StringHelper.hpp"
+#include "../helpers/ConversionHelper.hpp"
+#include "../helpers/FilePathHelper.hpp"
+#include "../helpers/DataHelper.hpp"
 
 class FileHandler {
 public:

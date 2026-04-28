@@ -1,7 +1,7 @@
 #include "Patient.hpp"
 
-#include "Validator.hpp"
-#include "helpers/StringHelper.hpp"
+#include "../core/Validator.hpp"
+#include "../helpers/StringHelper.hpp"
 
 Patient::Patient() : Person() {
     age = 0;

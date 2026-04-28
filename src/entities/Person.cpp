@@ -1,7 +1,7 @@
 #include "Person.hpp"
-#include "helpers/StringHelper.hpp"
+#include "../helpers/StringHelper.hpp"
 
-#include "Validator.hpp"
+#include "../core/Validator.hpp"
 
 Person::Person() {
     id = 0;

@@ -1,7 +1,7 @@
 #include "Doctor.hpp"
 
-#include "Validator.hpp"
-#include "helpers/StringHelper.hpp"
+#include "../core/Validator.hpp"
+#include "../helpers/StringHelper.hpp"
 
 Doctor::Doctor() : Person() {
     specialization = nullptr;

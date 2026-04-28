@@ -1,5 +1,5 @@
 #include "HospitalSystem.hpp"
-#include "helpers/StringHelper.hpp"
+#include "../helpers/StringHelper.hpp"
 
 int HospitalSystem::nextIDFromPatients(Storage<Patient>& storage) {
     int i;

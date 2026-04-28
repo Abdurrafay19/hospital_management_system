@@ -2,19 +2,19 @@
 
 #include <iostream>
 
-#include "Admin.hpp"
-#include "Appointment.hpp"
-#include "Bill.hpp"
-#include "Doctor.hpp"
+#include "../entities/Admin.hpp"
+#include "../entities/Appointment.hpp"
+#include "../entities/Bill.hpp"
+#include "../entities/Doctor.hpp"
 #include "FileHandler.hpp"
 #include "HospitalException.hpp"
-#include "Patient.hpp"
-#include "Prescription.hpp"
-#include "Person.hpp"
-#include "Storage.hpp"
+#include "../entities/Patient.hpp"
+#include "../entities/Prescription.hpp"
+#include "../entities/Person.hpp"
+#include "../entities/Storage.hpp"
 #include "Validator.hpp"
-#include "helpers/StringHelper.hpp"
-#include "helpers/ConversionHelper.hpp"
+#include "../helpers/StringHelper.hpp"
+#include "../helpers/ConversionHelper.hpp"
 
 enum Role {
     ROLE_PATIENT,

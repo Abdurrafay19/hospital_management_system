@@ -1,7 +1,7 @@
 #include "FileHandler.hpp"
-#include "helpers/FilePathHelper.hpp"
-#include "helpers/DataHelper.hpp"
-#include "helpers/ConversionHelper.hpp"
+#include "../helpers/FilePathHelper.hpp"
+#include "../helpers/DataHelper.hpp"
+#include "../helpers/ConversionHelper.hpp"
 
 #include <fstream>
 
