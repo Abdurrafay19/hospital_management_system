@@ -1,22 +1,5 @@
 #include "HospitalSystem.hpp"
-
-bool HospitalSystem::textEquals(const char* left, const char* right) {
-    int i;
-
-    if (left == nullptr || right == nullptr) {
-        return left == right;
-    }
-
-    i = 0;
-    while (left[i] != '\0' && right[i] != '\0') {
-        if (left[i] != right[i]) {
-            return false;
-        }
-        i++;
-    }
-
-    return left[i] == '\0' && right[i] == '\0';
-}
+#include "helpers/StringHelper.hpp"
 
 int HospitalSystem::nextIDFromPatients(Storage<Patient>& storage) {
     int i;
@@ -114,10 +97,11 @@ HospitalSystem::HospitalSystem() {
     FileHandler::loadPrescriptions(prescriptions);
 }
 
-Person* HospitalSystem::login(int id, const char* password, Role role) {
+Person* HospitalSystem::login(const char* name, const char* contact, const char* password, Role role) {
     Patient* patient;
     Doctor* doctor;
     Admin* admin;
+    int i;
 
     if (sessionLocked) {
         std::cout << "Account locked. Contact admin.\n";
@@ -129,20 +113,29 @@ Person* HospitalSystem::login(int id, const char* password, Role role) {
     admin = nullptr;
 
     if (role == ROLE_PATIENT) {
-        patient = patients.findByID(id);
-        if (patient != nullptr && textEquals(patient->getPassword(), password)) {
-            failedLoginAttempts = 0;
-            return patient;
+        // For patients: search by name and contact
+        for (i = 0; i < patients.size(); i++) {
+            if (StringHelper::textEquals(patients.getAll()[i].getName(), name) && 
+                StringHelper::textEquals(patients.getAll()[i].getContact(), contact)) {
+                if (StringHelper::textEquals(patients.getAll()[i].getPassword(), password)) {
+                    failedLoginAttempts = 0;
+                    return &patients.getAll()[i];
+                }
+            }
         }
     } else if (role == ROLE_DOCTOR) {
-        doctor = doctors.findByID(id);
-        if (doctor != nullptr && textEquals(doctor->getPassword(), password)) {
+        // For doctors: name acts as ID (convert to int)
+        int docID = ConversionHelper::toInt(name);
+        doctor = doctors.findByID(docID);
+        if (doctor != nullptr && StringHelper::textEquals(doctor->getPassword(), password)) {
             failedLoginAttempts = 0;
             return doctor;
         }
     } else if (role == ROLE_ADMIN) {
-        admin = admins.findByID(id);
-        if (admin != nullptr && textEquals(admin->getPassword(), password)) {
+        // For admin: name acts as ID (convert to int)
+        int adminID = ConversionHelper::toInt(name);
+        admin = admins.findByID(adminID);
+        if (admin != nullptr && StringHelper::textEquals(admin->getPassword(), password)) {
             failedLoginAttempts = 0;
             return admin;
         }
@@ -220,7 +213,7 @@ void HospitalSystem::payBill(Patient* patient, int billID) {
         throw InvalidInputException("Bill not found for this patient.");
     }
 
-    if (textEquals(bill->getStatus(), "paid")) {
+    if (StringHelper::textEquals(bill->getStatus(), "paid")) {
         throw InvalidInputException("Bill is already paid.");
     }
 
@@ -255,7 +248,7 @@ void HospitalSystem::dischargePatient(int patientID) {
     prescriptionCount = 0;
 
     for (i = 0; i < appointments.size(); i++) {
-        if (appointments.getAll()[i].getPatientID() == patientID && textEquals(appointments.getAll()[i].getStatus(), "pending")) {
+        if (appointments.getAll()[i].getPatientID() == patientID && StringHelper::textEquals(appointments.getAll()[i].getStatus(), "pending")) {
             throw InvalidInputException("Patient has pending appointments.");
         }
         if (appointments.getAll()[i].getPatientID() == patientID) {
@@ -265,7 +258,7 @@ void HospitalSystem::dischargePatient(int patientID) {
     }
 
     for (i = 0; i < bills.size(); i++) {
-        if (bills.getAll()[i].getPatientID() == patientID && !textEquals(bills.getAll()[i].getStatus(), "paid")) {
+        if (bills.getAll()[i].getPatientID() == patientID && !StringHelper::textEquals(bills.getAll()[i].getStatus(), "paid")) {
             throw InvalidInputException("Patient has unpaid bills.");
         }
         if (bills.getAll()[i].getPatientID() == patientID) {
@@ -301,6 +294,10 @@ void HospitalSystem::dischargePatient(int patientID) {
     FileHandler::saveAllAppointments(appointments);
     FileHandler::saveAllBills(bills);
     FileHandler::saveAllPrescriptions(prescriptions);
+}
+
+int HospitalSystem::getNextPatientID() {
+    return nextIDFromPatients(patients);
 }
 
 Storage<Patient>& HospitalSystem::getPatients() {

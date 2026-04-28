@@ -12,8 +12,6 @@ private:
     char* medicines;
     char* notes;
 
-    void copyText(char*& destination, const char* source);
-
 public:
     Prescription();
     Prescription(int newPrescriptionID,

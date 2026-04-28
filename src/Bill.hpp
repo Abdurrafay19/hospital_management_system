@@ -11,8 +11,6 @@ private:
     char* status;
     char* date;
 
-    void copyText(char*& destination, const char* source);
-
 public:
     Bill();
     Bill(int newBillID,

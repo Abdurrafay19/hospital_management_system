@@ -13,6 +13,8 @@
 #include "Person.hpp"
 #include "Storage.hpp"
 #include "Validator.hpp"
+#include "helpers/StringHelper.hpp"
+#include "helpers/ConversionHelper.hpp"
 
 enum Role {
     ROLE_PATIENT,
@@ -31,7 +33,6 @@ private:
     int failedLoginAttempts;
     bool sessionLocked;
 
-    static bool textEquals(const char* left, const char* right);
     static int nextIDFromPatients(Storage<Patient>& storage);
     static int nextIDFromDoctors(Storage<Doctor>& storage);
     static int nextIDFromAdmins(Storage<Admin>& storage);
@@ -42,10 +43,12 @@ private:
 public:
     HospitalSystem();
 
-    Person* login(int id, const char* password, Role role);
+    Person* login(const char* name, const char* contact, const char* password, Role role);
     void bookAppointment(Patient* patient, int doctorID, const char* date, const char* timeSlot);
     void payBill(Patient* patient, int billID);
     void dischargePatient(int patientID);
+
+    int getNextPatientID();
 
     Storage<Patient>& getPatients();
     Storage<Doctor>& getDoctors();

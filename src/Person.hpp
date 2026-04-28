@@ -6,8 +6,6 @@ protected:
     char* name;
     char* password;
 
-    void copyText(char*& destination, const char* source);
-
 public:
     Person();
     Person(int personID, const char* personName, const char* personPassword);

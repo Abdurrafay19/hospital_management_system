@@ -1,4 +1,5 @@
 #include "Person.hpp"
+#include "helpers/StringHelper.hpp"
 
 #include "Validator.hpp"
 
@@ -24,8 +25,8 @@ Person::Person(const Person& other) {
     password = 0;
 
     id = other.id;
-    copyText(name, other.name);
-    copyText(password, other.password);
+    StringHelper::copyTextDynamic(name, other.name);
+    StringHelper::copyTextDynamic(password, other.password);
 }
 
 Person::~Person() {
@@ -38,42 +39,13 @@ Person::~Person() {
 Person& Person::operator=(const Person& other) {
     if (this != &other) {
         id = other.id;
-        copyText(name, other.name);
-        copyText(password, other.password);
+        StringHelper::copyTextDynamic(name, other.name);
+        StringHelper::copyTextDynamic(password, other.password);
     }
 
     return *this;
 }
 
-void Person::copyText(char*& destination, const char* source) {
-    int i;
-    int length;
-
-    // Delete existing memory
-    delete[] destination;
-    destination = 0;
-
-    if (source == 0) {
-        return;
-    }
-
-    // Calculate length
-    length = 0;
-    while (source[length] != '\0') {
-        length++;
-    }
-
-    // Allocate memory
-    destination = new char[length + 1];
-
-    // Copy string
-    i = 0;
-    while (i < length) {
-        destination[i] = source[i];
-        i++;
-    }
-    destination[i] = '\0';
-}
 
 int Person::getID() const {
     return id;
@@ -94,7 +66,7 @@ void Person::setID(int personID) {
 }
 
 void Person::setName(const char* personName) {
-    copyText(name, personName);
+    StringHelper::copyTextDynamic(name, personName);
 }
 
 bool Person::setPassword(const char* personPassword) {
@@ -102,6 +74,6 @@ bool Person::setPassword(const char* personPassword) {
         return false;
     }
 
-    copyText(password, personPassword);
+    StringHelper::copyTextDynamic(password, personPassword);
     return true;
 }

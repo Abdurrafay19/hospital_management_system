@@ -1,36 +1,7 @@
 #include "Validator.hpp"
-
-static bool isDigitChar(char c) {
-    return c >= '0' && c <= '9';
-}
-
-static int toIntFromDigits(const char* text, int startIndex, int digitCount) {
-    int value = 0;
-    int i = 0;
-
-    while (i < digitCount) {
-        value = (value * 10) + (text[startIndex + i] - '0');
-        i++;
-    }
-
-    return value;
-}
-
-static bool isLeapYear(int year) {
-    if (year % 400 == 0) {
-        return true;
-    }
-
-    if (year % 100 == 0) {
-        return false;
-    }
-
-    if (year % 4 == 0) {
-        return true;
-    }
-
-    return false;
-}
+#include "helpers/CharHelper.hpp"
+#include "helpers/ConversionHelper.hpp"
+#include "helpers/DataHelper.hpp"
 
 bool Validator::isValidID(int id) {
     return id > 0;
@@ -62,15 +33,15 @@ bool Validator::isValidDate(const char* date) {
 
     i = 0;
     while (i < 10) {
-        if (i != 2 && i != 5 && !isDigitChar(date[i])) {
+        if (i != 2 && i != 5 && !CharHelper::isDigitChar(date[i])) {
             return false;
         }
         i++;
     }
 
-    day = toIntFromDigits(date, 0, 2);
-    month = toIntFromDigits(date, 3, 2);
-    year = toIntFromDigits(date, 6, 4);
+    day = ConversionHelper::toIntFromDigits(date, 0, 2);
+    month = ConversionHelper::toIntFromDigits(date, 3, 2);
+    year = ConversionHelper::toIntFromDigits(date, 6, 4);
 
     if (year <= 0) {
         return false;
@@ -86,7 +57,7 @@ bool Validator::isValidDate(const char* date) {
     } else if (month == 4 || month == 6 || month == 9 || month == 11) {
         maxDay = 30;
     } else {
-        if (isLeapYear(year)) {
+        if (DataHelper::isLeapYear(year)) {
             maxDay = 29;
         } else {
             maxDay = 28;
@@ -109,7 +80,7 @@ bool Validator::isValidContact(const char* contact) {
 
     i = 0;
     while (contact[i] != '\0') {
-        if (!isDigitChar(contact[i])) {
+        if (!CharHelper::isDigitChar(contact[i])) {
             return false;
         }
         i++;

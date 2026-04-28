@@ -1,6 +1,7 @@
 #include "Doctor.hpp"
 
 #include "Validator.hpp"
+#include "helpers/StringHelper.hpp"
 
 Doctor::Doctor() : Person() {
     specialization = nullptr;
@@ -29,8 +30,8 @@ Doctor::Doctor(const Doctor& other) : Person(other) {
     contact = nullptr;
     fee = other.fee;
 
-    copyText(specialization, other.specialization);
-    copyText(contact, other.contact);
+    StringHelper::copyTextDynamic(specialization, other.specialization);
+    StringHelper::copyTextDynamic(contact, other.contact);
 }
 
 Doctor::~Doctor() {
@@ -44,8 +45,8 @@ Doctor& Doctor::operator=(const Doctor& other) {
     if (this != &other) {
         Person::operator=(other);
         fee = other.fee;
-        copyText(specialization, other.specialization);
-        copyText(contact, other.contact);
+        StringHelper::copyTextDynamic(specialization, other.specialization);
+        StringHelper::copyTextDynamic(contact, other.contact);
     }
 
     return *this;
@@ -72,7 +73,7 @@ double Doctor::getFee() const {
 }
 
 void Doctor::setSpecialization(const char* doctorSpecialization) {
-    copyText(specialization, doctorSpecialization);
+    StringHelper::copyTextDynamic(specialization, doctorSpecialization);
 }
 
 bool Doctor::setContact(const char* doctorContact) {
@@ -80,7 +81,7 @@ bool Doctor::setContact(const char* doctorContact) {
         return false;
     }
 
-    copyText(contact, doctorContact);
+    StringHelper::copyTextDynamic(contact, doctorContact);
     return true;
 }
 

@@ -1,24 +1,7 @@
 #include "Bill.hpp"
 
 #include "Validator.hpp"
-
-static bool textEquals(const char* left, const char* right) {
-    int i;
-
-    if (left == nullptr || right == nullptr) {
-        return left == right;
-    }
-
-    i = 0;
-    while (left[i] != '\0' && right[i] != '\0') {
-        if (left[i] != right[i]) {
-            return false;
-        }
-        i++;
-    }
-
-    return left[i] == '\0' && right[i] == '\0';
-}
+#include "helpers/StringHelper.hpp"
 
 Bill::Bill() {
     billID = 0;
@@ -62,8 +45,8 @@ Bill::Bill(const Bill& other) {
     patientID = other.patientID;
     appointmentID = other.appointmentID;
     amount = other.amount;
-    copyText(status, other.status);
-    copyText(date, other.date);
+    StringHelper::copyTextDynamic(status, other.status);
+    StringHelper::copyTextDynamic(date, other.date);
 }
 
 Bill::~Bill() {
@@ -80,37 +63,11 @@ Bill& Bill::operator=(const Bill& other) {
         patientID = other.patientID;
         appointmentID = other.appointmentID;
         amount = other.amount;
-        copyText(status, other.status);
-        copyText(date, other.date);
+        StringHelper::copyTextDynamic(status, other.status);
+        StringHelper::copyTextDynamic(date, other.date);
     }
 
     return *this;
-}
-
-void Bill::copyText(char*& destination, const char* source) {
-    int i;
-    int length;
-
-    delete[] destination;
-    destination = nullptr;
-
-    if (source == nullptr) {
-        return;
-    }
-
-    length = 0;
-    while (source[length] != '\0') {
-        length++;
-    }
-
-    destination = new char[length + 1];
-
-    i = 0;
-    while (i < length) {
-        destination[i] = source[i];
-        i++;
-    }
-    destination[i] = '\0';
 }
 
 int Bill::getBillID() const {
@@ -166,7 +123,7 @@ void Bill::setAmount(double newAmount) {
 }
 
 void Bill::setStatus(const char* newStatus) {
-    copyText(status, newStatus);
+    StringHelper::copyTextDynamic(status, newStatus);
 }
 
 void Bill::setDate(const char* newDate) {
@@ -174,11 +131,11 @@ void Bill::setDate(const char* newDate) {
         return;
     }
 
-    copyText(date, newDate);
+    StringHelper::copyTextDynamic(date, newDate);
 }
 
 bool Bill::isPaid() const {
-    return textEquals(status, "paid");
+    return StringHelper::textEquals(status, "paid");
 }
 
 bool Bill::operator==(const Bill& other) const {

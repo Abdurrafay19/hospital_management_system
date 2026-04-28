@@ -1,50 +1,7 @@
 #include "Appointment.hpp"
 
 #include "Validator.hpp"
-
-static char toLowerASCII(char c) {
-    if (c >= 'A' && c <= 'Z') {
-        return static_cast<char>(c + ('a' - 'A'));
-    }
-
-    return c;
-}
-
-static bool textEquals(const char* left, const char* right) {
-    int i;
-
-    if (left == nullptr || right == nullptr) {
-        return left == right;
-    }
-
-    i = 0;
-    while (left[i] != '\0' && right[i] != '\0') {
-        if (left[i] != right[i]) {
-            return false;
-        }
-        i++;
-    }
-
-    return left[i] == '\0' && right[i] == '\0';
-}
-
-static bool textEqualsIgnoreCase(const char* left, const char* right) {
-    int i;
-
-    if (left == nullptr || right == nullptr) {
-        return left == right;
-    }
-
-    i = 0;
-    while (left[i] != '\0' && right[i] != '\0') {
-        if (toLowerASCII(left[i]) != toLowerASCII(right[i])) {
-            return false;
-        }
-        i++;
-    }
-
-    return left[i] == '\0' && right[i] == '\0';
-}
+#include "helpers/StringHelper.hpp"
 
 Appointment::Appointment() {
     appointmentID = 0;
@@ -87,9 +44,9 @@ Appointment::Appointment(const Appointment& other) {
     appointmentID = other.appointmentID;
     patientID = other.patientID;
     doctorID = other.doctorID;
-    copyText(date, other.date);
-    copyText(timeSlot, other.timeSlot);
-    copyText(status, other.status);
+    StringHelper::copyTextDynamic(date, other.date);
+    StringHelper::copyTextDynamic(timeSlot, other.timeSlot);
+    StringHelper::copyTextDynamic(status, other.status);
 }
 
 Appointment::~Appointment() {
@@ -107,38 +64,12 @@ Appointment& Appointment::operator=(const Appointment& other) {
         appointmentID = other.appointmentID;
         patientID = other.patientID;
         doctorID = other.doctorID;
-        copyText(date, other.date);
-        copyText(timeSlot, other.timeSlot);
-        copyText(status, other.status);
+        StringHelper::copyTextDynamic(date, other.date);
+        StringHelper::copyTextDynamic(timeSlot, other.timeSlot);
+        StringHelper::copyTextDynamic(status, other.status);
     }
 
     return *this;
-}
-
-void Appointment::copyText(char*& destination, const char* source) {
-    int i;
-    int length;
-
-    delete[] destination;
-    destination = nullptr;
-
-    if (source == nullptr) {
-        return;
-    }
-
-    length = 0;
-    while (source[length] != '\0') {
-        length++;
-    }
-
-    destination = new char[length + 1];
-
-    i = 0;
-    while (i < length) {
-        destination[i] = source[i];
-        i++;
-    }
-    destination[i] = '\0';
 }
 
 int Appointment::getAppointmentID() const {
@@ -192,19 +123,19 @@ void Appointment::setDate(const char* newDate) {
         return;
     }
 
-    copyText(date, newDate);
+    StringHelper::copyTextDynamic(date, newDate);
 }
 
 void Appointment::setTimeSlot(const char* newTimeSlot) {
-    copyText(timeSlot, newTimeSlot);
+    StringHelper::copyTextDynamic(timeSlot, newTimeSlot);
 }
 
 void Appointment::setStatus(const char* newStatus) {
-    copyText(status, newStatus);
+    StringHelper::copyTextDynamic(status, newStatus);
 }
 
 bool Appointment::isCancelled() const {
-    return textEqualsIgnoreCase(status, "cancelled");
+    return StringHelper::textEqualsIgnoreCase(status, "cancelled");
 }
 
 bool Appointment::operator==(const Appointment& other) const {
@@ -212,11 +143,11 @@ bool Appointment::operator==(const Appointment& other) const {
         return false;
     }
 
-    if (!textEquals(date, other.date)) {
+    if (!StringHelper::textEquals(date, other.date)) {
         return false;
     }
 
-    if (!textEquals(timeSlot, other.timeSlot)) {
+    if (!StringHelper::textEquals(timeSlot, other.timeSlot)) {
         return false;
     }
 

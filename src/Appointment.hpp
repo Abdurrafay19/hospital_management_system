@@ -11,8 +11,6 @@ private:
     char* timeSlot;
     char* status;
 
-    void copyText(char*& destination, const char* source);
-
 public:
     Appointment();
     Appointment(int newAppointmentID,

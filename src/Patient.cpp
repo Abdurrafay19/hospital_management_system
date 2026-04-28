@@ -1,6 +1,7 @@
 #include "Patient.hpp"
 
 #include "Validator.hpp"
+#include "helpers/StringHelper.hpp"
 
 Patient::Patient() : Person() {
     age = 0;
@@ -37,8 +38,8 @@ Patient::Patient(const Patient& other) : Person(other) {
     contact = 0;
     balance = other.balance;
 
-    copyText(gender, other.gender);
-    copyText(contact, other.contact);
+    StringHelper::copyTextDynamic(gender, other.gender);
+    StringHelper::copyTextDynamic(contact, other.contact);
 }
 
 Patient::~Patient() {
@@ -53,8 +54,8 @@ Patient& Patient::operator=(const Patient& other) {
         Person::operator=(other);
         age = other.age;
         balance = other.balance;
-        copyText(gender, other.gender);
-        copyText(contact, other.contact);
+        StringHelper::copyTextDynamic(gender, other.gender);
+        StringHelper::copyTextDynamic(contact, other.contact);
     }
 
     return *this;
@@ -91,7 +92,7 @@ void Patient::setAge(int patientAge) {
 }
 
 void Patient::setGender(const char* patientGender) {
-    copyText(gender, patientGender);
+    StringHelper::copyTextDynamic(gender, patientGender);
 }
 
 bool Patient::setContact(const char* patientContact) {
@@ -99,7 +100,7 @@ bool Patient::setContact(const char* patientContact) {
         return false;
     }
 
-    copyText(contact, patientContact);
+    StringHelper::copyTextDynamic(contact, patientContact);
     return true;
 }
 

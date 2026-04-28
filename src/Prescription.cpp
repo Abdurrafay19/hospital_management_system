@@ -1,4 +1,5 @@
 #include "Prescription.hpp"
+#include "helpers/StringHelper.hpp"
 
 #include "Validator.hpp"
 
@@ -49,7 +50,7 @@ Prescription::Prescription(const Prescription& other) {
     appointmentID = other.appointmentID;
     patientID = other.patientID;
     doctorID = other.doctorID;
-    copyText(date, other.date);
+    StringHelper::copyTextDynamic(date, other.date);
     setMedicines(other.medicines);
     setNotes(other.notes);
 }
@@ -70,7 +71,7 @@ Prescription& Prescription::operator=(const Prescription& other) {
         appointmentID = other.appointmentID;
         patientID = other.patientID;
         doctorID = other.doctorID;
-        copyText(date, other.date);
+        StringHelper::copyTextDynamic(date, other.date);
         setMedicines(other.medicines);
         setNotes(other.notes);
     }
@@ -78,31 +79,6 @@ Prescription& Prescription::operator=(const Prescription& other) {
     return *this;
 }
 
-void Prescription::copyText(char*& destination, const char* source) {
-    int i;
-    int length;
-
-    delete[] destination;
-    destination = nullptr;
-
-    if (source == nullptr) {
-        return;
-    }
-
-    length = 0;
-    while (source[length] != '\0') {
-        length++;
-    }
-
-    destination = new char[length + 1];
-
-    i = 0;
-    while (i < length) {
-        destination[i] = source[i];
-        i++;
-    }
-    destination[i] = '\0';
-}
 
 int Prescription::getPrescriptionID() const {
     return prescriptionID;
@@ -165,7 +141,7 @@ void Prescription::setDate(const char* newDate) {
         return;
     }
 
-    copyText(date, newDate);
+    StringHelper::copyTextDynamic(date, newDate);
 }
 
 void Prescription::setMedicines(const char* newMedicines) {
