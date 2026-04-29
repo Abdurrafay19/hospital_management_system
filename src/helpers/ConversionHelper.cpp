@@ -121,11 +121,7 @@ void ConversionHelper::intToString(int value, char* buffer) {
         length--;
     }
 
-    if (value < 0) {
-        buffer[i + length] = '\0';
-    } else {
-        buffer[i] = '\0';
-    }
+    buffer[i + length] = '\0';
 }
 
 void ConversionHelper::doubleToString(double value, char* buffer) {
@@ -160,7 +156,7 @@ void ConversionHelper::doubleToString(double value, char* buffer) {
     i++;
 
     digits = 0;
-    while (digits < 2 && decPart > 0.0) {
+    while (digits < 2) {
         decPart = decPart * 10.0;
         buffer[i] = static_cast<char>('0' + static_cast<int>(decPart));
         decPart = decPart - static_cast<int>(decPart);

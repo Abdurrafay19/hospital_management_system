@@ -97,11 +97,11 @@ HospitalSystem::HospitalSystem() {
     FileHandler::loadPrescriptions(prescriptions);
 }
 
-Person* HospitalSystem::login(const char* name, const char* contact, const char* password, Role role) {
+Person* HospitalSystem::login(const char* id, const char* password, const char* unused, Role role) {
     Patient* patient;
     Doctor* doctor;
     Admin* admin;
-    int i;
+    int userID;
 
     if (sessionLocked) {
         std::cout << "Account locked. Contact admin.\n";
@@ -112,29 +112,22 @@ Person* HospitalSystem::login(const char* name, const char* contact, const char*
     doctor = nullptr;
     admin = nullptr;
 
+    userID = ConversionHelper::toInt(id);
+
     if (role == ROLE_PATIENT) {
-        // For patients: search by name and contact
-        for (i = 0; i < patients.size(); i++) {
-            if (StringHelper::textEquals(patients.getAll()[i].getName(), name) && 
-                StringHelper::textEquals(patients.getAll()[i].getContact(), contact)) {
-                if (StringHelper::textEquals(patients.getAll()[i].getPassword(), password)) {
-                    failedLoginAttempts = 0;
-                    return &patients.getAll()[i];
-                }
-            }
+        patient = patients.findByID(userID);
+        if (patient != nullptr && StringHelper::textEquals(patient->getPassword(), password)) {
+            failedLoginAttempts = 0;
+            return patient;
         }
     } else if (role == ROLE_DOCTOR) {
-        // For doctors: name acts as ID (convert to int)
-        int docID = ConversionHelper::toInt(name);
-        doctor = doctors.findByID(docID);
+        doctor = doctors.findByID(userID);
         if (doctor != nullptr && StringHelper::textEquals(doctor->getPassword(), password)) {
             failedLoginAttempts = 0;
             return doctor;
         }
     } else if (role == ROLE_ADMIN) {
-        // For admin: name acts as ID (convert to int)
-        int adminID = ConversionHelper::toInt(name);
-        admin = admins.findByID(adminID);
+        admin = admins.findByID(userID);
         if (admin != nullptr && StringHelper::textEquals(admin->getPassword(), password)) {
             failedLoginAttempts = 0;
             return admin;

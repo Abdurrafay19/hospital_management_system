@@ -3,30 +3,18 @@
 #include "../helpers/ConversionHelper.hpp"
 
 void LoginScreen::updateRoleLabel() {
-    if (roleText == nullptr) {
-        return;
-    }
-
-    if (selectedRole == ROLE_PATIENT) {
-        roleText->setString("Role: Patient");
-    } else if (selectedRole == ROLE_DOCTOR) {
-        roleText->setString("Role: Doctor");
-    } else {
-        roleText->setString("Role: Admin");
-    }
+    // Deprecated - role label is now shown via nameLabel as ID field
 }
 
 bool LoginScreen::validateSignupInputs(char* errorMessage) {
     const char* name;
     const char* ageStr;
-    const char* gender;
     const char* contact;
     const char* password;
     int age;
 
     name = nameInput.getText();
     ageStr = ageInput.getText();
-    gender = genderInput.getText();
     contact = contactInput.getText();
     password = signupPasswordInput.getText();
 
@@ -41,8 +29,8 @@ bool LoginScreen::validateSignupInputs(char* errorMessage) {
         return false;
     }
 
-    if (StringHelper::stringLength(gender) < 1) {
-        StringHelper::stringCopy(errorMessage, "Gender cannot be empty", 200);
+    if (StringHelper::stringLength(selectedGender) < 1) {
+        StringHelper::stringCopy(errorMessage, "Please select a gender", 200);
         return false;
     }
 
@@ -71,6 +59,7 @@ LoginScreen::LoginScreen() {
     isSignupMode = false;
     signupRequested = false;
     statusMessage[0] = '\0';
+    selectedGender[0] = '\0';
 }
 
 LoginScreen::~LoginScreen() {
@@ -103,11 +92,13 @@ LoginScreen::LoginScreen(const LoginScreen& other) {
     loginButton = other.loginButton;
     toggleModeButton = other.toggleModeButton;
     signupButton = other.signupButton;
+    genderMButton = other.genderMButton;
+    genderFButton = other.genderFButton;
+    genderNAButton = other.genderNAButton;
     nameInput = other.nameInput;
     contactInput = other.contactInput;
     passwordInput = other.passwordInput;
     ageInput = other.ageInput;
-    genderInput = other.genderInput;
     signupPasswordInput = other.signupPasswordInput;
 
     titleText = nullptr;
@@ -130,6 +121,13 @@ LoginScreen::LoginScreen(const LoginScreen& other) {
         index++;
     }
     statusMessage[index] = '\0';
+    
+    index = 0;
+    while (other.selectedGender[index] != '\0' && index < 2) {
+        selectedGender[index] = other.selectedGender[index];
+        index++;
+    }
+    selectedGender[index] = '\0';
 }
 
 LoginScreen& LoginScreen::operator=(const LoginScreen& other) {
@@ -152,11 +150,13 @@ LoginScreen& LoginScreen::operator=(const LoginScreen& other) {
         loginButton = other.loginButton;
         toggleModeButton = other.toggleModeButton;
         signupButton = other.signupButton;
+        genderMButton = other.genderMButton;
+        genderFButton = other.genderFButton;
+        genderNAButton = other.genderNAButton;
         nameInput = other.nameInput;
         contactInput = other.contactInput;
         passwordInput = other.passwordInput;
         ageInput = other.ageInput;
-        genderInput = other.genderInput;
         signupPasswordInput = other.signupPasswordInput;
 
         titleText = nullptr;
@@ -179,6 +179,13 @@ LoginScreen& LoginScreen::operator=(const LoginScreen& other) {
             index++;
         }
         statusMessage[index] = '\0';
+        
+        index = 0;
+        while (other.selectedGender[index] != '\0' && index < 2) {
+            selectedGender[index] = other.selectedGender[index];
+            index++;
+        }
+        selectedGender[index] = '\0';
     }
 
     return *this;
@@ -213,13 +220,14 @@ bool LoginScreen::initialize(const sf::Font& regularFont, const sf::Font& boldFo
     // Toggle Mode / Back button (will be moved Top-Left inside card)
     toggleModeButton = UIButton(regularFont, "Sign Up", sf::Vector2f(innerX, startY + 430.f), sf::Vector2f(560.f, 50.f));
 
-    patientRoleButton.setFillColor(sf::Color(230, 235, 240));
+    // Patient is selected by default, so use darker gray
+    patientRoleButton.setFillColor(sf::Color(200, 200, 200));
     doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
     adminRoleButton.setFillColor(sf::Color(230, 235, 240));
     loginButton.setFillColor(sf::Color(52, 152, 219));
     toggleModeButton.setFillColor(sf::Color(245, 247, 248)); // Subtle button style
 
-    patientRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+    patientRoleButton.setOutlineColor(sf::Color(170, 170, 170));
     doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
     adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
     loginButton.setOutlineColor(sf::Color(52, 152, 219));
@@ -231,36 +239,47 @@ bool LoginScreen::initialize(const sf::Font& regularFont, const sf::Font& boldFo
     loginButton.setTextColor(sf::Color::White);
     toggleModeButton.setTextColor(sf::Color(44, 62, 80));
 
-    // Login form: Name, Contact, Password
+    // Login form: ID and Password (Contact field reused for signup)
     nameInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 210.f), sf::Vector2f(560.f, 40.f), 50);
+    passwordInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(560.f, 40.f), 30);
     contactInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(270.f, 40.f), 11);
-    passwordInput = UITextBox(regularFont, sf::Vector2f(innerX + 290.f, startY + 280.f), sf::Vector2f(270.f, 40.f), 30);
     
     nameInput.setFillColor(sf::Color(250, 251, 252));
-    contactInput.setFillColor(sf::Color(250, 251, 252));
     passwordInput.setFillColor(sf::Color(250, 251, 252));
+    contactInput.setFillColor(sf::Color(250, 251, 252));
     nameInput.setOutlineColor(sf::Color(200, 205, 210));
-    contactInput.setOutlineColor(sf::Color(200, 205, 210));
     passwordInput.setOutlineColor(sf::Color(200, 205, 210));
+    contactInput.setOutlineColor(sf::Color(200, 205, 210));
     nameInput.setTextColor(sf::Color(44, 62, 80));
-    contactInput.setTextColor(sf::Color(44, 62, 80));
     passwordInput.setTextColor(sf::Color(44, 62, 80));
+    contactInput.setTextColor(sf::Color(44, 62, 80));
 
     // Signup UI setup
     ageInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(120.f, 40.f), 3);
-    genderInput = UITextBox(regularFont, sf::Vector2f(innerX + 140.f, startY + 280.f), sf::Vector2f(120.f, 40.f), 10);
+    
+    genderMButton = UIButton(regularFont, "M", sf::Vector2f(innerX + 140.f, startY + 280.f), sf::Vector2f(35.f, 40.f));
+    genderFButton = UIButton(regularFont, "F", sf::Vector2f(innerX + 180.f, startY + 280.f), sf::Vector2f(35.f, 40.f));
+    genderNAButton = UIButton(regularFont, "N/A", sf::Vector2f(innerX + 220.f, startY + 280.f), sf::Vector2f(50.f, 40.f));
+    
+    genderMButton.setFillColor(sf::Color(230, 235, 240));
+    genderFButton.setFillColor(sf::Color(230, 235, 240));
+    genderNAButton.setFillColor(sf::Color(230, 235, 240));
+    genderMButton.setOutlineColor(sf::Color(200, 205, 210));
+    genderFButton.setOutlineColor(sf::Color(200, 205, 210));
+    genderNAButton.setOutlineColor(sf::Color(200, 205, 210));
+    genderMButton.setTextColor(sf::Color(44, 62, 80));
+    genderFButton.setTextColor(sf::Color(44, 62, 80));
+    genderNAButton.setTextColor(sf::Color(44, 62, 80));
+    
     signupPasswordInput = UITextBox(regularFont, sf::Vector2f(innerX + 290.f, startY + 280.f), sf::Vector2f(270.f, 40.f), 30);
 
     ageInput.setFillColor(sf::Color(250, 251, 252));
-    genderInput.setFillColor(sf::Color(250, 251, 252));
     signupPasswordInput.setFillColor(sf::Color(250, 251, 252));
 
     ageInput.setOutlineColor(sf::Color(200, 205, 210));
-    genderInput.setOutlineColor(sf::Color(200, 205, 210));
     signupPasswordInput.setOutlineColor(sf::Color(200, 205, 210));
 
     ageInput.setTextColor(sf::Color(44, 62, 80));
-    genderInput.setTextColor(sf::Color(44, 62, 80));
     signupPasswordInput.setTextColor(sf::Color(44, 62, 80));
 
     signupButton = UIButton(boldFont, "Create Account", sf::Vector2f(innerX, startY + 360.f), sf::Vector2f(560.f, 50.f));
@@ -271,7 +290,7 @@ bool LoginScreen::initialize(const sf::Font& regularFont, const sf::Font& boldFo
     // Text labels setup
     titleText = new sf::Text(boldFont, "MediCore", 40);
     roleText = new sf::Text(regularFont, "Role: Patient", 20);
-    nameLabel = new sf::Text(regularFont, "Full Name", 16);
+    nameLabel = new sf::Text(regularFont, "Patient ID", 16);
     contactLabel = new sf::Text(regularFont, "Contact Number", 16);
     passwordLabel = new sf::Text(regularFont, "Password", 16);
     statusText = new sf::Text(regularFont, "", 16);
@@ -291,7 +310,7 @@ bool LoginScreen::initialize(const sf::Font& regularFont, const sf::Font& boldFo
     roleText->setPosition(sf::Vector2f(startX + 40.f, startY + 90.f));
     nameLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 190.f));
     contactLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 260.f));
-    passwordLabel->setPosition(sf::Vector2f(startX + 330.f, startY + 260.f));
+    passwordLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 260.f));
     statusText->setPosition(sf::Vector2f(startX + 40.f, startY + 500.f));
 
     // Signup UI positions
@@ -328,9 +347,41 @@ void LoginScreen::handleMouseClick(sf::RenderWindow& window) {
         // Signup mode: handle signup-specific inputs and buttons
         nameInput.handleMousePress(window);
         ageInput.handleMousePress(window);
-        genderInput.handleMousePress(window);
         contactInput.handleMousePress(window);
         signupPasswordInput.handleMousePress(window);
+
+        if (genderMButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            selectedGender[0] = 'M';
+            selectedGender[1] = '\0';
+            genderMButton.setFillColor(sf::Color(200, 200, 200));
+            genderMButton.setOutlineColor(sf::Color(170, 170, 170));
+            genderFButton.setFillColor(sf::Color(230, 235, 240));
+            genderFButton.setOutlineColor(sf::Color(200, 205, 210));
+            genderNAButton.setFillColor(sf::Color(230, 235, 240));
+            genderNAButton.setOutlineColor(sf::Color(200, 205, 210));
+        }
+        if (genderFButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            selectedGender[0] = 'F';
+            selectedGender[1] = '\0';
+            genderMButton.setFillColor(sf::Color(230, 235, 240));
+            genderMButton.setOutlineColor(sf::Color(200, 205, 210));
+            genderFButton.setFillColor(sf::Color(200, 200, 200));
+            genderFButton.setOutlineColor(sf::Color(170, 170, 170));
+            genderNAButton.setFillColor(sf::Color(230, 235, 240));
+            genderNAButton.setOutlineColor(sf::Color(200, 205, 210));
+        }
+        if (genderNAButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            selectedGender[0] = 'N';
+            selectedGender[1] = '/';
+            selectedGender[2] = 'A';
+            selectedGender[3] = '\0';
+            genderMButton.setFillColor(sf::Color(230, 235, 240));
+            genderMButton.setOutlineColor(sf::Color(200, 205, 210));
+            genderFButton.setFillColor(sf::Color(230, 235, 240));
+            genderFButton.setOutlineColor(sf::Color(200, 205, 210));
+            genderNAButton.setFillColor(sf::Color(200, 200, 200));
+            genderNAButton.setOutlineColor(sf::Color(170, 170, 170));
+        }
 
         if (signupButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
             if (validateSignupInputs(errorBuffer)) {
@@ -344,16 +395,38 @@ void LoginScreen::handleMouseClick(sf::RenderWindow& window) {
             isSignupMode = false;
             clearInputs();
             setStatus("Back to login");
+            selectedGender[0] = '\0';
             
             float startX = 320.f;
             float startY = 90.f;
             float innerX = startX + 40.f;
             
+            // Reset role buttons
+            patientRoleButton.setPosition(sf::Vector2f(innerX, startY + 120.f));
+            patientRoleButton.setSize(sf::Vector2f(160.f, 40.f));
+            doctorRoleButton.setPosition(sf::Vector2f(innerX + 180.f, startY + 120.f));
+            doctorRoleButton.setSize(sf::Vector2f(160.f, 40.f));
+            adminRoleButton.setPosition(sf::Vector2f(innerX + 360.f, startY + 120.f));
+            adminRoleButton.setSize(sf::Vector2f(160.f, 40.f));
+            
+            // Reset Patient role as default
+            selectedRole = ROLE_PATIENT;
+            patientRoleButton.setFillColor(sf::Color(200, 200, 200));
+            patientRoleButton.setOutlineColor(sf::Color(170, 170, 170));
+            doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
+            doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            adminRoleButton.setFillColor(sf::Color(230, 235, 240));
+            adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            
+            // Reset login form labels and inputs
             nameLabel->setPosition(sf::Vector2f(innerX, startY + 190.f));
+            nameLabel->setString("Patient ID");
             contactLabel->setPosition(sf::Vector2f(innerX, startY + 260.f));
             nameInput.setPosition(sf::Vector2f(innerX, startY + 210.f));
             contactInput.setPosition(sf::Vector2f(innerX, startY + 280.f));
             contactInput.setSize(sf::Vector2f(270.f, 40.f));
+            passwordInput.setPosition(sf::Vector2f(innerX, startY + 280.f));
+            passwordInput.setSize(sf::Vector2f(560.f, 40.f));
             
             toggleModeButton.setText("Sign Up");
             toggleModeButton.setPosition(sf::Vector2f(innerX, startY + 430.f));
@@ -362,19 +435,39 @@ void LoginScreen::handleMouseClick(sf::RenderWindow& window) {
     } else {
         // Login mode: handle login-specific inputs and buttons
         nameInput.handleMousePress(window);
-        contactInput.handleMousePress(window);
         passwordInput.handleMousePress(window);
 
         if (patientRoleButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
             selectedRole = ROLE_PATIENT;
+            patientRoleButton.setFillColor(sf::Color(200, 200, 200));
+            patientRoleButton.setOutlineColor(sf::Color(170, 170, 170));
+            doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
+            doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            adminRoleButton.setFillColor(sf::Color(230, 235, 240));
+            adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            nameLabel->setString("Patient ID");
             setStatus("Selected role: Patient");
         }
         if (doctorRoleButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
             selectedRole = ROLE_DOCTOR;
+            patientRoleButton.setFillColor(sf::Color(230, 235, 240));
+            patientRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            doctorRoleButton.setFillColor(sf::Color(200, 200, 200));
+            doctorRoleButton.setOutlineColor(sf::Color(170, 170, 170));
+            adminRoleButton.setFillColor(sf::Color(230, 235, 240));
+            adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            nameLabel->setString("Doctor ID");
             setStatus("Selected role: Doctor");
         }
         if (adminRoleButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
             selectedRole = ROLE_ADMIN;
+            patientRoleButton.setFillColor(sf::Color(230, 235, 240));
+            patientRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
+            doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            adminRoleButton.setFillColor(sf::Color(200, 200, 200));
+            adminRoleButton.setOutlineColor(sf::Color(170, 170, 170));
+            nameLabel->setString("Admin ID");
             setStatus("Selected role: Admin");
         }
 
@@ -391,6 +484,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow& window) {
             float startY = 90.f;
             float innerX = startX + 40.f;
 
+            nameLabel->setString("Name");
             nameLabel->setPosition(sf::Vector2f(innerX, startY + 120.f));
             nameInput.setPosition(sf::Vector2f(innerX, startY + 140.f));
             
@@ -398,7 +492,9 @@ void LoginScreen::handleMouseClick(sf::RenderWindow& window) {
             ageInput.setPosition(sf::Vector2f(innerX, startY + 220.f));
             
             genderLabel->setPosition(sf::Vector2f(innerX + 140.f, startY + 200.f));
-            genderInput.setPosition(sf::Vector2f(innerX + 140.f, startY + 220.f));
+            genderMButton.setPosition(sf::Vector2f(innerX + 140.f, startY + 220.f));
+            genderFButton.setPosition(sf::Vector2f(innerX + 180.f, startY + 220.f));
+            genderNAButton.setPosition(sf::Vector2f(innerX + 220.f, startY + 220.f));
             
             contactLabel->setPosition(sf::Vector2f(innerX + 290.f, startY + 200.f));
             contactInput.setPosition(sf::Vector2f(innerX + 290.f, startY + 220.f));
@@ -412,8 +508,6 @@ void LoginScreen::handleMouseClick(sf::RenderWindow& window) {
             toggleModeButton.setPosition(sf::Vector2f(innerX, startY + 30.f));
             toggleModeButton.setSize(sf::Vector2f(80.f, 40.f));
         }
-
-        updateRoleLabel();
     }
 }
 
@@ -421,12 +515,10 @@ void LoginScreen::handleTextEntered(char32_t unicode) {
     if (isSignupMode) {
         nameInput.handleTextEntered(unicode);
         ageInput.handleTextEntered(unicode);
-        genderInput.handleTextEntered(unicode);
         contactInput.handleTextEntered(unicode);
         signupPasswordInput.handleTextEntered(unicode);
     } else {
         nameInput.handleTextEntered(unicode);
-        contactInput.handleTextEntered(unicode);
         passwordInput.handleTextEntered(unicode);
     }
 }
@@ -461,21 +553,17 @@ void LoginScreen::draw(sf::RenderWindow& window) const {
 
         nameInput.draw(window);
         ageInput.draw(window);
-        genderInput.draw(window);
+        genderMButton.draw(window);
+        genderFButton.draw(window);
+        genderNAButton.draw(window);
         contactInput.draw(window);
         signupPasswordInput.draw(window);
         signupButton.draw(window);
         toggleModeButton.draw(window);
     } else {
         // Draw login form
-        if (roleText != nullptr) {
-            window.draw(*roleText);
-        }
         if (nameLabel != nullptr) {
             window.draw(*nameLabel);
-        }
-        if (contactLabel != nullptr) {
-            window.draw(*contactLabel);
         }
         if (passwordLabel != nullptr) {
             window.draw(*passwordLabel);
@@ -485,10 +573,11 @@ void LoginScreen::draw(sf::RenderWindow& window) const {
         doctorRoleButton.draw(window);
         adminRoleButton.draw(window);
         nameInput.draw(window);
-        contactInput.draw(window);
         passwordInput.draw(window);
         loginButton.draw(window);
-        toggleModeButton.draw(window);
+        if (selectedRole == ROLE_PATIENT) {
+            toggleModeButton.draw(window);
+        }
     }
 }
 
@@ -521,7 +610,7 @@ void LoginScreen::clearInputs() {
     contactInput.clear();
     passwordInput.clear();
     ageInput.clear();
-    genderInput.clear();
+    selectedGender[0] = '\0';
     signupPasswordInput.clear();
 }
 
@@ -549,7 +638,7 @@ int LoginScreen::getEnteredAge() const {
 }
 
 const char* LoginScreen::getEnteredGender() const {
-    return genderInput.getText();
+    return selectedGender;
 }
 
 const char* LoginScreen::getEnteredSignupPassword() const {
@@ -567,10 +656,48 @@ bool LoginScreen::consumeSignupRequest() {
 void LoginScreen::setSignupMode(bool signupMode) {
     isSignupMode = signupMode;
     clearInputs();
+    
     if (signupMode) {
         setStatus("Create a new patient account");
     } else {
+        // Transitioning back to login mode - reset all UI positions and states
         setStatus("");
+        selectedGender[0] = '\0';
+        
+        float startX = 320.f;
+        float startY = 90.f;
+        float innerX = startX + 40.f;
+        
+        // Reset role buttons
+        patientRoleButton.setPosition(sf::Vector2f(innerX, startY + 120.f));
+        patientRoleButton.setSize(sf::Vector2f(160.f, 40.f));
+        doctorRoleButton.setPosition(sf::Vector2f(innerX + 180.f, startY + 120.f));
+        doctorRoleButton.setSize(sf::Vector2f(160.f, 40.f));
+        adminRoleButton.setPosition(sf::Vector2f(innerX + 360.f, startY + 120.f));
+        adminRoleButton.setSize(sf::Vector2f(160.f, 40.f));
+        
+        // Reset Patient role as default
+        selectedRole = ROLE_PATIENT;
+        patientRoleButton.setFillColor(sf::Color(200, 200, 200));
+        patientRoleButton.setOutlineColor(sf::Color(170, 170, 170));
+        doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
+        doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+        adminRoleButton.setFillColor(sf::Color(230, 235, 240));
+        adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+        
+        // Reset login form labels and inputs
+        nameLabel->setPosition(sf::Vector2f(innerX, startY + 190.f));
+        nameLabel->setString("Patient ID");
+        contactLabel->setPosition(sf::Vector2f(innerX, startY + 260.f));
+        nameInput.setPosition(sf::Vector2f(innerX, startY + 210.f));
+        contactInput.setPosition(sf::Vector2f(innerX, startY + 280.f));
+        contactInput.setSize(sf::Vector2f(270.f, 40.f));
+        passwordInput.setPosition(sf::Vector2f(innerX, startY + 280.f));
+        passwordInput.setSize(sf::Vector2f(560.f, 40.f));
+        
+        toggleModeButton.setText("Sign Up");
+        toggleModeButton.setPosition(sf::Vector2f(innerX, startY + 430.f));
+        toggleModeButton.setSize(sf::Vector2f(560.f, 50.f));
     }
 }
 

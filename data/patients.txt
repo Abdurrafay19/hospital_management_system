@@ -1,2 +1,10 @@
 patient_id,name,age,gender,contact,password,balance
 1,Ahmed Ali,28,M,03001234567,pass123,5000.00
+2,ali khan,46,male,03123456789,testing,0.00
+3,testing,28,T,03001234567,tester,0.00
+4,abdur,46,N/A,03124567890,testtest,0.00
+5,testagain,56,F,12345678910,testing,0.00
+6,gltich test,56,F,12345678901,testing,0.00
+7,John Doe,25,M,03001234567,test123,0.00
+8,message toast,19,N/A,12345678901,messagetoast,0.00
+9,id fix,21,F,98765432101,testing,0.00

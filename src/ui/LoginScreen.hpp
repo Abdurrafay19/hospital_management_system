@@ -31,13 +31,17 @@ private:
 
     // Signup UI
     UIButton signupButton;
+    UIButton genderMButton;
+    UIButton genderFButton;
+    UIButton genderNAButton;
     UITextBox ageInput;
-    UITextBox genderInput;
     UITextBox signupPasswordInput;
 
     sf::Text* ageLabel;
     sf::Text* genderLabel;
     sf::Text* signupPasswordLabel;
+
+    char selectedGender[4];
 
     Role selectedRole;
     bool loginRequested;

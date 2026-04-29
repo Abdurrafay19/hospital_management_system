@@ -1,15 +1,26 @@
 #include "App.hpp"
 
+#include <fstream>
 #include <optional>
 #include "../core/Validator.hpp"
 #include "../core/FileHandler.hpp"
 
+static bool pathExists(const char* path) {
+    std::ifstream fileStream(path, std::ios::binary);
+
+    return fileStream.good();
+}
+
 static bool loadFontWithFallback(sf::Font& font, const char* rootPath, const char* buildPath) {
-    if (font.openFromFile(rootPath)) {
+    if (pathExists(buildPath) && font.openFromFile(buildPath)) {
         return true;
     }
 
-    return font.openFromFile(buildPath);
+    if (pathExists(rootPath) && font.openFromFile(rootPath)) {
+        return true;
+    }
+
+    return false;
 }
 
 void App::setupUI() {
@@ -71,10 +82,10 @@ void App::attemptLogin() {
     Role selectedRole;
 
     selectedRole = loginScreen.getSelectedRole();
-    user = system.login(loginScreen.getEnteredName(), loginScreen.getEnteredContact(), loginScreen.getEnteredPassword(), selectedRole);
+    user = system.login(loginScreen.getEnteredName(), loginScreen.getEnteredPassword(), "", selectedRole);
 
     if (user == nullptr) {
-        loginScreen.setStatus("Login failed. Check name/contact/password.");
+        loginScreen.setStatus("Login failed. Check ID or password.");
         return;
     }
 
@@ -99,11 +110,8 @@ void App::attemptSignup() {
     const char* password;
     int newID;
     Patient newPatient;
-    char errorMsg[200];
-    int nameLen;
-    int genderLen;
-    int contactLen;
-    int passwordLen;
+    char successMsg[200];
+    int i;
 
     name = loginScreen.getEnteredName();
     age = loginScreen.getEnteredAge();
@@ -111,18 +119,8 @@ void App::attemptSignup() {
     contact = loginScreen.getEnteredContact();
     password = loginScreen.getEnteredSignupPassword();
 
-    // Calculate string lengths
-    nameLen = 0;
-    while (name[nameLen] != '\0') nameLen++;
-    genderLen = 0;
-    while (gender[genderLen] != '\0') genderLen++;
-    contactLen = 0;
-    while (contact[contactLen] != '\0') contactLen++;
-    passwordLen = 0;
-    while (password[passwordLen] != '\0') passwordLen++;
-
     // Validate inputs
-    if (nameLen < 2) {
+    if (StringHelper::stringLength(name) < 2) {
         loginScreen.setStatus("Name must be at least 2 characters");
         return;
     }
@@ -130,7 +128,7 @@ void App::attemptSignup() {
         loginScreen.setStatus("Age must be between 18 and 120");
         return;
     }
-    if (genderLen < 1) {
+    if (StringHelper::stringLength(gender) < 1) {
         loginScreen.setStatus("Gender cannot be empty");
         return;
     }
@@ -155,10 +153,15 @@ void App::attemptSignup() {
     // Add to system's patient storage
     system.getPatients().add(newPatient);
 
-    // Show success message and return to login
-    loginScreen.setStatus("Account created successfully! Please login.");
+    // Show success message with new patient ID
+    successMsg[0] = '\0';
+    StringHelper::stringCopy(successMsg, "New account created with ID: ", 200);
+    i = StringHelper::stringLength(successMsg);
+    ConversionHelper::intToString(newID, successMsg + i);
+    
     loginScreen.setSignupMode(false);
     loginScreen.clearInputs();
+    loginScreen.setStatus(successMsg);
 }
 
 void App::logout() {
