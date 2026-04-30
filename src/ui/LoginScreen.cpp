@@ -661,7 +661,7 @@ void LoginScreen::setSignupMode(bool signupMode) {
         setStatus("Create a new patient account");
     } else {
         // Transitioning back to login mode - reset all UI positions and states
-        setStatus("");
+        // Don't clear status here - let the caller set the appropriate message
         selectedGender[0] = '\0';
         
         float startX = 320.f;

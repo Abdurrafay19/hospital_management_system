@@ -24,6 +24,7 @@ public:
     UITextBox& operator=(const UITextBox& other);
 
     void setFont(const sf::Font& boxFont);
+    void setCapacity(int maxCharacters);
     void setPosition(sf::Vector2f position);
     void setSize(sf::Vector2f size);
     void setFillColor(const sf::Color& color);

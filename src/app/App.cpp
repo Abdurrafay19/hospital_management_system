@@ -4,6 +4,8 @@
 #include <optional>
 #include "../core/Validator.hpp"
 #include "../core/FileHandler.hpp"
+#include "../helpers/ConversionHelper.hpp"
+#include "../helpers/StringHelper.hpp"
 
 static bool pathExists(const char* path) {
     std::ifstream fileStream(path, std::ios::binary);
@@ -32,6 +34,7 @@ void App::setupUI() {
     logoutButton.setTextColor(sf::Color::White);
 
     loginScreen.initialize(regularFont, boldFont);
+    patientDash.initialize(regularFont, boldFont);
 }
 
 void App::processEvents() {
@@ -65,12 +68,52 @@ void App::handleMouseClick() {
         mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
         if (logoutButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
             logout();
+            return;
+        }
+        
+        if (state == PATIENT_MENU) {
+            patientDash.handleMouseClick(window);
+
+            if (patientDash.consumeBookAppointmentRequest()) {
+                Patient* patient;
+                int doctorID;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                doctorID = ConversionHelper::stringToInt(patientDash.getBookingDoctorIDText());
+
+                try {
+                    if (StringHelper::stringLength(patientDash.getBookingDoctorIDText()) < 1) {
+                        patientDash.setStatus("Doctor ID is required.");
+                    } else if (StringHelper::stringLength(patientDash.getBookingDateText()) < 1) {
+                        patientDash.setStatus("Date is required.");
+                    } else if (StringHelper::stringLength(patientDash.getBookingTimeText()) < 1) {
+                        patientDash.setStatus("Time slot is required.");
+                    } else {
+                        system.bookAppointment(
+                            patient,
+                            doctorID,
+                            patientDash.getBookingDateText(),
+                            patientDash.getBookingTimeText()
+                        );
+                        patientDash.cancelBookingMode();
+                        patientDash.setPatient(patient);
+                        patientDash.setStatus("Appointment booked successfully.");
+                    }
+                } catch (const HospitalException& exception) {
+                    patientDash.setStatus(exception.what());
+                }
+            }
+
+            patientDash.clearClickStates();
         }
     }
 }
 
 void App::handleTextEntered(char32_t unicode) {
     if (state != LOGIN) {
+        if (state == PATIENT_MENU) {
+            patientDash.handleTextEntered(unicode);
+        }
         return;
     }
 
@@ -92,6 +135,7 @@ void App::attemptLogin() {
     currentUser = user;
     if (selectedRole == ROLE_PATIENT) {
         state = PATIENT_MENU;
+        patientDash.setPatient(reinterpret_cast<Patient*>(user));
         loginScreen.setStatus("Login successful. Welcome, patient.");
     } else if (selectedRole == ROLE_DOCTOR) {
         state = DOCTOR_MENU;
@@ -169,23 +213,27 @@ void App::logout() {
     state = LOGIN;
     loginScreen.clearInputs();
     loginScreen.setStatus("Logged out.");
+    patientDash.setPatient(nullptr);
 }
 
 void App::drawDashboard() {
-    sf::Text title(boldFont, "", 30);
-
     if (state == PATIENT_MENU) {
-        title.setString("Patient Dashboard");
-    } else if (state == DOCTOR_MENU) {
-        title.setString("Doctor Dashboard");
+        patientDash.draw(window);
     } else {
-        title.setString("Admin Dashboard");
+        sf::Text title(boldFont, "", 30);
+
+        if (state == DOCTOR_MENU) {
+            title.setString("Doctor Dashboard");
+        } else {
+            title.setString("Admin Dashboard");
+        }
+
+        title.setPosition(sf::Vector2f(80.f, 34.f));
+        title.setFillColor(sf::Color(44, 62, 80));
+
+        window.draw(title);
     }
-
-    title.setPosition(sf::Vector2f(80.f, 34.f));
-    title.setFillColor(sf::Color(44, 62, 80));
-
-    window.draw(title);
+    
     logoutButton.draw(window);
 }
 

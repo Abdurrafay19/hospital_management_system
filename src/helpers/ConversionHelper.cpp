@@ -1,4 +1,5 @@
 #include "ConversionHelper.hpp"
+#include <fstream>
 
 int ConversionHelper::toInt(const char* text) {
     int value;
@@ -115,13 +116,14 @@ void ConversionHelper::intToString(int value, char* buffer) {
     }
 
     temp = value;
+    int originalLength = length;
     while (temp > 0) {
         buffer[i + length - 1] = static_cast<char>('0' + (temp % 10));
         temp = temp / 10;
         length--;
     }
 
-    buffer[i + length] = '\0';
+    buffer[i + originalLength] = '\0';
 }
 
 void ConversionHelper::doubleToString(double value, char* buffer) {
@@ -145,26 +147,40 @@ void ConversionHelper::doubleToString(double value, char* buffer) {
     intPart = static_cast<int>(value);
     decPart = value - intPart;
 
-    intToString(intPart, buffer + i);
-
-    i = 0;
-    while (buffer[i] != '\0') {
-        i++;
+    // Write integer part manually to avoid intToString inconsistencies
+    int idx = i;
+    if (intPart == 0) {
+        buffer[idx++] = '0';
+    } else {
+        int tempInt = intPart;
+        char rev[32];
+        int revLen = 0;
+        while (tempInt > 0 && revLen < 32) {
+            rev[revLen++] = static_cast<char>('0' + (tempInt % 10));
+            tempInt = tempInt / 10;
+        }
+        // reverse
+        int k;
+        for (k = revLen - 1; k >= 0; k--) {
+            buffer[idx++] = rev[k];
+        }
     }
 
-    buffer[i] = '.';
-    i++;
+    buffer[idx++] = '.';
 
     digits = 0;
     while (digits < 2) {
         decPart = decPart * 10.0;
-        buffer[i] = static_cast<char>('0' + static_cast<int>(decPart));
-        decPart = decPart - static_cast<int>(decPart);
-        i++;
+        int digit = static_cast<int>(decPart + 1e-9);
+        if (digit < 0) digit = 0;
+        if (digit > 9) digit = 9;
+        buffer[idx++] = static_cast<char>('0' + digit);
+        decPart = decPart - digit;
         digits++;
     }
 
-    buffer[i] = '\0';
+    buffer[idx] = '\0';
+
 }
 
 int ConversionHelper::toIntFromDigits(const char* text, int startIndex, int digitCount) {

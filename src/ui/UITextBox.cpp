@@ -139,6 +139,16 @@ void UITextBox::setFont(const sf::Font& boxFont) {
     refreshText();
 }
 
+void UITextBox::setCapacity(int maxCharacters) {
+    if (buffer != 0) {
+        delete[] buffer;
+    }
+    capacity = maxCharacters;
+    buffer = new char[capacity + 1];
+    buffer[0] = '\0';
+    length = 0;
+}
+
 void UITextBox::setPosition(sf::Vector2f position) {
     box.setPosition(position);
     if (text != 0) {

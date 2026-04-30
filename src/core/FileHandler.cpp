@@ -20,6 +20,8 @@ void FileHandler::loadPatients(Storage<Patient>& storage) {
         fields[i] = new char[256];
     }
 
+    file.getline(line, 1024);
+
     while (file.getline(line, 1024)) {
         DataHelper::splitByComma(line, fields, 7, fieldCount);
 
@@ -59,7 +61,7 @@ void FileHandler::loadDoctors(Storage<Doctor>& storage) {
     for (i = 0; i < 6; i++) {
         fields[i] = new char[256];
     }
-
+    file.getline(line, 2048);
     while (file.getline(line, 1024)) {
         DataHelper::splitByComma(line, fields, 6, fieldCount);
 
@@ -99,6 +101,8 @@ void FileHandler::loadAdmin(Storage<Admin>& storage) {
         fields[i] = new char[256];
     }
 
+    file.getline(line, 1024);
+
     while (file.getline(line, 1024)) {
         DataHelper::splitByComma(line, fields, 3, fieldCount);
 
@@ -134,6 +138,8 @@ void FileHandler::loadAppointments(Storage<Appointment>& storage) {
     for (i = 0; i < 6; i++) {
         fields[i] = new char[256];
     }
+    file.getline(line, 1024);
+    file.getline(line, 1024);
 
     while (file.getline(line, 1024)) {
         DataHelper::splitByComma(line, fields, 6, fieldCount);
@@ -173,6 +179,8 @@ void FileHandler::loadBills(Storage<Bill>& storage) {
     for (i = 0; i < 6; i++) {
         fields[i] = new char[256];
     }
+    file.getline(line, 1024);
+    file.getline(line, 1024);
 
     while (file.getline(line, 1024)) {
         DataHelper::splitByComma(line, fields, 6, fieldCount);
@@ -212,6 +220,8 @@ void FileHandler::loadPrescriptions(Storage<Prescription>& storage) {
     for (i = 0; i < 7; i++) {
         fields[i] = new char[512];
     }
+
+    file.getline(line, 2048);
 
     while (file.getline(line, 2048)) {
         DataHelper::splitByComma(line, fields, 7, fieldCount);

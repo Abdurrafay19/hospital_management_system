@@ -5,6 +5,7 @@
 #include "../core/HospitalSystem.hpp"
 #include "../ui/UIButton.hpp"
 #include "../ui/LoginScreen.hpp"
+#include "../ui/PatientDash.hpp"
 
 class App {
 public:
@@ -27,6 +28,7 @@ private:
 
     UIButton logoutButton;
     LoginScreen loginScreen;
+    PatientDash patientDash;
 
     void setupUI();
 
