@@ -1,12 +1,25 @@
-1,Ahmed Ali,28,M,03001234567,pass123,3500.00
-2,ali khan,46,male,03123456789,testing,6467.12
-3,testing,28,T,03001234567,tester,0.00
-4,abdur,46,N/A,03124567890,testtest,0.00
-5,testagain,56,F,12345678910,testing,0.00
-6,gltich test,56,F,12345678901,testing,0.00
-7,John Doe,25,M,03001234567,test123,0.00
-8,message toast,19,N/A,12345678901,messagetoast,0.00
-9,id fix,21,F,98765432101,testing,0.00
-10,Test User,30,M,03001234567,password123,0.00
-11,newtest,47,F,12345678910,pass123,0.00
-12,patient new,100,F,03000000000,123456789,0.00
+patient_id,name,age,gender,contact,password,balance
+1,Ahmed Ali,28,M,03001234567,pass123,497600.00
+2,Ali Khan,46,M,03123456789,passwdA,6467.12
+3,Test User,28,F,03001234568,tester,0.00
+4,Abdur Rahman,46,M,03124567890,testtest,120.50
+5,Testagain Smith,56,F,12345678910,testing,0.00
+6,Glitch Tester,56,F,12345678901,testing,0.00
+7,John Doe,25,M,03001234569,test123,75.00
+8,Message Toast,19,O,12345678902,messagetoast,0.00
+9,Id Fix,21,F,98765432101,testing,0.00
+10,User Ten,30,M,03001234570,password123,10.00
+11,New Test,47,F,12345678911,pass123,5.00
+12,Patient New,40,F,03000000000,123456789,0.00
+13,Aisha Noor,34,F,03010010001,aishaPass,200.00
+14,Bilal Ahmed,29,M,03010010002,bilalPass,50.00
+15,Camila Rose,52,F,03010010003,camilaPwd,0.00
+16,David Park,41,M,03010010004,davidPwd,300.00
+17,Elena Petrova,37,F,03010010005,elenapw,0.00
+18,Farooq Khan,60,M,03010010006,farooq123,1000.00
+19,Grace Kim,22,F,03010010007,gracepw,15.75
+20,Hassan Ali,33,M,03010010008,hassanpw,0.00
+21,Ibrahim Noor,18,M,03010010009,ibrahim,0.00
+22,Jenna Fox,27,F,03010010010,jenna!23,80.00
+23,Khalid Malik,55,M,03010010011,khalidpass,250.00
+24,Layla Ahmed,45,F,03010010012,layla2020,0.00

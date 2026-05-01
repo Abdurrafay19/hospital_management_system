@@ -138,7 +138,7 @@ void FileHandler::loadAppointments(Storage<Appointment>& storage) {
     for (i = 0; i < 6; i++) {
         fields[i] = new char[256];
     }
-    file.getline(line, 1024);
+    // skip header line
     file.getline(line, 1024);
 
     while (file.getline(line, 1024)) {
@@ -179,7 +179,7 @@ void FileHandler::loadBills(Storage<Bill>& storage) {
     for (i = 0; i < 6; i++) {
         fields[i] = new char[256];
     }
-    file.getline(line, 1024);
+    // skip header line
     file.getline(line, 1024);
 
     while (file.getline(line, 1024)) {
@@ -425,8 +425,9 @@ void FileHandler::saveAllPatients(Storage<Patient>& storage) {
     std::ofstream file;
     int i;
 
-    FilePathHelper::openOutputDataFile(file, "patients.txt", std::ios::trunc);
-    if (file.is_open()) {
+    // Truncate and write header
+    if (FilePathHelper::openOutputDataFile(file, "patients.txt", std::ios::out)) {
+        file << "patient_id,name,age,gender,contact,password,balance\n";
         file.close();
     }
 
@@ -439,8 +440,9 @@ void FileHandler::saveAllDoctors(Storage<Doctor>& storage) {
     std::ofstream file;
     int i;
 
-    FilePathHelper::openOutputDataFile(file, "doctors.txt", std::ios::trunc);
-    if (file.is_open()) {
+    // Truncate and write header
+    if (FilePathHelper::openOutputDataFile(file, "doctors.txt", std::ios::out)) {
+        file << "doctor_id,name,specialization,contact,password,fee\n";
         file.close();
     }
 
@@ -453,8 +455,9 @@ void FileHandler::saveAllAdmins(Storage<Admin>& storage) {
     std::ofstream file;
     int i;
 
-    FilePathHelper::openOutputDataFile(file, "admin.txt", std::ios::trunc);
-    if (file.is_open()) {
+    // Truncate and write header
+    if (FilePathHelper::openOutputDataFile(file, "admin.txt", std::ios::out)) {
+        file << "admin_id,name,password\n";
         file.close();
     }
 
@@ -467,8 +470,9 @@ void FileHandler::saveAllAppointments(Storage<Appointment>& storage) {
     std::ofstream file;
     int i;
 
-    FilePathHelper::openOutputDataFile(file, "appointments.txt", std::ios::trunc);
-    if (file.is_open()) {
+    // Truncate and write header
+    if (FilePathHelper::openOutputDataFile(file, "appointments.txt", std::ios::out)) {
+        file << "appointment_id,patient_id,doctor_id,date,time,status\n";
         file.close();
     }
 
@@ -481,8 +485,9 @@ void FileHandler::saveAllBills(Storage<Bill>& storage) {
     std::ofstream file;
     int i;
 
-    FilePathHelper::openOutputDataFile(file, "bills.txt", std::ios::trunc);
-    if (file.is_open()) {
+    // Truncate and write header
+    if (FilePathHelper::openOutputDataFile(file, "bills.txt", std::ios::out)) {
+        file << "bill_id,patient_id,appointment_id,amount,status,date\n";
         file.close();
     }
 
@@ -495,8 +500,9 @@ void FileHandler::saveAllPrescriptions(Storage<Prescription>& storage) {
     std::ofstream file;
     int i;
 
-    FilePathHelper::openOutputDataFile(file, "prescriptions.txt", std::ios::trunc);
-    if (file.is_open()) {
+    // Truncate and write header
+    if (FilePathHelper::openOutputDataFile(file, "prescriptions.txt", std::ios::out)) {
+        file << "prescription_id,appointment_id,patient_id,doctor_id,date,medicines,notes\n";
         file.close();
     }
 

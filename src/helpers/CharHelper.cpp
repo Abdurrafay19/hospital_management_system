@@ -7,3 +7,10 @@ bool CharHelper::isDigitChar(char c) {
 bool CharHelper::isAlphaChar(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
 }
+
+char CharHelper::tolowerChar(char c) {
+    if (c >= 'A' && c <= 'Z') {
+        return c + 32;
+    }
+    return c;
+}

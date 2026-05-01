@@ -74,20 +74,41 @@ void App::handleMouseClick() {
         if (state == PATIENT_MENU) {
             patientDash.handleMouseClick(window);
 
+            // Handle specialization search
+            if (patientDash.consumeSpecializationSearchRequest()) {
+                try {
+                    Storage<Doctor>* foundDoctors;
+                    foundDoctors = system.getDoctorsBySpecialization(patientDash.getSpecializationText());
+                    
+                    if (foundDoctors == nullptr || foundDoctors->size() == 0) {
+                        patientDash.setDialogStatus("No doctors available for that specialization.");
+                        if (foundDoctors != nullptr) {
+                            delete foundDoctors;
+                        }
+                    } else {
+                        patientDash.setFilteredDoctors(foundDoctors);
+                        patientDash.advanceBookingStep();
+                    }
+                } catch (const HospitalException& exception) {
+                    patientDash.setDialogStatus(exception.what());
+                }
+            }
+
+            // Handle booking confirmation
             if (patientDash.consumeBookAppointmentRequest()) {
                 Patient* patient;
                 int doctorID;
 
                 patient = reinterpret_cast<Patient*>(currentUser);
-                doctorID = ConversionHelper::stringToInt(patientDash.getBookingDoctorIDText());
+                doctorID = patientDash.getSelectedDoctorID();
 
                 try {
-                    if (StringHelper::stringLength(patientDash.getBookingDoctorIDText()) < 1) {
-                        patientDash.setStatus("Doctor ID is required.");
+                    if (doctorID < 1) {
+                        patientDash.setDialogStatus("Doctor ID is invalid.");
                     } else if (StringHelper::stringLength(patientDash.getBookingDateText()) < 1) {
-                        patientDash.setStatus("Date is required.");
+                        patientDash.setDialogStatus("Date is required.");
                     } else if (StringHelper::stringLength(patientDash.getBookingTimeText()) < 1) {
-                        patientDash.setStatus("Time slot is required.");
+                        patientDash.setDialogStatus("Time slot is required.");
                     } else {
                         system.bookAppointment(
                             patient,
@@ -95,12 +116,12 @@ void App::handleMouseClick() {
                             patientDash.getBookingDateText(),
                             patientDash.getBookingTimeText()
                         );
+                        patientDash.setDialogStatus("Appointment booked successfully!");
                         patientDash.cancelBookingMode();
                         patientDash.setPatient(patient);
-                        patientDash.setStatus("Appointment booked successfully.");
                     }
                 } catch (const HospitalException& exception) {
-                    patientDash.setStatus(exception.what());
+                    patientDash.setDialogStatus(exception.what());
                 }
             }
 

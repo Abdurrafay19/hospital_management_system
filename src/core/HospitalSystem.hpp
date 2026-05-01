@@ -49,6 +49,7 @@ public:
     void dischargePatient(int patientID);
 
     int getNextPatientID();
+    Storage<Doctor>* getDoctorsBySpecialization(const char* specialization);
 
     Storage<Patient>& getPatients();
     Storage<Doctor>& getDoctors();

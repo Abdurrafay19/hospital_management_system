@@ -293,6 +293,27 @@ int HospitalSystem::getNextPatientID() {
     return nextIDFromPatients(patients);
 }
 
+Storage<Doctor>* HospitalSystem::getDoctorsBySpecialization(const char* specialization) {
+    Storage<Doctor>* result;
+    Doctor* allDoctors;
+    int i;
+
+    if (specialization == nullptr || StringHelper::stringLength(specialization) == 0) {
+        return nullptr;
+    }
+
+    result = new Storage<Doctor>();
+    allDoctors = doctors.getAll();
+
+    for (i = 0; i < doctors.size(); i++) {
+        if (StringHelper::textEqualsIgnoreCase(allDoctors[i].getSpecialization(), specialization)) {
+            result->add(allDoctors[i]);
+        }
+    }
+
+    return result;
+}
+
 Storage<Patient>& HospitalSystem::getPatients() {
     return patients;
 }
