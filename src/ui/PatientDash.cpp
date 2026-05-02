@@ -7,12 +7,20 @@ PatientDash::PatientDash()
       bookAppointmentClicked(false), cancelAppointmentClicked(false), 
       viewAppointmentsClicked(false), viewMedicalRecordsClicked(false),
       viewBillsClicked(false), payBillClicked(false),
-      topUpBalanceClicked(false), bookingMode(false),
+            topUpBalanceClicked(false), bookingMode(false),
       bookAppointmentRequested(false), specializationSearchRequested(false),
-      bookingFocusedField(0),
+            cancelAppointmentMode(false), cancelAppointmentRequested(false),
+            bookingFocusedField(0),
       currentBookingStep(STEP_SPECIALIZATION), doctorListCount(0),
       selectedDoctorIndex(-1), dateFailureCount(0), selectedTimeSlotIndex(-1),
-      filteredDoctors(nullptr) {
+            filteredDoctors(nullptr), pendingAppointments(nullptr),
+        pendingAppointmentDoctors(nullptr), pendingAppointmentCount(0),
+        viewAppointmentsMode(false), viewedAppointments(nullptr),
+        viewedAppointmentDoctors(nullptr), viewedAppointmentCount(0),
+        viewMedicalRecordsMode(false), viewedMedicalRecords(nullptr),
+        viewedMedicalRecordDoctors(nullptr), viewedMedicalRecordCount(0),
+        viewBillsMode(false), viewedBills(nullptr), viewedBillCount(0),
+        outstandingUnpaidAmount(0.0) {
     titleText = nullptr;
     patientNameText = nullptr;
     balanceText = nullptr;
@@ -25,10 +33,25 @@ PatientDash::PatientDash()
     dateInputLabelText = nullptr;
     timeSlotsLabelText = nullptr;
     timeSlotDisplayText = nullptr;
+    cancelTitleText = nullptr;
+    cancelDialogStatusText = nullptr;
+    cancelAppointmentsLabelText = nullptr;
+    cancelAppointmentIdLabelText = nullptr;
+    viewAppointmentsTitleText = nullptr;
+    viewAppointmentsStatusText = nullptr;
+    viewAppointmentsLabelText = nullptr;
+    viewMedicalRecordsTitleText = nullptr;
+    viewMedicalRecordsStatusText = nullptr;
+    viewMedicalRecordsLabelText = nullptr;
+    viewBillsTitleText = nullptr;
+    viewBillsStatusText = nullptr;
+    viewBillsLabelText = nullptr;
+    viewBillsTotalText = nullptr;
     
     int i;
     for (i = 0; i < 20; i++) {
         doctorListText[i] = nullptr;
+        pendingAppointmentListText[i] = nullptr;
     }
     
     selectedSpecialization[0] = '\0';
@@ -50,16 +73,48 @@ PatientDash::~PatientDash() {
     delete dateInputLabelText;
     delete timeSlotsLabelText;
     delete timeSlotDisplayText;
+    delete cancelTitleText;
+    delete cancelDialogStatusText;
+    delete cancelAppointmentsLabelText;
+    delete cancelAppointmentIdLabelText;
+    delete viewAppointmentsTitleText;
+    delete viewAppointmentsStatusText;
+    delete viewAppointmentsLabelText;
+    delete viewMedicalRecordsTitleText;
+    delete viewMedicalRecordsStatusText;
+    delete viewMedicalRecordsLabelText;
+    delete viewBillsTitleText;
+    delete viewBillsStatusText;
+    delete viewBillsLabelText;
+    delete viewBillsTotalText;
     
     int i;
     for (i = 0; i < 20; i++) {
         delete doctorListText[i];
+        delete pendingAppointmentListText[i];
         doctorListText[i] = nullptr;
+        pendingAppointmentListText[i] = nullptr;
     }
     
     if (filteredDoctors != nullptr) {
         delete filteredDoctors;
         filteredDoctors = nullptr;
+    }
+    if (pendingAppointments != nullptr) {
+        delete pendingAppointments;
+        pendingAppointments = nullptr;
+    }
+    if (viewedAppointments != nullptr) {
+        delete viewedAppointments;
+        viewedAppointments = nullptr;
+    }
+    if (viewedMedicalRecords != nullptr) {
+        delete viewedMedicalRecords;
+        viewedMedicalRecords = nullptr;
+    }
+    if (viewedBills != nullptr) {
+        delete viewedBills;
+        viewedBills = nullptr;
     }
     
     titleText = nullptr;
@@ -74,6 +129,20 @@ PatientDash::~PatientDash() {
     dateInputLabelText = nullptr;
     timeSlotsLabelText = nullptr;
     timeSlotDisplayText = nullptr;
+    cancelTitleText = nullptr;
+    cancelDialogStatusText = nullptr;
+    cancelAppointmentsLabelText = nullptr;
+    cancelAppointmentIdLabelText = nullptr;
+    viewAppointmentsTitleText = nullptr;
+    viewAppointmentsStatusText = nullptr;
+    viewAppointmentsLabelText = nullptr;
+    viewMedicalRecordsTitleText = nullptr;
+    viewMedicalRecordsStatusText = nullptr;
+    viewMedicalRecordsLabelText = nullptr;
+    viewBillsTitleText = nullptr;
+    viewBillsStatusText = nullptr;
+    viewBillsLabelText = nullptr;
+    viewBillsTotalText = nullptr;
 }
 
 bool PatientDash::initialize(const sf::Font& regularFontParam, const sf::Font& boldFontParam) {
@@ -98,6 +167,10 @@ bool PatientDash::initialize(const sf::Font& regularFontParam, const sf::Font& b
     timeSlotDisplayText = new sf::Text(regularFont, "", 14);
     bookingStepIndicatorText = new sf::Text(regularFont, "Step 1 of 5", 14);
     bookingDialogStatusText = new sf::Text(regularFont, "", 13);
+    cancelTitleText = new sf::Text(boldFont, "Cancel Appointment", 24);
+    cancelDialogStatusText = new sf::Text(regularFont, "", 13);
+    cancelAppointmentsLabelText = new sf::Text(regularFont, "Pending Appointments:", 16);
+    cancelAppointmentIdLabelText = new sf::Text(regularFont, "Enter Appointment ID to cancel:", 16);
 
     titleText->setPosition(sf::Vector2f(110.f, 100.f));
     titleText->setFillColor(sf::Color(44, 62, 80));
@@ -127,6 +200,141 @@ bool PatientDash::initialize(const sf::Font& regularFontParam, const sf::Font& b
     bookingDialogStatusText->setPosition(sf::Vector2f(220.f, 467.f));
     bookingDialogStatusText->setFillColor(sf::Color(192, 57, 43));
 
+    int i;
+
+    cancelPanel.setSize(sf::Vector2f(900.f, 550.f));
+    cancelPanel.setPosition(sf::Vector2f(200.f, 130.f));
+    cancelPanel.setFillColor(sf::Color(250, 251, 252));
+    cancelPanel.setOutlineColor(sf::Color(220, 225, 230));
+    cancelPanel.setOutlineThickness(2.f);
+
+    cancelTitleText->setPosition(sf::Vector2f(220.f, 150.f));
+    cancelTitleText->setFillColor(sf::Color(44, 62, 80));
+
+    cancelDialogStatusText->setPosition(sf::Vector2f(220.f, 605.f));
+    cancelDialogStatusText->setFillColor(sf::Color(192, 57, 43));
+
+    cancelAppointmentsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
+    cancelAppointmentsLabelText->setFillColor(sf::Color(127, 140, 141));
+
+    cancelAppointmentIdLabelText->setPosition(sf::Vector2f(220.f, 490.f));
+    cancelAppointmentIdLabelText->setFillColor(sf::Color(127, 140, 141));
+
+    viewAppointmentsPanel.setSize(sf::Vector2f(900.f, 550.f));
+    viewAppointmentsPanel.setPosition(sf::Vector2f(200.f, 130.f));
+    viewAppointmentsPanel.setFillColor(sf::Color(250, 251, 252));
+    viewAppointmentsPanel.setOutlineColor(sf::Color(220, 225, 230));
+    viewAppointmentsPanel.setOutlineThickness(2.f);
+
+    viewAppointmentsTitleText = new sf::Text(boldFont, "My Appointments", 24);
+    viewAppointmentsStatusText = new sf::Text(regularFont, "", 13);
+    viewAppointmentsLabelText = new sf::Text(regularFont, "Appointments:", 16);
+
+    viewAppointmentsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
+    viewAppointmentsTitleText->setFillColor(sf::Color(44, 62, 80));
+
+    viewAppointmentsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
+    viewAppointmentsStatusText->setFillColor(sf::Color(192, 57, 43));
+
+    viewAppointmentsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
+    viewAppointmentsLabelText->setFillColor(sf::Color(127, 140, 141));
+
+    viewMedicalRecordsPanel.setSize(sf::Vector2f(900.f, 550.f));
+    viewMedicalRecordsPanel.setPosition(sf::Vector2f(200.f, 130.f));
+    viewMedicalRecordsPanel.setFillColor(sf::Color(250, 251, 252));
+    viewMedicalRecordsPanel.setOutlineColor(sf::Color(220, 225, 230));
+    viewMedicalRecordsPanel.setOutlineThickness(2.f);
+
+    viewMedicalRecordsTitleText = new sf::Text(boldFont, "My Medical Records", 24);
+    viewMedicalRecordsStatusText = new sf::Text(regularFont, "", 13);
+    viewMedicalRecordsLabelText = new sf::Text(regularFont, "Records:", 16);
+
+    viewMedicalRecordsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
+    viewMedicalRecordsTitleText->setFillColor(sf::Color(44, 62, 80));
+
+    viewMedicalRecordsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
+    viewMedicalRecordsStatusText->setFillColor(sf::Color(192, 57, 43));
+
+    viewMedicalRecordsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
+    viewMedicalRecordsLabelText->setFillColor(sf::Color(127, 140, 141));
+
+    viewBillsPanel.setSize(sf::Vector2f(900.f, 550.f));
+    viewBillsPanel.setPosition(sf::Vector2f(200.f, 130.f));
+    viewBillsPanel.setFillColor(sf::Color(250, 251, 252));
+    viewBillsPanel.setOutlineColor(sf::Color(220, 225, 230));
+    viewBillsPanel.setOutlineThickness(2.f);
+
+    viewBillsTitleText = new sf::Text(boldFont, "My Bills", 24);
+    viewBillsStatusText = new sf::Text(regularFont, "", 13);
+    viewBillsLabelText = new sf::Text(regularFont, "Bills:", 16);
+    viewBillsTotalText = new sf::Text(regularFont, "", 15);
+
+    viewBillsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
+    viewBillsTitleText->setFillColor(sf::Color(44, 62, 80));
+
+    viewBillsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
+    viewBillsStatusText->setFillColor(sf::Color(192, 57, 43));
+
+    viewBillsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
+    viewBillsLabelText->setFillColor(sf::Color(127, 140, 141));
+
+    viewBillsTotalText->setPosition(sf::Vector2f(220.f, 560.f));
+    viewBillsTotalText->setFillColor(sf::Color(44, 62, 80));
+
+    cancelAppointmentIdInput.setFont(regularFont);
+    cancelAppointmentIdInput.setCapacity(20);
+    cancelAppointmentIdInput.setPosition(sf::Vector2f(220.f, 515.f));
+    cancelAppointmentIdInput.setSize(sf::Vector2f(360.f, 36.f));
+    cancelAppointmentIdInput.setFillColor(sf::Color::White);
+    cancelAppointmentIdInput.setOutlineColor(sf::Color(189, 195, 199));
+    cancelAppointmentIdInput.setTextColor(sf::Color(44, 62, 80));
+
+    for (i = 0; i < 20; i++) {
+        pendingAppointmentListText[i] = new sf::Text(regularFont, "", 12);
+        pendingAppointmentListText[i]->setPosition(sf::Vector2f(220.f, 225.f + i * 14.f));
+        pendingAppointmentListText[i]->setFillColor(sf::Color(44, 62, 80));
+    }
+
+    confirmCancelAppointmentBtn.setFont(regularFont);
+    confirmCancelAppointmentBtn.setText("Cancel Appointment");
+    confirmCancelAppointmentBtn.setPosition(sf::Vector2f(720.f, 560.f));
+    confirmCancelAppointmentBtn.setSize(sf::Vector2f(160.f, 38.f));
+    confirmCancelAppointmentBtn.setFillColor(sf::Color(231, 76, 60));
+    confirmCancelAppointmentBtn.setOutlineColor(sf::Color(231, 76, 60));
+    confirmCancelAppointmentBtn.setTextColor(sf::Color::White);
+
+    backFromCancelAppointmentBtn.setFont(regularFont);
+    backFromCancelAppointmentBtn.setText("Back");
+    backFromCancelAppointmentBtn.setPosition(sf::Vector2f(890.f, 560.f));
+    backFromCancelAppointmentBtn.setSize(sf::Vector2f(90.f, 38.f));
+    backFromCancelAppointmentBtn.setFillColor(sf::Color(149, 165, 166));
+    backFromCancelAppointmentBtn.setOutlineColor(sf::Color(149, 165, 166));
+    backFromCancelAppointmentBtn.setTextColor(sf::Color::White);
+
+    backFromViewAppointmentsBtn.setFont(regularFont);
+    backFromViewAppointmentsBtn.setText("Back");
+    backFromViewAppointmentsBtn.setPosition(sf::Vector2f(890.f, 560.f));
+    backFromViewAppointmentsBtn.setSize(sf::Vector2f(90.f, 38.f));
+    backFromViewAppointmentsBtn.setFillColor(sf::Color(149, 165, 166));
+    backFromViewAppointmentsBtn.setOutlineColor(sf::Color(149, 165, 166));
+    backFromViewAppointmentsBtn.setTextColor(sf::Color::White);
+
+    backFromViewMedicalRecordsBtn.setFont(regularFont);
+    backFromViewMedicalRecordsBtn.setText("Back");
+    backFromViewMedicalRecordsBtn.setPosition(sf::Vector2f(890.f, 560.f));
+    backFromViewMedicalRecordsBtn.setSize(sf::Vector2f(90.f, 38.f));
+    backFromViewMedicalRecordsBtn.setFillColor(sf::Color(149, 165, 166));
+    backFromViewMedicalRecordsBtn.setOutlineColor(sf::Color(149, 165, 166));
+    backFromViewMedicalRecordsBtn.setTextColor(sf::Color::White);
+
+    backFromViewBillsBtn.setFont(regularFont);
+    backFromViewBillsBtn.setText("Back");
+    backFromViewBillsBtn.setPosition(sf::Vector2f(890.f, 560.f));
+    backFromViewBillsBtn.setSize(sf::Vector2f(90.f, 38.f));
+    backFromViewBillsBtn.setFillColor(sf::Color(149, 165, 166));
+    backFromViewBillsBtn.setOutlineColor(sf::Color(149, 165, 166));
+    backFromViewBillsBtn.setTextColor(sf::Color::White);
+
     // Step 1: Specialization
     specializationLabelText->setPosition(sf::Vector2f(220.f, 210.f));
     specializationLabelText->setFillColor(sf::Color(127, 140, 141));
@@ -151,7 +359,6 @@ bool PatientDash::initialize(const sf::Font& regularFontParam, const sf::Font& b
     doctorListLabelText->setPosition(sf::Vector2f(220.f, 280.f));
     doctorListLabelText->setFillColor(sf::Color(127, 140, 141));
 
-    int i;
     for (i = 0; i < 20; i++) {
         doctorListText[i] = new sf::Text(regularFont, "", 14);
         doctorListText[i]->setPosition(sf::Vector2f(220.f, 305.f + i * 22.f));
@@ -393,6 +600,10 @@ void PatientDash::setPatient(Patient* patientPtr) {
 
     if (patient == nullptr) {
         cancelBookingMode();
+        closeCancelAppointmentMode();
+        closeViewAppointmentsMode();
+        closeViewMedicalRecordsMode();
+        closeViewBillsMode();
         if (patientNameText != nullptr) {
             patientNameText->setString("");
         }
@@ -459,7 +670,95 @@ void PatientDash::draw(sf::RenderWindow& window) const {
     payBillBtn.draw(window);
     topUpBalanceBtn.draw(window);
 
-    if (bookingMode) {
+    if (cancelAppointmentMode) {
+        window.draw(cancelPanel);
+        if (cancelTitleText != nullptr) {
+            window.draw(*cancelTitleText);
+        }
+        if (cancelDialogStatusText != nullptr) {
+            window.draw(*cancelDialogStatusText);
+        }
+        if (cancelAppointmentsLabelText != nullptr) {
+            window.draw(*cancelAppointmentsLabelText);
+        }
+        if (cancelAppointmentIdLabelText != nullptr) {
+            window.draw(*cancelAppointmentIdLabelText);
+        }
+
+        int i;
+        for (i = 0; i < pendingAppointmentCount; i++) {
+            if (pendingAppointmentListText[i] != nullptr) {
+                window.draw(*pendingAppointmentListText[i]);
+            }
+        }
+
+        cancelAppointmentIdInput.draw(window);
+        confirmCancelAppointmentBtn.draw(window);
+        backFromCancelAppointmentBtn.draw(window);
+    } else if (viewAppointmentsMode) {
+        window.draw(viewAppointmentsPanel);
+        if (viewAppointmentsTitleText != nullptr) {
+            window.draw(*viewAppointmentsTitleText);
+        }
+        if (viewAppointmentsStatusText != nullptr) {
+            window.draw(*viewAppointmentsStatusText);
+        }
+        if (viewAppointmentsLabelText != nullptr) {
+            window.draw(*viewAppointmentsLabelText);
+        }
+
+        int i;
+        for (i = 0; i < viewedAppointmentCount; i++) {
+            if (pendingAppointmentListText[i] != nullptr) {
+                window.draw(*pendingAppointmentListText[i]);
+            }
+        }
+
+        backFromViewAppointmentsBtn.draw(window);
+    } else if (viewMedicalRecordsMode) {
+        window.draw(viewMedicalRecordsPanel);
+        if (viewMedicalRecordsTitleText != nullptr) {
+            window.draw(*viewMedicalRecordsTitleText);
+        }
+        if (viewMedicalRecordsStatusText != nullptr) {
+            window.draw(*viewMedicalRecordsStatusText);
+        }
+        if (viewMedicalRecordsLabelText != nullptr) {
+            window.draw(*viewMedicalRecordsLabelText);
+        }
+
+        int i;
+        for (i = 0; i < viewedMedicalRecordCount; i++) {
+            if (pendingAppointmentListText[i] != nullptr) {
+                window.draw(*pendingAppointmentListText[i]);
+            }
+        }
+
+        backFromViewMedicalRecordsBtn.draw(window);
+    } else if (viewBillsMode) {
+        window.draw(viewBillsPanel);
+        if (viewBillsTitleText != nullptr) {
+            window.draw(*viewBillsTitleText);
+        }
+        if (viewBillsStatusText != nullptr) {
+            window.draw(*viewBillsStatusText);
+        }
+        if (viewBillsLabelText != nullptr) {
+            window.draw(*viewBillsLabelText);
+        }
+        if (viewBillsTotalText != nullptr) {
+            window.draw(*viewBillsTotalText);
+        }
+
+        int i;
+        for (i = 0; i < viewedBillCount; i++) {
+            if (pendingAppointmentListText[i] != nullptr) {
+                window.draw(*pendingAppointmentListText[i]);
+            }
+        }
+
+        backFromViewBillsBtn.draw(window);
+    } else if (bookingMode) {
         window.draw(bookingPanel);
         if (bookingTitleText != nullptr) {
             window.draw(*bookingTitleText);
@@ -581,6 +880,61 @@ void PatientDash::draw(sf::RenderWindow& window) const {
 }
 
 void PatientDash::handleMouseClick(sf::RenderWindow& window) {
+    if (cancelAppointmentMode) {
+        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+        if (cancelAppointmentIdInput.contains(mouseWorldPosition)) {
+            cancelAppointmentIdInput.setActive(true);
+            return;
+        }
+
+        if (confirmCancelAppointmentBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            cancelAppointmentRequested = true;
+            return;
+        }
+
+        if (backFromCancelAppointmentBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            closeCancelAppointmentMode();
+            return;
+        }
+
+        cancelAppointmentIdInput.setActive(false);
+        return;
+    }
+
+    if (viewAppointmentsMode) {
+        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+        if (backFromViewAppointmentsBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            closeViewAppointmentsMode();
+            return;
+        }
+
+        return;
+    }
+
+    if (viewMedicalRecordsMode) {
+        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+        if (backFromViewMedicalRecordsBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            closeViewMedicalRecordsMode();
+            return;
+        }
+
+        return;
+    }
+
+    if (viewBillsMode) {
+        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+        if (backFromViewBillsBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            closeViewBillsMode();
+            return;
+        }
+
+        return;
+    }
+
     if (bookingMode) {
         sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
@@ -698,6 +1052,23 @@ void PatientDash::handleMouseClick(sf::RenderWindow& window) {
 }
 
 void PatientDash::handleTextEntered(char32_t unicode) {
+    if (cancelAppointmentMode) {
+        cancelAppointmentIdInput.handleTextEntered(unicode);
+        return;
+    }
+
+    if (viewAppointmentsMode) {
+        return;
+    }
+
+    if (viewMedicalRecordsMode) {
+        return;
+    }
+
+    if (viewBillsMode) {
+        return;
+    }
+
     if (!bookingMode) {
         return;
     }
@@ -733,6 +1104,111 @@ void PatientDash::startBookingMode() {
     if (filteredDoctors != nullptr) {
         delete filteredDoctors;
         filteredDoctors = nullptr;
+    }
+}
+
+void PatientDash::startCancelAppointmentMode() {
+    cancelAppointmentMode = true;
+    cancelAppointmentRequested = false;
+    cancelAppointmentIdInput.clear();
+    cancelAppointmentIdInput.setActive(false);
+
+    if (pendingAppointments != nullptr) {
+        updatePendingAppointmentList();
+    }
+
+    if (cancelDialogStatusText != nullptr) {
+        cancelDialogStatusText->setString("Enter the appointment ID to cancel.");
+    }
+}
+
+void PatientDash::closeCancelAppointmentMode() {
+    cancelAppointmentMode = false;
+    cancelAppointmentRequested = false;
+    cancelAppointmentIdInput.clear();
+    cancelAppointmentIdInput.setActive(false);
+    pendingAppointmentCount = 0;
+
+    if (pendingAppointments != nullptr) {
+        delete pendingAppointments;
+        pendingAppointments = nullptr;
+    }
+
+    pendingAppointmentDoctors = nullptr;
+}
+
+void PatientDash::startViewAppointmentsMode() {
+    viewAppointmentsMode = true;
+
+    if (viewAppointmentsStatusText != nullptr) {
+        viewAppointmentsStatusText->setString("");
+    }
+
+    if (viewedAppointments != nullptr) {
+        updatePendingAppointmentList();
+    }
+}
+
+void PatientDash::closeViewAppointmentsMode() {
+    viewAppointmentsMode = false;
+    viewedAppointmentCount = 0;
+
+    if (viewedAppointments != nullptr) {
+        delete viewedAppointments;
+        viewedAppointments = nullptr;
+    }
+
+    viewedAppointmentDoctors = nullptr;
+}
+
+void PatientDash::startViewMedicalRecordsMode() {
+    viewMedicalRecordsMode = true;
+
+    if (viewMedicalRecordsStatusText != nullptr) {
+        viewMedicalRecordsStatusText->setString("");
+    }
+
+    if (viewedMedicalRecords != nullptr) {
+        updatePendingAppointmentList();
+    }
+}
+
+void PatientDash::closeViewMedicalRecordsMode() {
+    viewMedicalRecordsMode = false;
+    viewedMedicalRecordCount = 0;
+
+    if (viewedMedicalRecords != nullptr) {
+        delete viewedMedicalRecords;
+        viewedMedicalRecords = nullptr;
+    }
+
+    viewedMedicalRecordDoctors = nullptr;
+}
+
+void PatientDash::startViewBillsMode() {
+    viewBillsMode = true;
+
+    if (viewBillsStatusText != nullptr) {
+        viewBillsStatusText->setString("");
+    }
+
+    if (viewedBills != nullptr) {
+        updatePendingAppointmentList();
+    }
+}
+
+void PatientDash::closeViewBillsMode() {
+    viewBillsMode = false;
+    viewedBillCount = 0;
+    outstandingUnpaidAmount = 0.0;
+
+    if (viewedBills != nullptr) {
+        delete viewedBills;
+        viewedBills = nullptr;
+    }
+
+    if (viewBillsTotalText != nullptr) {
+        viewBillsTotalText->setString("");
     }
 }
 
@@ -818,6 +1294,19 @@ bool PatientDash::consumeSpecializationSearchRequest() {
     return true;
 }
 
+bool PatientDash::isCancelAppointmentMode() const {
+    return cancelAppointmentMode;
+}
+
+bool PatientDash::consumeCancelAppointmentRequest() {
+    if (!cancelAppointmentRequested) {
+        return false;
+    }
+
+    cancelAppointmentRequested = false;
+    return true;
+}
+
 const char* PatientDash::getSpecializationText() const {
     return selectedSpecialization;
 }
@@ -838,6 +1327,10 @@ Storage<Doctor>* PatientDash::getFilteredDoctors() const {
     return filteredDoctors;
 }
 
+const char* PatientDash::getCancelAppointmentIDText() const {
+    return cancelAppointmentIdInput.getText();
+}
+
 bool PatientDash::isBookAppointmentClicked() const {
     return bookAppointmentClicked;
 }
@@ -849,6 +1342,66 @@ void PatientDash::setFilteredDoctors(Storage<Doctor>* doctors) {
     filteredDoctors = doctors;
     if (doctors != nullptr) {
         updateDoctorList();
+    }
+}
+
+void PatientDash::setPendingAppointments(Storage<Appointment>* appointments, Storage<Doctor>* doctors) {
+    if (pendingAppointments != nullptr) {
+        delete pendingAppointments;
+    }
+
+    pendingAppointments = appointments;
+    pendingAppointmentDoctors = doctors;
+
+    if (appointments != nullptr) {
+        updatePendingAppointmentList();
+    } else {
+        pendingAppointmentCount = 0;
+    }
+}
+
+void PatientDash::setViewedAppointments(Storage<Appointment>* appointments, Storage<Doctor>* doctors) {
+    if (viewedAppointments != nullptr) {
+        delete viewedAppointments;
+    }
+
+    viewedAppointments = appointments;
+    viewedAppointmentDoctors = doctors;
+
+    if (appointments != nullptr) {
+        updatePendingAppointmentList();
+    } else {
+        viewedAppointmentCount = 0;
+    }
+}
+
+void PatientDash::setViewedMedicalRecords(Storage<Prescription>* records, Storage<Doctor>* doctors) {
+    if (viewedMedicalRecords != nullptr) {
+        delete viewedMedicalRecords;
+    }
+
+    viewedMedicalRecords = records;
+    viewedMedicalRecordDoctors = doctors;
+
+    if (records != nullptr) {
+        updatePendingAppointmentList();
+    } else {
+        viewedMedicalRecordCount = 0;
+    }
+}
+
+void PatientDash::setViewedBills(Storage<Bill>* bills) {
+    if (viewedBills != nullptr) {
+        delete viewedBills;
+    }
+
+    viewedBills = bills;
+
+    if (bills != nullptr) {
+        updatePendingAppointmentList();
+    } else {
+        viewedBillCount = 0;
+        outstandingUnpaidAmount = 0.0;
     }
 }
 
@@ -878,6 +1431,274 @@ bool PatientDash::isPayBillClicked() const {
 
 bool PatientDash::isTopUpBalanceClicked() const {
     return topUpBalanceClicked;
+}
+
+void PatientDash::updatePendingAppointmentList() {
+    int i;
+    int j;
+    Appointment* appointmentsArray;
+    Appointment* appointment;
+    Prescription* recordsArray;
+    Prescription* record;
+    Bill* billsArray;
+    Bill* bill;
+    Doctor* doctor;
+    const char* doctorName;
+    char row[400];
+    char amountBuffer[32];
+    char totalBuffer[400];
+    int rowLen;
+
+    if (cancelAppointmentMode) {
+        if (pendingAppointments == nullptr) {
+            pendingAppointmentCount = 0;
+            return;
+        }
+
+        pendingAppointmentCount = pendingAppointments->size();
+        if (pendingAppointmentCount > 20) {
+            pendingAppointmentCount = 20;
+        }
+
+        appointmentsArray = pendingAppointments->getAll();
+        for (i = 0; i < pendingAppointmentCount; i++) {
+            appointment = &appointmentsArray[i];
+            doctorName = "Unknown Doctor";
+
+            if (pendingAppointmentDoctors != nullptr) {
+                doctor = pendingAppointmentDoctors->findByID(appointment->getDoctorID());
+                if (doctor != nullptr) {
+                    doctorName = doctor->getName();
+                }
+            }
+
+            row[0] = '\0';
+            StringHelper::stringCopy(row, "Appointment ID: ", 400);
+            rowLen = StringHelper::stringLength(row);
+            ConversionHelper::intToString(appointment->getAppointmentID(), row + rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, doctorName, 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, appointment->getDate(), 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, appointment->getTimeSlot(), 400 - rowLen);
+
+            if (pendingAppointmentListText[i] != nullptr) {
+                pendingAppointmentListText[i]->setString(row);
+            }
+        }
+
+        for (j = pendingAppointmentCount; j < 20; j++) {
+            if (pendingAppointmentListText[j] != nullptr) {
+                pendingAppointmentListText[j]->setString("");
+            }
+        }
+        return;
+    }
+
+    if (viewAppointmentsMode) {
+        if (viewedAppointments == nullptr) {
+            viewedAppointmentCount = 0;
+            return;
+        }
+
+        viewedAppointmentCount = viewedAppointments->size();
+        if (viewedAppointmentCount > 20) {
+            viewedAppointmentCount = 20;
+        }
+
+        appointmentsArray = viewedAppointments->getAll();
+        for (i = 0; i < viewedAppointmentCount; i++) {
+            appointment = &appointmentsArray[i];
+            doctorName = "Unknown Doctor";
+
+            if (viewedAppointmentDoctors != nullptr) {
+                doctor = viewedAppointmentDoctors->findByID(appointment->getDoctorID());
+                if (doctor != nullptr) {
+                    doctorName = doctor->getName();
+                }
+            }
+
+            row[0] = '\0';
+            StringHelper::stringCopy(row, "ID: ", 400);
+            rowLen = StringHelper::stringLength(row);
+            ConversionHelper::intToString(appointment->getAppointmentID(), row + rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, doctorName, 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            if (doctor != nullptr) {
+                StringHelper::stringCopy(row + rowLen, doctor->getSpecialization(), 400 - rowLen);
+            } else {
+                StringHelper::stringCopy(row + rowLen, "Unknown", 400 - rowLen);
+            }
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, appointment->getDate(), 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, appointment->getTimeSlot(), 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, appointment->getStatus(), 400 - rowLen);
+
+            if (pendingAppointmentListText[i] != nullptr) {
+                pendingAppointmentListText[i]->setString(row);
+            }
+        }
+
+        for (j = viewedAppointmentCount; j < 20; j++) {
+            if (pendingAppointmentListText[j] != nullptr) {
+                pendingAppointmentListText[j]->setString("");
+            }
+        }
+        return;
+    }
+
+    if (viewMedicalRecordsMode) {
+        if (viewedMedicalRecords == nullptr) {
+            viewedMedicalRecordCount = 0;
+            return;
+        }
+
+        viewedMedicalRecordCount = viewedMedicalRecords->size();
+        if (viewedMedicalRecordCount > 20) {
+            viewedMedicalRecordCount = 20;
+        }
+
+        recordsArray = viewedMedicalRecords->getAll();
+        for (i = 0; i < viewedMedicalRecordCount; i++) {
+            record = &recordsArray[i];
+            doctorName = "Unknown Doctor";
+
+            if (viewedMedicalRecordDoctors != nullptr) {
+                doctor = viewedMedicalRecordDoctors->findByID(record->getDoctorID());
+                if (doctor != nullptr) {
+                    doctorName = doctor->getName();
+                }
+            }
+
+            row[0] = '\0';
+            StringHelper::stringCopy(row, record->getDate(), 400);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, doctorName, 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, record->getMedicines(), 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, record->getNotes(), 400 - rowLen);
+
+            if (pendingAppointmentListText[i] != nullptr) {
+                pendingAppointmentListText[i]->setString(row);
+            }
+        }
+
+        for (j = viewedMedicalRecordCount; j < 20; j++) {
+            if (pendingAppointmentListText[j] != nullptr) {
+                pendingAppointmentListText[j]->setString("");
+            }
+        }
+        return;
+    }
+
+    if (viewBillsMode) {
+        if (viewedBills == nullptr) {
+            viewedBillCount = 0;
+            outstandingUnpaidAmount = 0.0;
+            if (viewBillsTotalText != nullptr) {
+                viewBillsTotalText->setString("");
+            }
+            return;
+        }
+
+        viewedBillCount = viewedBills->size();
+        if (viewedBillCount > 20) {
+            viewedBillCount = 20;
+        }
+
+        outstandingUnpaidAmount = 0.0;
+        billsArray = viewedBills->getAll();
+        for (i = 0; i < viewedBillCount; i++) {
+            bill = &billsArray[i];
+
+            row[0] = '\0';
+            StringHelper::stringCopy(row, "Bill ID: ", 400);
+            rowLen = StringHelper::stringLength(row);
+            ConversionHelper::intToString(bill->getBillID(), row + rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | Appt ID: ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            ConversionHelper::intToString(bill->getAppointmentID(), row + rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | PKR ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            ConversionHelper::doubleToString(bill->getAmount(), amountBuffer);
+            StringHelper::stringCopy(row + rowLen, amountBuffer, 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, bill->getStatus(), 400 - rowLen);
+
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
+            rowLen = StringHelper::stringLength(row);
+            StringHelper::stringCopy(row + rowLen, bill->getDate(), 400 - rowLen);
+
+            if (!StringHelper::textEquals(bill->getStatus(), "paid") && !StringHelper::textEquals(bill->getStatus(), "cancelled")) {
+                outstandingUnpaidAmount = outstandingUnpaidAmount + bill->getAmount();
+            }
+
+            if (pendingAppointmentListText[i] != nullptr) {
+                pendingAppointmentListText[i]->setString(row);
+            }
+        }
+
+        for (j = viewedBillCount; j < 20; j++) {
+            if (pendingAppointmentListText[j] != nullptr) {
+                pendingAppointmentListText[j]->setString("");
+            }
+        }
+
+        if (viewBillsTotalText != nullptr) {
+            totalBuffer[0] = '\0';
+            StringHelper::stringCopy(totalBuffer, "Total Outstanding Unpaid: PKR ", 400);
+            rowLen = StringHelper::stringLength(totalBuffer);
+            ConversionHelper::doubleToString(outstandingUnpaidAmount, amountBuffer);
+            StringHelper::stringCopy(totalBuffer + rowLen, amountBuffer, 400 - rowLen);
+            viewBillsTotalText->setString(totalBuffer);
+        }
+    }
 }
 
 void PatientDash::clearClickStates() {

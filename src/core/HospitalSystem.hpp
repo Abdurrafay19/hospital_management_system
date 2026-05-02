@@ -45,6 +45,7 @@ public:
 
     Person* login(const char* name, const char* contact, const char* password, Role role);
     void bookAppointment(Patient* patient, int doctorID, const char* date, const char* timeSlot);
+    double cancelAppointment(Patient* patient, int appointmentID);
     void payBill(Patient* patient, int billID);
     void dischargePatient(int patientID);
 

@@ -194,6 +194,51 @@ void HospitalSystem::bookAppointment(Patient* patient, int doctorID, const char*
     FileHandler::saveAllBills(bills);
 }
 
+double HospitalSystem::cancelAppointment(Patient* patient, int appointmentID) {
+    Appointment* appointment;
+    Doctor* doctor;
+    Bill* bill;
+    int i;
+    double fee;
+
+    if (patient == nullptr) {
+        throw InvalidInputException();
+    }
+
+    appointment = appointments.findByID(appointmentID);
+    if (appointment == nullptr || appointment->getPatientID() != patient->getID() || !StringHelper::textEquals(appointment->getStatus(), "pending")) {
+        throw InvalidInputException("Invalid appointment ID.");
+    }
+
+    doctor = doctors.findByID(appointment->getDoctorID());
+    if (doctor == nullptr) {
+        throw InvalidInputException("Invalid appointment ID.");
+    }
+
+    bill = nullptr;
+    for (i = 0; i < bills.size(); i++) {
+        if (bills.getAll()[i].getPatientID() == patient->getID() && bills.getAll()[i].getAppointmentID() == appointmentID) {
+            bill = &bills.getAll()[i];
+            break;
+        }
+    }
+
+    if (bill == nullptr) {
+        throw InvalidInputException("Invalid appointment ID.");
+    }
+
+    fee = doctor->getFee();
+    *patient += fee;
+    appointment->setStatus("cancelled");
+    bill->setStatus("cancelled");
+
+    FileHandler::saveAllPatients(patients);
+    FileHandler::saveAllAppointments(appointments);
+    FileHandler::saveAllBills(bills);
+
+    return fee;
+}
+
 void HospitalSystem::payBill(Patient* patient, int billID) {
     Bill* bill;
 

@@ -25,6 +25,208 @@ static bool loadFontWithFallback(sf::Font& font, const char* rootPath, const cha
     return false;
 }
 
+static int compareText(const char* left, const char* right) {
+    int index;
+    char leftChar;
+    char rightChar;
+
+    index = 0;
+    while (left != nullptr && right != nullptr) {
+        leftChar = left[index];
+        rightChar = right[index];
+
+        if (leftChar == '\0' && rightChar == '\0') {
+            return 0;
+        }
+        if (leftChar == '\0') {
+            return -1;
+        }
+        if (rightChar == '\0') {
+            return 1;
+        }
+        if (leftChar < rightChar) {
+            return -1;
+        }
+        if (leftChar > rightChar) {
+            return 1;
+        }
+
+        index++;
+    }
+
+    if (left == nullptr && right == nullptr) {
+        return 0;
+    }
+    if (left == nullptr) {
+        return -1;
+    }
+
+    return 1;
+}
+
+static int parseDateComponent(const char* dateText, int startIndex, int endMarker) {
+    int value;
+    int index;
+
+    value = 0;
+    index = startIndex;
+    while (dateText != nullptr && dateText[index] != '\0' && dateText[index] != endMarker) {
+        if (dateText[index] >= '0' && dateText[index] <= '9') {
+            value = value * 10 + (dateText[index] - '0');
+        }
+        index++;
+    }
+
+    return value;
+}
+
+static void parseDateText(const char* dateText, int& day, int& month, int& year) {
+    int index;
+
+    day = 0;
+    month = 0;
+    year = 0;
+
+    if (dateText == nullptr) {
+        return;
+    }
+
+    day = parseDateComponent(dateText, 0, '-');
+
+    index = 0;
+    while (dateText[index] != '\0' && dateText[index] != '-') {
+        index++;
+    }
+    if (dateText[index] == '-') {
+        index++;
+    }
+
+    month = parseDateComponent(dateText, index, '-');
+
+    while (dateText[index] != '\0' && dateText[index] != '-') {
+        index++;
+    }
+    if (dateText[index] == '-') {
+        index++;
+    }
+
+    year = parseDateComponent(dateText, index, '\0');
+}
+
+static int compareAppointmentsByDateTime(const Appointment& left, const Appointment& right) {
+    int leftDay;
+    int leftMonth;
+    int leftYear;
+    int rightDay;
+    int rightMonth;
+    int rightYear;
+    int result;
+
+    parseDateText(left.getDate(), leftDay, leftMonth, leftYear);
+    parseDateText(right.getDate(), rightDay, rightMonth, rightYear);
+
+    if (leftYear < rightYear) {
+        return -1;
+    }
+    if (leftYear > rightYear) {
+        return 1;
+    }
+
+    if (leftMonth < rightMonth) {
+        return -1;
+    }
+    if (leftMonth > rightMonth) {
+        return 1;
+    }
+
+    if (leftDay < rightDay) {
+        return -1;
+    }
+    if (leftDay > rightDay) {
+        return 1;
+    }
+
+    result = compareText(left.getTimeSlot(), right.getTimeSlot());
+    return result;
+}
+
+static void sortAppointmentsByDate(Storage<Appointment>& appointments) {
+    Appointment* appointmentArray;
+    int count;
+    int pass;
+    int index;
+    Appointment temp;
+
+    count = appointments.size();
+    appointmentArray = appointments.getAll();
+
+    for (pass = 0; pass < count - 1; pass++) {
+        for (index = 0; index < count - 1 - pass; index++) {
+            if (compareAppointmentsByDateTime(appointmentArray[index], appointmentArray[index + 1]) > 0) {
+                temp = appointmentArray[index];
+                appointmentArray[index] = appointmentArray[index + 1];
+                appointmentArray[index + 1] = temp;
+            }
+        }
+    }
+}
+
+static int comparePrescriptionsByDateDesc(const Prescription& left, const Prescription& right) {
+    int leftDay;
+    int leftMonth;
+    int leftYear;
+    int rightDay;
+    int rightMonth;
+    int rightYear;
+
+    parseDateText(left.getDate(), leftDay, leftMonth, leftYear);
+    parseDateText(right.getDate(), rightDay, rightMonth, rightYear);
+
+    if (leftYear > rightYear) {
+        return -1;
+    }
+    if (leftYear < rightYear) {
+        return 1;
+    }
+
+    if (leftMonth > rightMonth) {
+        return -1;
+    }
+    if (leftMonth < rightMonth) {
+        return 1;
+    }
+
+    if (leftDay > rightDay) {
+        return -1;
+    }
+    if (leftDay < rightDay) {
+        return 1;
+    }
+
+    return 0;
+}
+
+static void sortPrescriptionsByDateDesc(Storage<Prescription>& prescriptions) {
+    Prescription* prescriptionArray;
+    int count;
+    int pass;
+    int index;
+    Prescription temp;
+
+    count = prescriptions.size();
+    prescriptionArray = prescriptions.getAll();
+
+    for (pass = 0; pass < count - 1; pass++) {
+        for (index = 0; index < count - 1 - pass; index++) {
+            if (comparePrescriptionsByDateDesc(prescriptionArray[index], prescriptionArray[index + 1]) > 0) {
+                temp = prescriptionArray[index];
+                prescriptionArray[index] = prescriptionArray[index + 1];
+                prescriptionArray[index + 1] = temp;
+            }
+        }
+    }
+}
+
 void App::setupUI() {
     logoutButton = UIButton(regularFont, "Logout", sf::Vector2f(1100.f, 30.f), sf::Vector2f(130.f, 40.f));
 
@@ -91,6 +293,138 @@ void App::handleMouseClick() {
                     }
                 } catch (const HospitalException& exception) {
                     patientDash.setDialogStatus(exception.what());
+                }
+            }
+
+            if (patientDash.isCancelAppointmentClicked()) {
+                Patient* patient;
+                Storage<Appointment>* pendingAppointments;
+                Appointment* appointmentList;
+                int i;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                pendingAppointments = new Storage<Appointment>();
+                appointmentList = system.getAppointments().getAll();
+
+                for (i = 0; i < system.getAppointments().size(); i++) {
+                    if (appointmentList[i].getPatientID() == patient->getID() && StringHelper::textEquals(appointmentList[i].getStatus(), "pending")) {
+                        pendingAppointments->add(appointmentList[i]);
+                    }
+                }
+
+                if (pendingAppointments->size() == 0) {
+                    delete pendingAppointments;
+                    patientDash.setStatus("You have no pending appointments.");
+                } else {
+                    patientDash.setPendingAppointments(pendingAppointments, &system.getDoctors());
+                    patientDash.startCancelAppointmentMode();
+                }
+            }
+
+            if (patientDash.isViewAppointmentsClicked()) {
+                Patient* patient;
+                Storage<Appointment>* patientAppointments;
+                Appointment* appointmentList;
+                int i;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                patientAppointments = new Storage<Appointment>();
+                appointmentList = system.getAppointments().getAll();
+
+                for (i = 0; i < system.getAppointments().size(); i++) {
+                    if (appointmentList[i].getPatientID() == patient->getID()) {
+                        patientAppointments->add(appointmentList[i]);
+                    }
+                }
+
+                if (patientAppointments->size() == 0) {
+                    delete patientAppointments;
+                    patientDash.setStatus("No appointments found.");
+                } else {
+                    sortAppointmentsByDate(*patientAppointments);
+                    patientDash.setViewedAppointments(patientAppointments, &system.getDoctors());
+                    patientDash.startViewAppointmentsMode();
+                }
+            }
+
+            if (patientDash.isViewMedicalRecordsClicked()) {
+                Patient* patient;
+                Storage<Prescription>* patientRecords;
+                Prescription* recordList;
+                int i;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                patientRecords = new Storage<Prescription>();
+                recordList = system.getPrescriptions().getAll();
+
+                for (i = 0; i < system.getPrescriptions().size(); i++) {
+                    if (recordList[i].getPatientID() == patient->getID()) {
+                        patientRecords->add(recordList[i]);
+                    }
+                }
+
+                if (patientRecords->size() == 0) {
+                    delete patientRecords;
+                    patientDash.setStatus("No medical records found.");
+                } else {
+                    sortPrescriptionsByDateDesc(*patientRecords);
+                    patientDash.setViewedMedicalRecords(patientRecords, &system.getDoctors());
+                    patientDash.startViewMedicalRecordsMode();
+                }
+            }
+
+            if (patientDash.isViewBillsClicked()) {
+                Patient* patient;
+                Storage<Bill>* patientBills;
+                Bill* billList;
+                int i;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                patientBills = new Storage<Bill>();
+                billList = system.getBills().getAll();
+
+                for (i = 0; i < system.getBills().size(); i++) {
+                    if (billList[i].getPatientID() == patient->getID()) {
+                        patientBills->add(billList[i]);
+                    }
+                }
+
+                if (patientBills->size() == 0) {
+                    delete patientBills;
+                    patientDash.setStatus("No bills found.");
+                } else {
+                    patientDash.setViewedBills(patientBills);
+                    patientDash.startViewBillsMode();
+                }
+            }
+
+            if (patientDash.consumeCancelAppointmentRequest()) {
+                Patient* patient;
+                int appointmentID;
+                double refundedFee;
+                char feeBuffer[32];
+                char successMessage[200];
+                int messageLength;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                appointmentID = ConversionHelper::toInt(patientDash.getCancelAppointmentIDText());
+
+                try {
+                    refundedFee = system.cancelAppointment(patient, appointmentID);
+                    patientDash.closeCancelAppointmentMode();
+                    patientDash.setPatient(patient);
+
+                    successMessage[0] = '\0';
+                    StringHelper::stringCopy(successMessage, "Appointment cancelled. PKR ", 200);
+                    messageLength = StringHelper::stringLength(successMessage);
+                    ConversionHelper::doubleToString(refundedFee, feeBuffer);
+                    StringHelper::stringCopy(successMessage + messageLength, feeBuffer, 200 - messageLength);
+                    messageLength = StringHelper::stringLength(successMessage);
+                    StringHelper::stringCopy(successMessage + messageLength, " refunded to your balance.", 200 - messageLength);
+                    patientDash.setStatus(successMessage);
+                } catch (const HospitalException& exception) {
+                    patientDash.closeCancelAppointmentMode();
+                    patientDash.setStatus(exception.what());
                 }
             }
 

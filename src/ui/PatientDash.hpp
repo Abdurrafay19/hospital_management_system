@@ -2,6 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 #include "../entities/Patient.hpp"
+#include "../entities/Appointment.hpp"
+#include "../entities/Prescription.hpp"
+#include "../entities/Bill.hpp"
 #include "../entities/Storage.hpp"
 #include "../entities/Doctor.hpp"
 #include "UIButton.hpp"
@@ -63,6 +66,56 @@ private:
     UIButton confirmBookingBtn;
     UIButton cancelBookingBtn;
 
+    // Cancel appointment mode
+    bool cancelAppointmentMode;
+    bool cancelAppointmentRequested;
+    sf::RectangleShape cancelPanel;
+    sf::Text* cancelTitleText;
+    sf::Text* cancelDialogStatusText;
+    sf::Text* cancelAppointmentsLabelText;
+    sf::Text* cancelAppointmentIdLabelText;
+    sf::Text* pendingAppointmentListText[20];
+    int pendingAppointmentCount;
+    UITextBox cancelAppointmentIdInput;
+    UIButton confirmCancelAppointmentBtn;
+    UIButton backFromCancelAppointmentBtn;
+    Storage<Appointment>* pendingAppointments;
+    Storage<Doctor>* pendingAppointmentDoctors;
+
+    // View appointments mode
+    bool viewAppointmentsMode;
+    sf::RectangleShape viewAppointmentsPanel;
+    sf::Text* viewAppointmentsTitleText;
+    sf::Text* viewAppointmentsStatusText;
+    sf::Text* viewAppointmentsLabelText;
+    UIButton backFromViewAppointmentsBtn;
+    Storage<Appointment>* viewedAppointments;
+    Storage<Doctor>* viewedAppointmentDoctors;
+    int viewedAppointmentCount;
+
+    // View medical records mode
+    bool viewMedicalRecordsMode;
+    sf::RectangleShape viewMedicalRecordsPanel;
+    sf::Text* viewMedicalRecordsTitleText;
+    sf::Text* viewMedicalRecordsStatusText;
+    sf::Text* viewMedicalRecordsLabelText;
+    UIButton backFromViewMedicalRecordsBtn;
+    Storage<Prescription>* viewedMedicalRecords;
+    Storage<Doctor>* viewedMedicalRecordDoctors;
+    int viewedMedicalRecordCount;
+
+    // View bills mode
+    bool viewBillsMode;
+    sf::RectangleShape viewBillsPanel;
+    sf::Text* viewBillsTitleText;
+    sf::Text* viewBillsStatusText;
+    sf::Text* viewBillsLabelText;
+    sf::Text* viewBillsTotalText;
+    UIButton backFromViewBillsBtn;
+    Storage<Bill>* viewedBills;
+    int viewedBillCount;
+    double outstandingUnpaidAmount;
+
     // Navigation buttons between steps
     UIButton previousStepBtn;
     UIButton nextStepBtn;
@@ -102,6 +155,7 @@ private:
     void updateBookingFocus(int focusedField);
     void updateDoctorList();
     void updateTimeSlotDisplay();
+    void updatePendingAppointmentList();
     void showStep(BookingStep step);
     
 public:
@@ -115,11 +169,21 @@ public:
     void handleTextEntered(char32_t unicode);
     void startBookingMode();
     void cancelBookingMode();
+    void startCancelAppointmentMode();
+    void closeCancelAppointmentMode();
+    void startViewAppointmentsMode();
+    void closeViewAppointmentsMode();
+    void startViewMedicalRecordsMode();
+    void closeViewMedicalRecordsMode();
+    void startViewBillsMode();
+    void closeViewBillsMode();
     void advanceBookingStep();
     void regressBookingStep();
     bool isBookingMode() const;
     bool consumeBookAppointmentRequest();
     bool consumeSpecializationSearchRequest();
+    bool isCancelAppointmentMode() const;
+    bool consumeCancelAppointmentRequest();
     
     // Getters for booking data
     const char* getSpecializationText() const;
@@ -128,7 +192,12 @@ public:
     const char* getBookingTimeText() const;
     Storage<Doctor>* getFilteredDoctors() const;
     void setFilteredDoctors(Storage<Doctor>* doctors);
+    void setPendingAppointments(Storage<Appointment>* appointments, Storage<Doctor>* doctors);
+    void setViewedAppointments(Storage<Appointment>* appointments, Storage<Doctor>* doctors);
+    void setViewedMedicalRecords(Storage<Prescription>* records, Storage<Doctor>* doctors);
+    void setViewedBills(Storage<Bill>* bills);
     BookingStep getCurrentBookingStep() const;
+    const char* getCancelAppointmentIDText() const;
 
     bool isBookAppointmentClicked() const;
     bool isCancelAppointmentClicked() const;
