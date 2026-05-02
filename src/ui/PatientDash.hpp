@@ -115,6 +115,23 @@ private:
     Storage<Bill>* viewedBills;
     int viewedBillCount;
     double outstandingUnpaidAmount;
+    // Pay bill mode
+    bool payBillMode;
+    bool payBillRequested;
+    sf::Text* payBillIdLabelText;
+    UITextBox payBillIdInput;
+    UIButton confirmPayBillBtn;
+    UIButton backFromPayBillBtn;
+    // Top up balance mode
+    bool topUpMode;
+    bool topUpRequested;
+    int topUpAttempts;
+    sf::RectangleShape topUpPanel;
+    sf::Text* topUpTitleText;
+    sf::Text* topUpLabelText;
+    UITextBox topUpAmountInput;
+    UIButton confirmTopUpBtn;
+    UIButton backFromTopUpBtn;
 
     // Navigation buttons between steps
     UIButton previousStepBtn;
@@ -177,6 +194,10 @@ public:
     void closeViewMedicalRecordsMode();
     void startViewBillsMode();
     void closeViewBillsMode();
+    void startPayBillMode();
+    void closePayBillMode();
+    void startTopUpMode();
+    void closeTopUpMode();
     void advanceBookingStep();
     void regressBookingStep();
     bool isBookingMode() const;
@@ -198,6 +219,8 @@ public:
     void setViewedBills(Storage<Bill>* bills);
     BookingStep getCurrentBookingStep() const;
     const char* getCancelAppointmentIDText() const;
+    const char* getPayBillIDText() const;
+    const char* getTopUpAmountText() const;
 
     bool isBookAppointmentClicked() const;
     bool isCancelAppointmentClicked() const;
@@ -206,6 +229,10 @@ public:
     bool isViewBillsClicked() const;
     bool isPayBillClicked() const;
     bool isTopUpBalanceClicked() const;
+    bool consumePayBillRequest();
+    bool consumeTopUpRequest();
+    void incrementTopUpAttempts();
+    int getTopUpAttempts() const;
     
     void clearClickStates();
     void setStatus(const char* message);

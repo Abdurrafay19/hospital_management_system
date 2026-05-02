@@ -1,5 +1,5 @@
 patient_id,name,age,gender,contact,password,balance
-1,Ahmed Ali,28,M,03001234567,pass123,500600.00
+1,Ahmed Ali,28,M,03001234567,pass123,504400.00
 2,Ali Khan,46,M,03123456789,passwdA,6467.12
 3,Test User,28,F,03001234568,tester,0.00
 4,Abdur Rahman,46,M,03124567890,testtest,120.50

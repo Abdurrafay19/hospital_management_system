@@ -21,6 +21,14 @@ PatientDash::PatientDash()
         viewedMedicalRecordDoctors(nullptr), viewedMedicalRecordCount(0),
         viewBillsMode(false), viewedBills(nullptr), viewedBillCount(0),
         outstandingUnpaidAmount(0.0) {
+    payBillMode = false;
+    payBillRequested = false;
+    payBillIdLabelText = nullptr;
+        topUpMode = false;
+        topUpRequested = false;
+        topUpAttempts = 0;
+        topUpTitleText = nullptr;
+        topUpLabelText = nullptr;
     titleText = nullptr;
     patientNameText = nullptr;
     balanceText = nullptr;
@@ -47,6 +55,8 @@ PatientDash::PatientDash()
     viewBillsStatusText = nullptr;
     viewBillsLabelText = nullptr;
     viewBillsTotalText = nullptr;
+    payBillIdLabelText = nullptr;
+    topUpLabelText = nullptr;
     
     int i;
     for (i = 0; i < 20; i++) {
@@ -87,6 +97,9 @@ PatientDash::~PatientDash() {
     delete viewBillsStatusText;
     delete viewBillsLabelText;
     delete viewBillsTotalText;
+    delete payBillIdLabelText;
+    delete topUpTitleText;
+    delete topUpLabelText;
     
     int i;
     for (i = 0; i < 20; i++) {
@@ -143,6 +156,7 @@ PatientDash::~PatientDash() {
     viewBillsStatusText = nullptr;
     viewBillsLabelText = nullptr;
     viewBillsTotalText = nullptr;
+    topUpTitleText = nullptr;
 }
 
 bool PatientDash::initialize(const sf::Font& regularFontParam, const sf::Font& boldFontParam) {
@@ -280,6 +294,72 @@ bool PatientDash::initialize(const sf::Font& regularFontParam, const sf::Font& b
 
     viewBillsTotalText->setPosition(sf::Vector2f(220.f, 560.f));
     viewBillsTotalText->setFillColor(sf::Color(44, 62, 80));
+
+    payBillIdLabelText = new sf::Text(regularFont, "Enter Bill ID to pay:", 16);
+    payBillIdLabelText->setPosition(sf::Vector2f(220.f, 490.f));
+    payBillIdLabelText->setFillColor(sf::Color(127, 140, 141));
+
+    payBillIdInput.setFont(regularFont);
+    payBillIdInput.setCapacity(20);
+    payBillIdInput.setPosition(sf::Vector2f(220.f, 515.f));
+    payBillIdInput.setSize(sf::Vector2f(360.f, 36.f));
+    payBillIdInput.setFillColor(sf::Color::White);
+    payBillIdInput.setOutlineColor(sf::Color(189, 195, 199));
+    payBillIdInput.setTextColor(sf::Color(44, 62, 80));
+
+    confirmPayBillBtn.setFont(regularFont);
+    confirmPayBillBtn.setText("Pay Bill");
+    confirmPayBillBtn.setPosition(sf::Vector2f(720.f, 560.f));
+    confirmPayBillBtn.setSize(sf::Vector2f(160.f, 38.f));
+    confirmPayBillBtn.setFillColor(sf::Color(46, 204, 113));
+    confirmPayBillBtn.setOutlineColor(sf::Color(46, 204, 113));
+    confirmPayBillBtn.setTextColor(sf::Color::White);
+
+    backFromPayBillBtn.setFont(regularFont);
+    backFromPayBillBtn.setText("Back");
+    backFromPayBillBtn.setPosition(sf::Vector2f(890.f, 560.f));
+    backFromPayBillBtn.setSize(sf::Vector2f(90.f, 38.f));
+    backFromPayBillBtn.setFillColor(sf::Color(149, 165, 166));
+    backFromPayBillBtn.setOutlineColor(sf::Color(149, 165, 166));
+    backFromPayBillBtn.setTextColor(sf::Color::White);
+
+    topUpPanel.setSize(sf::Vector2f(650.f, 260.f));
+    topUpPanel.setPosition(sf::Vector2f(320.f, 220.f));
+    topUpPanel.setFillColor(sf::Color(250, 251, 252));
+    topUpPanel.setOutlineColor(sf::Color(220, 225, 230));
+    topUpPanel.setOutlineThickness(2.f);
+
+    topUpTitleText = new sf::Text(boldFont, "Top Up Balance", 24);
+    topUpTitleText->setPosition(sf::Vector2f(340.f, 240.f));
+    topUpTitleText->setFillColor(sf::Color(44, 62, 80));
+
+    topUpLabelText = new sf::Text(regularFont, "Enter amount to add (PKR):", 16);
+    topUpLabelText->setPosition(sf::Vector2f(340.f, 295.f));
+    topUpLabelText->setFillColor(sf::Color(127, 140, 141));
+
+    topUpAmountInput.setFont(regularFont);
+    topUpAmountInput.setCapacity(20);
+    topUpAmountInput.setPosition(sf::Vector2f(340.f, 320.f));
+    topUpAmountInput.setSize(sf::Vector2f(380.f, 36.f));
+    topUpAmountInput.setFillColor(sf::Color::White);
+    topUpAmountInput.setOutlineColor(sf::Color(189, 195, 199));
+    topUpAmountInput.setTextColor(sf::Color(44, 62, 80));
+
+    confirmTopUpBtn.setFont(regularFont);
+    confirmTopUpBtn.setText("Top Up");
+    confirmTopUpBtn.setPosition(sf::Vector2f(560.f, 380.f));
+    confirmTopUpBtn.setSize(sf::Vector2f(160.f, 38.f));
+    confirmTopUpBtn.setFillColor(sf::Color(46, 204, 113));
+    confirmTopUpBtn.setOutlineColor(sf::Color(46, 204, 113));
+    confirmTopUpBtn.setTextColor(sf::Color::White);
+
+    backFromTopUpBtn.setFont(regularFont);
+    backFromTopUpBtn.setText("Back");
+    backFromTopUpBtn.setPosition(sf::Vector2f(730.f, 380.f));
+    backFromTopUpBtn.setSize(sf::Vector2f(90.f, 38.f));
+    backFromTopUpBtn.setFillColor(sf::Color(149, 165, 166));
+    backFromTopUpBtn.setOutlineColor(sf::Color(149, 165, 166));
+    backFromTopUpBtn.setTextColor(sf::Color::White);
 
     cancelAppointmentIdInput.setFont(regularFont);
     cancelAppointmentIdInput.setCapacity(20);
@@ -604,6 +684,8 @@ void PatientDash::setPatient(Patient* patientPtr) {
         closeViewAppointmentsMode();
         closeViewMedicalRecordsMode();
         closeViewBillsMode();
+        closePayBillMode();
+        closeTopUpMode();
         if (patientNameText != nullptr) {
             patientNameText->setString("");
         }
@@ -758,6 +840,47 @@ void PatientDash::draw(sf::RenderWindow& window) const {
         }
 
         backFromViewBillsBtn.draw(window);
+    } else if (payBillMode) {
+        window.draw(viewBillsPanel);
+        if (viewBillsTitleText != nullptr) {
+            window.draw(*viewBillsTitleText);
+        }
+        if (viewBillsStatusText != nullptr) {
+            window.draw(*viewBillsStatusText);
+        }
+        if (viewBillsLabelText != nullptr) {
+            window.draw(*viewBillsLabelText);
+        }
+        if (viewBillsTotalText != nullptr) {
+            window.draw(*viewBillsTotalText);
+        }
+
+        int i;
+        for (i = 0; i < viewedBillCount; i++) {
+            if (pendingAppointmentListText[i] != nullptr) {
+                window.draw(*pendingAppointmentListText[i]);
+            }
+        }
+
+        if (payBillIdLabelText != nullptr) {
+            window.draw(*payBillIdLabelText);
+        }
+        payBillIdInput.draw(window);
+        confirmPayBillBtn.draw(window);
+        backFromPayBillBtn.draw(window);
+    } else if (topUpMode) {
+        window.draw(topUpPanel);
+
+        if (topUpTitleText != nullptr) {
+            window.draw(*topUpTitleText);
+        }
+
+        if (topUpLabelText != nullptr) {
+            window.draw(*topUpLabelText);
+        }
+        topUpAmountInput.draw(window);
+        confirmTopUpBtn.draw(window);
+        backFromTopUpBtn.draw(window);
     } else if (bookingMode) {
         window.draw(bookingPanel);
         if (bookingTitleText != nullptr) {
@@ -935,6 +1058,50 @@ void PatientDash::handleMouseClick(sf::RenderWindow& window) {
         return;
     }
 
+    if (payBillMode) {
+        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+        if (payBillIdInput.contains(mouseWorldPosition)) {
+            payBillIdInput.setActive(true);
+            return;
+        }
+
+        if (confirmPayBillBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            payBillRequested = true;
+            return;
+        }
+
+        if (backFromPayBillBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            closePayBillMode();
+            return;
+        }
+
+        payBillIdInput.setActive(false);
+        return;
+    }
+
+    if (topUpMode) {
+        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+        if (topUpAmountInput.contains(mouseWorldPosition)) {
+            topUpAmountInput.setActive(true);
+            return;
+        }
+
+        if (confirmTopUpBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            topUpRequested = true;
+            return;
+        }
+
+        if (backFromTopUpBtn.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+            closeTopUpMode();
+            return;
+        }
+
+        topUpAmountInput.setActive(false);
+        return;
+    }
+
     if (bookingMode) {
         sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
@@ -1069,10 +1236,20 @@ void PatientDash::handleTextEntered(char32_t unicode) {
         return;
     }
 
-    if (!bookingMode) {
+    if (payBillMode) {
+        payBillIdInput.handleTextEntered(unicode);
         return;
     }
 
+    if (topUpMode) {
+        topUpAmountInput.handleTextEntered(unicode);
+        return;
+    }
+
+    if (!bookingMode) {
+        return;
+    }
+                                // Confirm booking logic here
     if (currentBookingStep == STEP_SPECIALIZATION) {
         specializationInput.handleTextEntered(unicode);
     } else if (currentBookingStep == STEP_DATE_INPUT) {
@@ -1194,6 +1371,71 @@ void PatientDash::startViewBillsMode() {
 
     if (viewedBills != nullptr) {
         updatePendingAppointmentList();
+    }
+}
+
+void PatientDash::startPayBillMode() {
+    payBillMode = true;
+    payBillRequested = false;
+    payBillIdInput.clear();
+    payBillIdInput.setActive(false);
+
+    if (viewedBills != nullptr) {
+        updatePendingAppointmentList();
+    }
+
+    if (viewBillsStatusText != nullptr) {
+        viewBillsStatusText->setString("");
+    }
+}
+
+void PatientDash::closePayBillMode() {
+    payBillMode = false;
+    payBillRequested = false;
+    payBillIdInput.clear();
+    payBillIdInput.setActive(false);
+    viewedBillCount = 0;
+
+    if (viewedBills != nullptr) {
+        delete viewedBills;
+        viewedBills = nullptr;
+    }
+
+    if (viewBillsTotalText != nullptr) {
+        viewBillsTotalText->setString("");
+    }
+}
+
+void PatientDash::startTopUpMode() {
+    topUpMode = true;
+    topUpRequested = false;
+    topUpAttempts = 0;
+    topUpAmountInput.clear();
+    topUpAmountInput.setActive(false);
+
+    if (viewedBills != nullptr) {
+        updatePendingAppointmentList();
+    }
+
+    if (viewBillsStatusText != nullptr) {
+        viewBillsStatusText->setString("");
+    }
+}
+
+void PatientDash::closeTopUpMode() {
+    topUpMode = false;
+    topUpRequested = false;
+    topUpAmountInput.clear();
+    topUpAmountInput.setActive(false);
+    topUpAttempts = 0;
+
+    if (viewedBills != nullptr) {
+        delete viewedBills;
+        viewedBills = nullptr;
+    }
+
+    if (viewBillsTotalText != nullptr) {
+        viewBillsTotalText->setString("");
     }
 }
 
@@ -1331,6 +1573,14 @@ const char* PatientDash::getCancelAppointmentIDText() const {
     return cancelAppointmentIdInput.getText();
 }
 
+const char* PatientDash::getPayBillIDText() const {
+    return payBillIdInput.getText();
+}
+
+const char* PatientDash::getTopUpAmountText() const {
+    return topUpAmountInput.getText();
+}
+
 bool PatientDash::isBookAppointmentClicked() const {
     return bookAppointmentClicked;
 }
@@ -1431,6 +1681,32 @@ bool PatientDash::isPayBillClicked() const {
 
 bool PatientDash::isTopUpBalanceClicked() const {
     return topUpBalanceClicked;
+}
+
+bool PatientDash::consumeTopUpRequest() {
+    if (!topUpRequested) {
+        return false;
+    }
+
+    topUpRequested = false;
+    return true;
+}
+
+void PatientDash::incrementTopUpAttempts() {
+    topUpAttempts++;
+}
+
+int PatientDash::getTopUpAttempts() const {
+    return topUpAttempts;
+}
+
+bool PatientDash::consumePayBillRequest() {
+    if (!payBillRequested) {
+        return false;
+    }
+
+    payBillRequested = false;
+    return true;
 }
 
 void PatientDash::updatePendingAppointmentList() {
@@ -1629,7 +1905,7 @@ void PatientDash::updatePendingAppointmentList() {
         return;
     }
 
-    if (viewBillsMode) {
+    if (viewBillsMode || payBillMode) {
         if (viewedBills == nullptr) {
             viewedBillCount = 0;
             outstandingUnpaidAmount = 0.0;

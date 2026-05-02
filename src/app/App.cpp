@@ -398,6 +398,38 @@ void App::handleMouseClick() {
                 }
             }
 
+            if (patientDash.isTopUpBalanceClicked()) {
+                Patient* patient;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                patientDash.startTopUpMode();
+            }
+
+            if (patientDash.isPayBillClicked()) {
+                Patient* patient;
+                Storage<Bill>* unpaidBills;
+                Bill* billList;
+                int i;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                unpaidBills = new Storage<Bill>();
+                billList = system.getBills().getAll();
+
+                for (i = 0; i < system.getBills().size(); i++) {
+                    if (billList[i].getPatientID() == patient->getID() && !StringHelper::textEquals(billList[i].getStatus(), "paid") && !StringHelper::textEquals(billList[i].getStatus(), "cancelled")) {
+                        unpaidBills->add(billList[i]);
+                    }
+                }
+
+                if (unpaidBills->size() == 0) {
+                    delete unpaidBills;
+                    patientDash.setStatus("No unpaid bills.");
+                } else {
+                    patientDash.setViewedBills(unpaidBills);
+                    patientDash.startPayBillMode();
+                }
+            }
+
             if (patientDash.consumeCancelAppointmentRequest()) {
                 Patient* patient;
                 int appointmentID;
@@ -425,6 +457,95 @@ void App::handleMouseClick() {
                 } catch (const HospitalException& exception) {
                     patientDash.closeCancelAppointmentMode();
                     patientDash.setStatus(exception.what());
+                }
+            }
+
+            if (patientDash.consumePayBillRequest()) {
+                Patient* patient;
+                int billID;
+                char balanceBuffer[64];
+                char successMessage[200];
+                int msgLen;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                billID = ConversionHelper::toInt(patientDash.getPayBillIDText());
+
+                // Validate bill belongs to this patient and is unpaid
+                Bill* targetBill = system.getBills().findByID(billID);
+                if (targetBill == nullptr) {
+                    patientDash.closePayBillMode();
+                    patientDash.setStatus("Invalid Bill ID.");
+                } else if (targetBill->getPatientID() != patient->getID()) {
+                    patientDash.closePayBillMode();
+                    patientDash.setStatus("Bill does not belong to you.");
+                } else if (StringHelper::textEquals(targetBill->getStatus(), "paid") || StringHelper::textEquals(targetBill->getStatus(), "cancelled")) {
+                    patientDash.closePayBillMode();
+                    patientDash.setStatus("Bill is not unpaid.");
+                } else {
+                    try {
+                        system.payBill(patient, billID);
+                        patientDash.closePayBillMode();
+                        patientDash.setPatient(patient);
+
+                        successMessage[0] = '\0';
+                        StringHelper::stringCopy(successMessage, "Bill paid successfully. Remaining balance: PKR ", 200);
+                        msgLen = StringHelper::stringLength(successMessage);
+                        ConversionHelper::doubleToString(patient->getBalance(), balanceBuffer);
+                        StringHelper::stringCopy(successMessage + msgLen, balanceBuffer, 200 - msgLen);
+                        patientDash.setStatus(successMessage);
+                    } catch (const InsufficientFundsException& ex) {
+                        patientDash.closePayBillMode();
+                        patientDash.setStatus(ex.what());
+                    } catch (const HospitalException& ex) {
+                        patientDash.closePayBillMode();
+                        patientDash.setStatus(ex.what());
+                    }
+                }
+            }
+
+            if (patientDash.consumeTopUpRequest()) {
+                Patient* patient;
+                const char* amtText;
+                double amount;
+
+                patient = reinterpret_cast<Patient*>(currentUser);
+                amtText = patientDash.getTopUpAmountText();
+
+                try {
+                    if (amtText == nullptr || StringHelper::stringLength(amtText) == 0) {
+                        throw InvalidInputException("Amount is required.");
+                    }
+
+                    amount = ConversionHelper::stringToDouble(amtText);
+                    if (amount <= 0.0) {
+                        throw InvalidInputException("Amount must be greater than 0.");
+                    }
+
+                    *patient += amount;
+                    FileHandler::saveAllPatients(system.getPatients());
+
+                    char buf[128];
+                    buf[0] = '\0';
+                    StringHelper::stringCopy(buf, "Balance updated. New balance: PKR ", 128);
+                    char balStr[64];
+                    ConversionHelper::doubleToString(patient->getBalance(), balStr);
+                    int len = StringHelper::stringLength(buf);
+                    StringHelper::stringCopy(buf + len, balStr, 128 - len);
+
+                    patientDash.closeTopUpMode();
+                    patientDash.setPatient(patient);
+                    patientDash.setStatus(buf);
+                } catch (const InvalidInputException& ex) {
+                    patientDash.incrementTopUpAttempts();
+                    if (patientDash.getTopUpAttempts() >= 3) {
+                        patientDash.closeTopUpMode();
+                        patientDash.setStatus("Top up cancelled after 3 attempts.");
+                    } else {
+                        patientDash.setStatus(ex.what());
+                    }
+                } catch (const HospitalException& ex) {
+                    patientDash.closeTopUpMode();
+                    patientDash.setStatus(ex.what());
                 }
             }
 
