@@ -5,7 +5,7 @@
 class HospitalException : public std::exception
 {
 protected:
-    char* message;
+    char *message;
 
 public:
     HospitalException(const char *msg);

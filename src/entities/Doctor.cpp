@@ -3,19 +3,21 @@
 #include "../core/Validator.hpp"
 #include "../helpers/StringHelper.hpp"
 
-Doctor::Doctor() : Person() {
+Doctor::Doctor() : Person()
+{
     specialization = nullptr;
     contact = nullptr;
     fee = 0.0;
 }
 
 Doctor::Doctor(int doctorID,
-               const char* doctorName,
-               const char* doctorPassword,
-               const char* doctorSpecialization,
-               const char* doctorContact,
+               const char *doctorName,
+               const char *doctorPassword,
+               const char *doctorSpecialization,
+               const char *doctorContact,
                double doctorFee)
-    : Person(doctorID, doctorName, doctorPassword) {
+    : Person(doctorID, doctorName, doctorPassword)
+{
     specialization = nullptr;
     contact = nullptr;
     fee = 0.0;
@@ -25,7 +27,8 @@ Doctor::Doctor(int doctorID,
     setFee(doctorFee);
 }
 
-Doctor::Doctor(const Doctor& other) : Person(other) {
+Doctor::Doctor(const Doctor &other) : Person(other)
+{
     specialization = nullptr;
     contact = nullptr;
     fee = other.fee;
@@ -34,15 +37,18 @@ Doctor::Doctor(const Doctor& other) : Person(other) {
     StringHelper::copyTextDynamic(contact, other.contact);
 }
 
-Doctor::~Doctor() {
+Doctor::~Doctor()
+{
     delete[] specialization;
     delete[] contact;
     specialization = nullptr;
     contact = nullptr;
 }
 
-Doctor& Doctor::operator=(const Doctor& other) {
-    if (this != &other) {
+Doctor &Doctor::operator=(const Doctor &other)
+{
+    if (this != &other)
+    {
         Person::operator=(other);
         fee = other.fee;
         StringHelper::copyTextDynamic(specialization, other.specialization);
@@ -52,32 +58,40 @@ Doctor& Doctor::operator=(const Doctor& other) {
     return *this;
 }
 
-void Doctor::displayDashboard() {
+void Doctor::displayDashboard()
+{
     std::cout << "Doctor Dashboard - ID: " << id << "\n";
 }
 
-void Doctor::showProfile() const {
+void Doctor::showProfile() const
+{
     std::cout << *this << "\n";
 }
 
-const char* Doctor::getSpecialization() const {
+const char *Doctor::getSpecialization() const
+{
     return specialization;
 }
 
-const char* Doctor::getContact() const {
+const char *Doctor::getContact() const
+{
     return contact;
 }
 
-double Doctor::getFee() const {
+double Doctor::getFee() const
+{
     return fee;
 }
 
-void Doctor::setSpecialization(const char* doctorSpecialization) {
+void Doctor::setSpecialization(const char *doctorSpecialization)
+{
     StringHelper::copyTextDynamic(specialization, doctorSpecialization);
 }
 
-bool Doctor::setContact(const char* doctorContact) {
-    if (!Validator::isValidContact(doctorContact)) {
+bool Doctor::setContact(const char *doctorContact)
+{
+    if (!Validator::isValidContact(doctorContact))
+    {
         return false;
     }
 
@@ -85,20 +99,24 @@ bool Doctor::setContact(const char* doctorContact) {
     return true;
 }
 
-void Doctor::setFee(double doctorFee) {
-    if (doctorFee > 0.0) {
+void Doctor::setFee(double doctorFee)
+{
+    if (doctorFee > 0.0)
+    {
         fee = doctorFee;
     }
 }
 
-bool Doctor::operator==(const Doctor& other) const {
+bool Doctor::operator==(const Doctor &other) const
+{
     return id == other.id;
 }
 
-std::ostream& operator<<(std::ostream& out, const Doctor& doctor) {
-    const char* safeName;
-    const char* safeSpecialization;
-    const char* safeContact;
+std::ostream &operator<<(std::ostream &out, const Doctor &doctor)
+{
+    const char *safeName;
+    const char *safeSpecialization;
+    const char *safeContact;
 
     safeName = doctor.name != nullptr ? doctor.name : "";
     safeSpecialization = doctor.specialization != nullptr ? doctor.specialization : "";

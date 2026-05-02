@@ -3,7 +3,8 @@
 #include "../core/Validator.hpp"
 #include "../helpers/StringHelper.hpp"
 
-Bill::Bill() {
+Bill::Bill()
+{
     billID = 0;
     patientID = 0;
     appointmentID = 0;
@@ -16,8 +17,9 @@ Bill::Bill(int newBillID,
            int newPatientID,
            int newAppointmentID,
            double newAmount,
-           const char* newStatus,
-           const char* newDate) {
+           const char *newStatus,
+           const char *newDate)
+{
     billID = 0;
     patientID = 0;
     appointmentID = 0;
@@ -33,7 +35,8 @@ Bill::Bill(int newBillID,
     setDate(newDate);
 }
 
-Bill::Bill(const Bill& other) {
+Bill::Bill(const Bill &other)
+{
     billID = 0;
     patientID = 0;
     appointmentID = 0;
@@ -49,7 +52,8 @@ Bill::Bill(const Bill& other) {
     StringHelper::copyTextDynamic(date, other.date);
 }
 
-Bill::~Bill() {
+Bill::~Bill()
+{
     delete[] status;
     delete[] date;
 
@@ -57,8 +61,10 @@ Bill::~Bill() {
     date = nullptr;
 }
 
-Bill& Bill::operator=(const Bill& other) {
-    if (this != &other) {
+Bill &Bill::operator=(const Bill &other)
+{
+    if (this != &other)
+    {
         billID = other.billID;
         patientID = other.patientID;
         appointmentID = other.appointmentID;
@@ -70,81 +76,102 @@ Bill& Bill::operator=(const Bill& other) {
     return *this;
 }
 
-int Bill::getBillID() const {
+int Bill::getBillID() const
+{
     return billID;
 }
 
-int Bill::getID() const {
+int Bill::getID() const
+{
     return billID;
 }
 
-int Bill::getPatientID() const {
+int Bill::getPatientID() const
+{
     return patientID;
 }
 
-int Bill::getAppointmentID() const {
+int Bill::getAppointmentID() const
+{
     return appointmentID;
 }
 
-double Bill::getAmount() const {
+double Bill::getAmount() const
+{
     return amount;
 }
 
-const char* Bill::getStatus() const {
+const char *Bill::getStatus() const
+{
     return status;
 }
 
-const char* Bill::getDate() const {
+const char *Bill::getDate() const
+{
     return date;
 }
 
-void Bill::setBillID(int newBillID) {
-    if (Validator::isValidID(newBillID)) {
+void Bill::setBillID(int newBillID)
+{
+    if (Validator::isValidID(newBillID))
+    {
         billID = newBillID;
     }
 }
 
-void Bill::setPatientID(int newPatientID) {
-    if (Validator::isValidID(newPatientID)) {
+void Bill::setPatientID(int newPatientID)
+{
+    if (Validator::isValidID(newPatientID))
+    {
         patientID = newPatientID;
     }
 }
 
-void Bill::setAppointmentID(int newAppointmentID) {
-    if (Validator::isValidID(newAppointmentID)) {
+void Bill::setAppointmentID(int newAppointmentID)
+{
+    if (Validator::isValidID(newAppointmentID))
+    {
         appointmentID = newAppointmentID;
     }
 }
 
-void Bill::setAmount(double newAmount) {
-    if (newAmount >= 0.0) {
+void Bill::setAmount(double newAmount)
+{
+    if (newAmount >= 0.0)
+    {
         amount = newAmount;
     }
 }
 
-void Bill::setStatus(const char* newStatus) {
+void Bill::setStatus(const char *newStatus)
+{
     StringHelper::copyTextDynamic(status, newStatus);
 }
 
-void Bill::setDate(const char* newDate) {
-    if (!Validator::isValidDate(newDate)) {
+void Bill::setDate(const char *newDate)
+{
+    if (!Validator::isValidDate(newDate))
+    {
         return;
     }
 
     StringHelper::copyTextDynamic(date, newDate);
 }
 
-bool Bill::isPaid() const {
+bool Bill::isPaid() const
+{
     return StringHelper::textEquals(status, "paid");
 }
 
-bool Bill::operator==(const Bill& other) const {
+bool Bill::operator==(const Bill &other) const
+{
     return billID == other.billID;
 }
 
-std::ostream& operator<<(std::ostream& out, const Bill& bill) {
-    const char* safeStatus;
-    const char* safeDate;
+std::ostream &operator<<(std::ostream &out, const Bill &bill)
+{
+    const char *safeStatus;
+    const char *safeDate;
 
     safeStatus = bill.status != nullptr ? bill.status : "";
     safeDate = bill.date != nullptr ? bill.date : "";

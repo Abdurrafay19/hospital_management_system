@@ -2,22 +2,27 @@
 
 #include <iostream>
 
-Admin::Admin() : Person() {
+Admin::Admin() : Person()
+{
 }
 
-Admin::Admin(int adminID, const char* adminName, const char* adminPassword)
-    : Person(adminID, adminName, adminPassword) {
+Admin::Admin(int adminID, const char *adminName, const char *adminPassword)
+    : Person(adminID, adminName, adminPassword)
+{
 }
 
-Admin::~Admin() {
+Admin::~Admin()
+{
 }
 
-void Admin::displayDashboard() {
+void Admin::displayDashboard()
+{
     std::cout << "Admin Dashboard - ID: " << id << "\n";
 }
 
-void Admin::showProfile() const {
-    const char* safeName;
+void Admin::showProfile() const
+{
+    const char *safeName;
 
     safeName = name != nullptr ? name : "";
 

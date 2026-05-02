@@ -7,9 +7,11 @@
 #include "../ui/LoginScreen.hpp"
 #include "../ui/PatientDash.hpp"
 
-class App {
+class App
+{
 public:
-    enum AppState {
+    enum AppState
+    {
         LOGIN,
         PATIENT_MENU,
         DOCTOR_MENU,
@@ -24,7 +26,7 @@ private:
     bool fontLoaded;
 
     AppState state;
-    Person* currentUser;
+    Person *currentUser;
 
     UIButton logoutButton;
     LoginScreen loginScreen;

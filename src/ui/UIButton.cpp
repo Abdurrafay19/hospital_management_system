@@ -1,16 +1,18 @@
 #include "UIButton.hpp"
 
-UIButton::UIButton() {
+UIButton::UIButton()
+{
     font = 0;
     label = 0;
     enabled = true;
     box.setSize(sf::Vector2f(0.f, 0.f));
 }
 
-UIButton::UIButton(const sf::Font& buttonFont,
-                   const char* text,
+UIButton::UIButton(const sf::Font &buttonFont,
+                   const char *text,
                    sf::Vector2f position,
-                   sf::Vector2f size) {
+                   sf::Vector2f size)
+{
     font = 0;
     label = 0;
     enabled = true;
@@ -22,41 +24,49 @@ UIButton::UIButton(const sf::Font& buttonFont,
     setSize(size);
 }
 
-UIButton::UIButton(const UIButton& other) {
+UIButton::UIButton(const UIButton &other)
+{
     font = 0;
     label = 0;
     enabled = other.enabled;
     box = other.box;
 
-    if (other.font != 0) {
+    if (other.font != 0)
+    {
         font = other.font;
         label = new sf::Text(*font, "", 20);
     }
 
-    if (label != 0 && other.label != 0) {
+    if (label != 0 && other.label != 0)
+    {
         *label = *other.label;
     }
 }
 
-UIButton::~UIButton() {
+UIButton::~UIButton()
+{
     delete label;
     label = 0;
 }
 
-UIButton& UIButton::operator=(const UIButton& other) {
-    if (this != &other) {
+UIButton &UIButton::operator=(const UIButton &other)
+{
+    if (this != &other)
+    {
         delete label;
         label = 0;
         font = 0;
         enabled = other.enabled;
         box = other.box;
 
-        if (other.font != 0) {
+        if (other.font != 0)
+        {
             font = other.font;
             label = new sf::Text(*font, "", 20);
         }
 
-        if (label != 0 && other.label != 0) {
+        if (label != 0 && other.label != 0)
+        {
             *label = *other.label;
         }
     }
@@ -64,8 +74,10 @@ UIButton& UIButton::operator=(const UIButton& other) {
     return *this;
 }
 
-void UIButton::updateLabelPosition() {
-    if (label == 0) {
+void UIButton::updateLabelPosition()
+{
+    if (label == 0)
+    {
         return;
     }
 
@@ -79,66 +91,84 @@ void UIButton::updateLabelPosition() {
     label->setPosition(sf::Vector2f(targetX, targetY));
 }
 
-void UIButton::setFont(const sf::Font& buttonFont) {
+void UIButton::setFont(const sf::Font &buttonFont)
+{
     font = &buttonFont;
 
-    if (label == 0) {
+    if (label == 0)
+    {
         label = new sf::Text(buttonFont, "", 20);
-    } else {
+    }
+    else
+    {
         *label = sf::Text(buttonFont, label->getString(), label->getCharacterSize());
     }
 
     updateLabelPosition();
 }
 
-void UIButton::setText(const char* text) {
-    if (label == 0) {
+void UIButton::setText(const char *text)
+{
+    if (label == 0)
+    {
         return;
     }
 
-    if (text == 0) {
+    if (text == 0)
+    {
         label->setString("");
-    } else {
+    }
+    else
+    {
         label->setString(text);
     }
 
     updateLabelPosition();
 }
 
-void UIButton::setPosition(sf::Vector2f position) {
+void UIButton::setPosition(sf::Vector2f position)
+{
     box.setPosition(position);
     updateLabelPosition();
 }
 
-void UIButton::setSize(sf::Vector2f size) {
+void UIButton::setSize(sf::Vector2f size)
+{
     box.setSize(size);
     box.setOutlineThickness(1.f);
     updateLabelPosition();
 }
 
-void UIButton::setFillColor(const sf::Color& color) {
+void UIButton::setFillColor(const sf::Color &color)
+{
     box.setFillColor(color);
 }
 
-void UIButton::setOutlineColor(const sf::Color& color) {
+void UIButton::setOutlineColor(const sf::Color &color)
+{
     box.setOutlineColor(color);
 }
 
-void UIButton::setTextColor(const sf::Color& color) {
-    if (label != 0) {
+void UIButton::setTextColor(const sf::Color &color)
+{
+    if (label != 0)
+    {
         label->setFillColor(color);
     }
 }
 
-void UIButton::setEnabled(bool isEnabled) {
+void UIButton::setEnabled(bool isEnabled)
+{
     enabled = isEnabled;
 }
 
-bool UIButton::isClicked(sf::RenderWindow& window) const {
+bool UIButton::isClicked(sf::RenderWindow &window) const
+{
     sf::Vector2i mousePosition;
     sf::Vector2f mouseWorldPosition;
 
-    if (!enabled) {
+    if (!enabled)
+    {
         return false;
     }
 
@@ -148,17 +178,21 @@ bool UIButton::isClicked(sf::RenderWindow& window) const {
     return sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && box.getGlobalBounds().contains(mouseWorldPosition);
 }
 
-void UIButton::draw(sf::RenderWindow& window) const {
+void UIButton::draw(sf::RenderWindow &window) const
+{
     window.draw(box);
-    if (label != 0) {
+    if (label != 0)
+    {
         window.draw(*label);
     }
 }
 
-const sf::RectangleShape& UIButton::getShape() const {
+const sf::RectangleShape &UIButton::getShape() const
+{
     return box;
 }
 
-const sf::Text* UIButton::getLabel() const {
+const sf::Text *UIButton::getLabel() const
+{
     return label;
 }

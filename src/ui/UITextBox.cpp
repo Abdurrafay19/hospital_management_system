@@ -1,6 +1,7 @@
 #include "UITextBox.hpp"
 
-UITextBox::UITextBox() {
+UITextBox::UITextBox()
+{
     font = 0;
     text = 0;
     buffer = 0;
@@ -10,7 +11,8 @@ UITextBox::UITextBox() {
     box.setSize(sf::Vector2f(0.f, 0.f));
 }
 
-UITextBox::UITextBox(const sf::Font& boxFont, sf::Vector2f position, sf::Vector2f size, int maxCharacters) {
+UITextBox::UITextBox(const sf::Font &boxFont, sf::Vector2f position, sf::Vector2f size, int maxCharacters)
+{
     font = 0;
     text = 0;
     buffer = 0;
@@ -27,14 +29,16 @@ UITextBox::UITextBox(const sf::Font& boxFont, sf::Vector2f position, sf::Vector2
     buffer[0] = '\0';
 }
 
-UITextBox::~UITextBox() {
+UITextBox::~UITextBox()
+{
     delete text;
     delete[] buffer;
     text = 0;
     buffer = 0;
 }
 
-UITextBox::UITextBox(const UITextBox& other) {
+UITextBox::UITextBox(const UITextBox &other)
+{
     font = 0;
     text = 0;
     buffer = 0;
@@ -43,27 +47,34 @@ UITextBox::UITextBox(const UITextBox& other) {
     active = other.active;
     box = other.box;
 
-    if (other.font != 0) {
+    if (other.font != 0)
+    {
         font = other.font;
         text = new sf::Text(*font, "", 20);
     }
 
     capacity = other.capacity;
-    if (capacity > 0) {
+    if (capacity > 0)
+    {
         buffer = new char[capacity + 1];
         copyBuffer(other.buffer);
     }
 
     length = other.length;
-    if (text != 0 && other.text != 0) {
+    if (text != 0 && other.text != 0)
+    {
         *text = *other.text;
-    } else {
+    }
+    else
+    {
         refreshText();
     }
 }
 
-UITextBox& UITextBox::operator=(const UITextBox& other) {
-    if (this != &other) {
+UITextBox &UITextBox::operator=(const UITextBox &other)
+{
+    if (this != &other)
+    {
         delete text;
         delete[] buffer;
         text = 0;
@@ -74,21 +85,26 @@ UITextBox& UITextBox::operator=(const UITextBox& other) {
         active = other.active;
         box = other.box;
 
-        if (other.font != 0) {
+        if (other.font != 0)
+        {
             font = other.font;
             text = new sf::Text(*font, "", 20);
         }
 
         capacity = other.capacity;
-        if (capacity > 0) {
+        if (capacity > 0)
+        {
             buffer = new char[capacity + 1];
             copyBuffer(other.buffer);
         }
 
         length = other.length;
-        if (text != 0 && other.text != 0) {
+        if (text != 0 && other.text != 0)
+        {
             *text = *other.text;
-        } else {
+        }
+        else
+        {
             refreshText();
         }
     }
@@ -96,30 +112,39 @@ UITextBox& UITextBox::operator=(const UITextBox& other) {
     return *this;
 }
 
-void UITextBox::refreshText() {
-    if (text == 0) {
+void UITextBox::refreshText()
+{
+    if (text == 0)
+    {
         return;
     }
 
-    if (buffer == 0) {
+    if (buffer == 0)
+    {
         text->setString("");
-    } else {
+    }
+    else
+    {
         text->setString(buffer);
     }
 }
 
-void UITextBox::copyBuffer(const char* source) {
+void UITextBox::copyBuffer(const char *source)
+{
     int i;
 
-    if (buffer == 0 || source == 0) {
-        if (buffer != 0) {
+    if (buffer == 0 || source == 0)
+    {
+        if (buffer != 0)
+        {
             buffer[0] = '\0';
         }
         return;
     }
 
     i = 0;
-    while (i < capacity && source[i] != '\0') {
+    while (i < capacity && source[i] != '\0')
+    {
         buffer[i] = source[i];
         i++;
     }
@@ -127,20 +152,26 @@ void UITextBox::copyBuffer(const char* source) {
     length = i;
 }
 
-void UITextBox::setFont(const sf::Font& boxFont) {
+void UITextBox::setFont(const sf::Font &boxFont)
+{
     font = &boxFont;
 
-    if (text == 0) {
+    if (text == 0)
+    {
         text = new sf::Text(boxFont, "", 20);
-    } else {
+    }
+    else
+    {
         *text = sf::Text(boxFont, getText(), 20);
     }
 
     refreshText();
 }
 
-void UITextBox::setCapacity(int maxCharacters) {
-    if (buffer != 0) {
+void UITextBox::setCapacity(int maxCharacters)
+{
+    if (buffer != 0)
+    {
         delete[] buffer;
     }
     capacity = maxCharacters;
@@ -149,55 +180,70 @@ void UITextBox::setCapacity(int maxCharacters) {
     length = 0;
 }
 
-void UITextBox::setPosition(sf::Vector2f position) {
+void UITextBox::setPosition(sf::Vector2f position)
+{
     box.setPosition(position);
-    if (text != 0) {
+    if (text != 0)
+    {
         text->setPosition(sf::Vector2f(position.x + 10.f, position.y + 10.f));
     }
 }
 
-void UITextBox::setSize(sf::Vector2f size) {
+void UITextBox::setSize(sf::Vector2f size)
+{
     box.setSize(size);
     box.setOutlineThickness(1.f);
 }
 
-void UITextBox::setFillColor(const sf::Color& color) {
+void UITextBox::setFillColor(const sf::Color &color)
+{
     box.setFillColor(color);
 }
 
-void UITextBox::setOutlineColor(const sf::Color& color) {
+void UITextBox::setOutlineColor(const sf::Color &color)
+{
     box.setOutlineColor(color);
 }
 
-void UITextBox::setTextColor(const sf::Color& color) {
-    if (text != 0) {
+void UITextBox::setTextColor(const sf::Color &color)
+{
+    if (text != 0)
+    {
         text->setFillColor(color);
     }
 }
 
-void UITextBox::setActive(bool isActive) {
+void UITextBox::setActive(bool isActive)
+{
     active = isActive;
 }
 
-bool UITextBox::isActive() const {
+bool UITextBox::isActive() const
+{
     return active;
 }
 
-void UITextBox::clear() {
-    if (buffer != 0) {
+void UITextBox::clear()
+{
+    if (buffer != 0)
+    {
         buffer[0] = '\0';
     }
     length = 0;
     refreshText();
 }
 
-void UITextBox::handleTextEntered(char32_t unicode) {
-    if (!active || buffer == 0) {
+void UITextBox::handleTextEntered(char32_t unicode)
+{
+    if (!active || buffer == 0)
+    {
         return;
     }
 
-    if (unicode == U'\b') {
-        if (length > 0) {
+    if (unicode == U'\b')
+    {
+        if (length > 0)
+        {
             length--;
             buffer[length] = '\0';
             refreshText();
@@ -205,11 +251,13 @@ void UITextBox::handleTextEntered(char32_t unicode) {
         return;
     }
 
-    if (unicode < 32 || unicode > 126) {
+    if (unicode < 32 || unicode > 126)
+    {
         return;
     }
 
-    if (length >= capacity) {
+    if (length >= capacity)
+    {
         return;
     }
 
@@ -219,7 +267,8 @@ void UITextBox::handleTextEntered(char32_t unicode) {
     refreshText();
 }
 
-void UITextBox::handleMousePress(sf::RenderWindow& window) {
+void UITextBox::handleMousePress(sf::RenderWindow &window)
+{
     sf::Vector2i mousePosition;
     sf::Vector2f mouseWorldPosition;
 
@@ -228,23 +277,28 @@ void UITextBox::handleMousePress(sf::RenderWindow& window) {
     active = box.getGlobalBounds().contains(mouseWorldPosition);
 }
 
-const char* UITextBox::getText() const {
-    if (buffer == 0) {
+const char *UITextBox::getText() const
+{
+    if (buffer == 0)
+    {
         return "";
     }
 
     return buffer;
 }
 
-void UITextBox::setText(const char* value) {
+void UITextBox::setText(const char *value)
+{
     int i;
 
-    if (buffer == 0 || value == 0) {
+    if (buffer == 0 || value == 0)
+    {
         return;
     }
 
     i = 0;
-    while (i < capacity && value[i] != '\0') {
+    while (i < capacity && value[i] != '\0')
+    {
         buffer[i] = value[i];
         i++;
     }
@@ -253,13 +307,16 @@ void UITextBox::setText(const char* value) {
     refreshText();
 }
 
-bool UITextBox::contains(sf::Vector2f point) const {
+bool UITextBox::contains(sf::Vector2f point) const
+{
     return box.getGlobalBounds().contains(point);
 }
 
-void UITextBox::draw(sf::RenderWindow& window) const {
+void UITextBox::draw(sf::RenderWindow &window) const
+{
     window.draw(box);
-    if (text != 0) {
+    if (text != 0)
+    {
         window.draw(*text);
     }
 }

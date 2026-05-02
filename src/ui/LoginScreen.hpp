@@ -8,7 +8,8 @@
 #include "../core/Validator.hpp"
 #include "../core/FileHandler.hpp"
 
-class LoginScreen {
+class LoginScreen
+{
 private:
     // Login UI
     sf::RectangleShape cardBackground;
@@ -22,12 +23,12 @@ private:
     UITextBox contactInput;
     UITextBox passwordInput;
 
-    sf::Text* titleText;
-    sf::Text* roleText;
-    sf::Text* nameLabel;
-    sf::Text* contactLabel;
-    sf::Text* passwordLabel;
-    sf::Text* statusText;
+    sf::Text *titleText;
+    sf::Text *roleText;
+    sf::Text *nameLabel;
+    sf::Text *contactLabel;
+    sf::Text *passwordLabel;
+    sf::Text *statusText;
 
     // Signup UI
     UIButton signupButton;
@@ -37,9 +38,9 @@ private:
     UITextBox ageInput;
     UITextBox signupPasswordInput;
 
-    sf::Text* ageLabel;
-    sf::Text* genderLabel;
-    sf::Text* signupPasswordLabel;
+    sf::Text *ageLabel;
+    sf::Text *genderLabel;
+    sf::Text *signupPasswordLabel;
 
     char selectedGender[4];
 
@@ -51,34 +52,34 @@ private:
     char statusMessage[200];
 
     void updateRoleLabel();
-    bool validateSignupInputs(char* errorMessage);
+    bool validateSignupInputs(char *errorMessage);
 
 public:
     LoginScreen();
     ~LoginScreen();
 
-    LoginScreen(const LoginScreen& other);
-    LoginScreen& operator=(const LoginScreen& other);
+    LoginScreen(const LoginScreen &other);
+    LoginScreen &operator=(const LoginScreen &other);
 
-    bool initialize(const sf::Font& regularFont, const sf::Font& boldFont);
+    bool initialize(const sf::Font &regularFont, const sf::Font &boldFont);
 
-    void handleMouseClick(sf::RenderWindow& window);
+    void handleMouseClick(sf::RenderWindow &window);
     void handleTextEntered(char32_t unicode);
-    void draw(sf::RenderWindow& window) const;
+    void draw(sf::RenderWindow &window) const;
 
     Role getSelectedRole() const;
-    const char* getEnteredName() const;
-    const char* getEnteredContact() const;
-    const char* getEnteredPassword() const;
+    const char *getEnteredName() const;
+    const char *getEnteredContact() const;
+    const char *getEnteredPassword() const;
     bool consumeLoginRequest();
 
     int getEnteredAge() const;
-    const char* getEnteredGender() const;
-    const char* getEnteredSignupPassword() const;
+    const char *getEnteredGender() const;
+    const char *getEnteredSignupPassword() const;
     bool consumeSignupRequest();
 
     void clearInputs();
-    void setStatus(const char* message);
+    void setStatus(const char *message);
     void setSignupMode(bool signupMode);
     bool getIsSignupMode() const;
 };

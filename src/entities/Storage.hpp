@@ -1,7 +1,8 @@
 #pragma once
 
 template <class T>
-class Storage {
+class Storage
+{
 private:
     T data[100];
     int count;
@@ -10,26 +11,30 @@ public:
     Storage();
     ~Storage();
 
-    void add(const T& item);
+    void add(const T &item);
     void removeByID(int id);
-    T* findByID(int id);
-    T* getAll();
+    T *findByID(int id);
+    T *getAll();
     int size() const;
 };
 
 template <class T>
-Storage<T>::Storage() {
+Storage<T>::Storage()
+{
     count = 0;
 }
 
 template <class T>
-Storage<T>::~Storage() {
+Storage<T>::~Storage()
+{
     count = 0;
 }
 
 template <class T>
-void Storage<T>::add(const T& item) {
-    if (count >= 100) {
+void Storage<T>::add(const T &item)
+{
+    if (count >= 100)
+    {
         return;
     }
 
@@ -38,13 +43,17 @@ void Storage<T>::add(const T& item) {
 }
 
 template <class T>
-void Storage<T>::removeByID(int id) {
+void Storage<T>::removeByID(int id)
+{
     int i;
     int j;
 
-    for (i = 0; i < count; i++) {
-        if (data[i].getID() == id) {
-            for (j = i; j < count - 1; j++) {
+    for (i = 0; i < count; i++)
+    {
+        if (data[i].getID() == id)
+        {
+            for (j = i; j < count - 1; j++)
+            {
                 data[j] = data[j + 1];
             }
 
@@ -55,10 +64,13 @@ void Storage<T>::removeByID(int id) {
 }
 
 template <class T>
-T* Storage<T>::findByID(int id) {
+T *Storage<T>::findByID(int id)
+{
     int i;
-    for (i = 0; i < count; i++) {
-        if (data[i].getID() == id) {
+    for (i = 0; i < count; i++)
+    {
+        if (data[i].getID() == id)
+        {
             return &data[i];
         }
     }
@@ -67,11 +79,13 @@ T* Storage<T>::findByID(int id) {
 }
 
 template <class T>
-T* Storage<T>::getAll() {
+T *Storage<T>::getAll()
+{
     return data;
 }
 
 template <class T>
-int Storage<T>::size() const {
+int Storage<T>::size() const
+{
     return count;
 }

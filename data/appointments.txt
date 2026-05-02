@@ -50,3 +50,9 @@ appointment_id,patient_id,doctor_id,date,time,status
 49,19,9,19-11-2025,09:00,confirmed
 50,20,20,26-11-2025,10:00,confirmed
 51,1,20,05-02-2025,09:00,pending
+52,1,19,02-05-2025,09:00,pending
+53,1,20,05-02-2026,09:00,pending
+54,1,6,01-05-2026,09:00,cancelled
+55,1,20,01-05-2026,09:00,cancelled
+56,1,6,03-05-2026,09:00,pending
+57,1,20,03-05-2026,13:00,pending

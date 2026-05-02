@@ -11,7 +11,8 @@
 #include "UITextBox.hpp"
 
 // Booking steps
-enum BookingStep {
+enum BookingStep
+{
     STEP_SPECIALIZATION = 0,
     STEP_DOCTOR_SELECTION = 1,
     STEP_DATE_INPUT = 2,
@@ -19,48 +20,50 @@ enum BookingStep {
     STEP_CONFIRM = 4
 };
 
-class PatientDash {
+class PatientDash
+{
 private:
-    Patient* patient;
+    Patient *patient;
     sf::Font regularFont;
     sf::Font boldFont;
 
     sf::RectangleShape dashboardCard;
-    sf::Text* titleText;
-    sf::Text* patientNameText;
-    sf::Text* balanceText;
-    sf::Text* statusText;
-    
+    sf::Text *titleText;
+    sf::Text *patientNameText;
+    sf::Text *balanceText;
+    sf::Text *statusText;
+
     // Large booking panel for multi-step
     sf::RectangleShape bookingPanel;
-    sf::Text* bookingTitleText;
-    sf::Text* bookingStepIndicatorText;
-    sf::Text* bookingDialogStatusText;
+    sf::Text *bookingTitleText;
+    sf::Text *bookingStepIndicatorText;
+    sf::Text *bookingDialogStatusText;
     sf::RectangleShape selectedDoctorHighlight;
 
     // Step 1: Specialization
-    sf::Text* specializationLabelText;
+    sf::Text *specializationLabelText;
     UITextBox specializationInput;
     UIButton searchDoctorsBtn;
 
     // Step 2: Doctor Selection
-    sf::Text* doctorListLabelText;
-    sf::Text* doctorListText[20];  // Display up to 20 doctors
+    sf::Text *doctorListLabelText;
+    sf::Text *doctorListText[20]; // Display up to 20 doctors
     int doctorListCount;
     int selectedDoctorIndex;
     UIButton selectDoctorBtn;
 
     // Step 3: Date Input
-    sf::Text* dateInputLabelText;
+    sf::Text *dateInputLabelText;
     UITextBox dateInput;
     UIButton confirmDateBtn;
     int dateFailureCount;
 
     // Step 4: Time Slot
-    sf::Text* timeSlotsLabelText;
-    sf::Text* timeSlotDisplayText;
+    sf::Text *timeSlotsLabelText;
+    sf::Text *timeSlotDisplayText;
     UIButton timeSlotButtons[8];
     int selectedTimeSlotIndex;
+    Storage<Appointment> *allAppointments;
 
     // Step 5: Confirm
     UIButton confirmBookingBtn;
@@ -70,55 +73,58 @@ private:
     bool cancelAppointmentMode;
     bool cancelAppointmentRequested;
     sf::RectangleShape cancelPanel;
-    sf::Text* cancelTitleText;
-    sf::Text* cancelDialogStatusText;
-    sf::Text* cancelAppointmentsLabelText;
-    sf::Text* cancelAppointmentIdLabelText;
-    sf::Text* pendingAppointmentListText[20];
+    sf::Text *cancelTitleText;
+    sf::Text *cancelDialogStatusText;
+    sf::Text *cancelAppointmentsLabelText;
+    sf::Text *cancelAppointmentIdLabelText;
+    sf::Text *pendingAppointmentListText[20];
     int pendingAppointmentCount;
     UITextBox cancelAppointmentIdInput;
     UIButton confirmCancelAppointmentBtn;
     UIButton backFromCancelAppointmentBtn;
-    Storage<Appointment>* pendingAppointments;
-    Storage<Doctor>* pendingAppointmentDoctors;
+    Storage<Appointment> *pendingAppointments;
+    Storage<Doctor> *pendingAppointmentDoctors;
 
     // View appointments mode
     bool viewAppointmentsMode;
     sf::RectangleShape viewAppointmentsPanel;
-    sf::Text* viewAppointmentsTitleText;
-    sf::Text* viewAppointmentsStatusText;
-    sf::Text* viewAppointmentsLabelText;
+    sf::Text *viewAppointmentsTitleText;
+    sf::Text *viewAppointmentsStatusText;
+    sf::Text *viewAppointmentsLabelText;
     UIButton backFromViewAppointmentsBtn;
-    Storage<Appointment>* viewedAppointments;
-    Storage<Doctor>* viewedAppointmentDoctors;
+    Storage<Appointment> *viewedAppointments;
+    Storage<Doctor> *viewedAppointmentDoctors;
     int viewedAppointmentCount;
 
     // View medical records mode
     bool viewMedicalRecordsMode;
     sf::RectangleShape viewMedicalRecordsPanel;
-    sf::Text* viewMedicalRecordsTitleText;
-    sf::Text* viewMedicalRecordsStatusText;
-    sf::Text* viewMedicalRecordsLabelText;
+    sf::Text *viewMedicalRecordsTitleText;
+    sf::Text *viewMedicalRecordsStatusText;
+    sf::Text *viewMedicalRecordsLabelText;
     UIButton backFromViewMedicalRecordsBtn;
-    Storage<Prescription>* viewedMedicalRecords;
-    Storage<Doctor>* viewedMedicalRecordDoctors;
+    Storage<Prescription> *viewedMedicalRecords;
+    Storage<Doctor> *viewedMedicalRecordDoctors;
     int viewedMedicalRecordCount;
 
     // View bills mode
     bool viewBillsMode;
     sf::RectangleShape viewBillsPanel;
-    sf::Text* viewBillsTitleText;
-    sf::Text* viewBillsStatusText;
-    sf::Text* viewBillsLabelText;
-    sf::Text* viewBillsTotalText;
+    sf::Text *viewBillsTitleText;
+    sf::Text *viewBillsStatusText;
+    sf::Text *viewBillsLabelText;
+    sf::Text *viewBillsTotalText;
     UIButton backFromViewBillsBtn;
-    Storage<Bill>* viewedBills;
+    Storage<Bill> *viewedBills;
     int viewedBillCount;
     double outstandingUnpaidAmount;
     // Pay bill mode
     bool payBillMode;
     bool payBillRequested;
-    sf::Text* payBillIdLabelText;
+    sf::RectangleShape payBillPanel;
+    sf::Text *payBillTitleText;
+    sf::Text *payBillLabelText;
+    sf::Text *payBillIdLabelText;
     UITextBox payBillIdInput;
     UIButton confirmPayBillBtn;
     UIButton backFromPayBillBtn;
@@ -127,8 +133,8 @@ private:
     bool topUpRequested;
     int topUpAttempts;
     sf::RectangleShape topUpPanel;
-    sf::Text* topUpTitleText;
-    sf::Text* topUpLabelText;
+    sf::Text *topUpTitleText;
+    sf::Text *topUpLabelText;
     UITextBox topUpAmountInput;
     UIButton confirmTopUpBtn;
     UIButton backFromTopUpBtn;
@@ -161,28 +167,30 @@ private:
     bool bookAppointmentRequested;
     bool specializationSearchRequested;
     int bookingFocusedField;
-    
+
     // Temporary storage during booking
     char selectedSpecialization[100];
     int selectedDoctorID;
     char selectedDate[20];
     char selectedTimeSlot[10];
-    Storage<Doctor>* filteredDoctors;
+    Storage<Doctor> *filteredDoctors;
 
     void updateBookingFocus(int focusedField);
     void updateDoctorList();
     void updateTimeSlotDisplay();
     void updatePendingAppointmentList();
+    void resetBillModeStatus();
+    void clearViewedBillsState();
     void showStep(BookingStep step);
-    
+
 public:
     PatientDash();
     ~PatientDash();
-    
-    bool initialize(const sf::Font& regularFont, const sf::Font& boldFont);
-    void setPatient(Patient* patient);
-    void draw(sf::RenderWindow& window) const;
-    void handleMouseClick(sf::RenderWindow& window);
+
+    bool initialize(const sf::Font &regularFont, const sf::Font &boldFont);
+    void setPatient(Patient *patient);
+    void draw(sf::RenderWindow &window) const;
+    void handleMouseClick(sf::RenderWindow &window);
     void handleTextEntered(char32_t unicode);
     void startBookingMode();
     void cancelBookingMode();
@@ -205,22 +213,23 @@ public:
     bool consumeSpecializationSearchRequest();
     bool isCancelAppointmentMode() const;
     bool consumeCancelAppointmentRequest();
-    
+
     // Getters for booking data
-    const char* getSpecializationText() const;
+    const char *getSpecializationText() const;
     int getSelectedDoctorID() const;
-    const char* getBookingDateText() const;
-    const char* getBookingTimeText() const;
-    Storage<Doctor>* getFilteredDoctors() const;
-    void setFilteredDoctors(Storage<Doctor>* doctors);
-    void setPendingAppointments(Storage<Appointment>* appointments, Storage<Doctor>* doctors);
-    void setViewedAppointments(Storage<Appointment>* appointments, Storage<Doctor>* doctors);
-    void setViewedMedicalRecords(Storage<Prescription>* records, Storage<Doctor>* doctors);
-    void setViewedBills(Storage<Bill>* bills);
+    const char *getBookingDateText() const;
+    const char *getBookingTimeText() const;
+    Storage<Doctor> *getFilteredDoctors() const;
+    void setFilteredDoctors(Storage<Doctor> *doctors);
+    void setPendingAppointments(Storage<Appointment> *appointments, Storage<Doctor> *doctors);
+    void setViewedAppointments(Storage<Appointment> *appointments, Storage<Doctor> *doctors);
+    void setViewedMedicalRecords(Storage<Prescription> *records, Storage<Doctor> *doctors);
+    void setViewedBills(Storage<Bill> *bills);
+    void setAllAppointments(Storage<Appointment> *appointments);
     BookingStep getCurrentBookingStep() const;
-    const char* getCancelAppointmentIDText() const;
-    const char* getPayBillIDText() const;
-    const char* getTopUpAmountText() const;
+    const char *getCancelAppointmentIDText() const;
+    const char *getPayBillIDText() const;
+    const char *getTopUpAmountText() const;
 
     bool isBookAppointmentClicked() const;
     bool isCancelAppointmentClicked() const;
@@ -233,10 +242,9 @@ public:
     bool consumeTopUpRequest();
     void incrementTopUpAttempts();
     int getTopUpAttempts() const;
-    
+
     void clearClickStates();
-    void setStatus(const char* message);
-    void setDialogStatus(const char* message);
+    void setStatus(const char *message);
+    void setDialogStatus(const char *message);
     void updateStepIndicator();
 };
-

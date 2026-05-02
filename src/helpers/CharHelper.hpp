@@ -1,6 +1,7 @@
 #pragma once
 
-class CharHelper {
+class CharHelper
+{
 public:
     static bool isDigitChar(char c);
     static bool isAlphaChar(char c);

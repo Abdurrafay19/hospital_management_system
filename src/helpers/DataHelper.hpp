@@ -1,7 +1,8 @@
 #pragma once
 
-class DataHelper {
+class DataHelper
+{
 public:
-    static void splitByComma(const char* line, char** fields, int maxFields, int& fieldCount);
+    static void splitByComma(const char *line, char **fields, int maxFields, int &fieldCount);
     static bool isLeapYear(int year);
 };

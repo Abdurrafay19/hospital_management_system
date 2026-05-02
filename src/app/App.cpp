@@ -7,71 +7,87 @@
 #include "../helpers/ConversionHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 
-static bool pathExists(const char* path) {
+static bool pathExists(const char *path)
+{
     std::ifstream fileStream(path, std::ios::binary);
 
     return fileStream.good();
 }
 
-static bool loadFontWithFallback(sf::Font& font, const char* rootPath, const char* buildPath) {
-    if (pathExists(buildPath) && font.openFromFile(buildPath)) {
+static bool loadFontWithFallback(sf::Font &font, const char *rootPath, const char *buildPath)
+{
+    if (pathExists(buildPath) && font.openFromFile(buildPath))
+    {
         return true;
     }
 
-    if (pathExists(rootPath) && font.openFromFile(rootPath)) {
+    if (pathExists(rootPath) && font.openFromFile(rootPath))
+    {
         return true;
     }
 
     return false;
 }
 
-static int compareText(const char* left, const char* right) {
+static int compareText(const char *left, const char *right)
+{
     int index;
     char leftChar;
     char rightChar;
 
     index = 0;
-    while (left != nullptr && right != nullptr) {
+    while (left != nullptr && right != nullptr)
+    {
         leftChar = left[index];
         rightChar = right[index];
 
-        if (leftChar == '\0' && rightChar == '\0') {
+        if (leftChar == '\0' && rightChar == '\0')
+        {
             return 0;
         }
-        if (leftChar == '\0') {
+        if (leftChar == '\0')
+        {
             return -1;
         }
-        if (rightChar == '\0') {
+        if (rightChar == '\0')
+        {
             return 1;
         }
-        if (leftChar < rightChar) {
+        if (leftChar < rightChar)
+        {
             return -1;
         }
-        if (leftChar > rightChar) {
+        if (leftChar > rightChar)
+        {
             return 1;
         }
 
         index++;
     }
 
-    if (left == nullptr && right == nullptr) {
+    if (left == nullptr && right == nullptr)
+    {
         return 0;
     }
-    if (left == nullptr) {
+    if (left == nullptr)
+    {
         return -1;
     }
 
     return 1;
 }
 
-static int parseDateComponent(const char* dateText, int startIndex, int endMarker) {
+static int parseDateComponent(const char *dateText, int startIndex, int endMarker)
+{
     int value;
     int index;
 
     value = 0;
     index = startIndex;
-    while (dateText != nullptr && dateText[index] != '\0' && dateText[index] != endMarker) {
-        if (dateText[index] >= '0' && dateText[index] <= '9') {
+    while (dateText != nullptr && dateText[index] != '\0' && dateText[index] != endMarker)
+    {
+        if (dateText[index] >= '0' && dateText[index] <= '9')
+        {
             value = value * 10 + (dateText[index] - '0');
         }
         index++;
@@ -80,40 +96,47 @@ static int parseDateComponent(const char* dateText, int startIndex, int endMarke
     return value;
 }
 
-static void parseDateText(const char* dateText, int& day, int& month, int& year) {
+static void parseDateText(const char *dateText, int &day, int &month, int &year)
+{
     int index;
 
     day = 0;
     month = 0;
     year = 0;
 
-    if (dateText == nullptr) {
+    if (dateText == nullptr)
+    {
         return;
     }
 
     day = parseDateComponent(dateText, 0, '-');
 
     index = 0;
-    while (dateText[index] != '\0' && dateText[index] != '-') {
+    while (dateText[index] != '\0' && dateText[index] != '-')
+    {
         index++;
     }
-    if (dateText[index] == '-') {
+    if (dateText[index] == '-')
+    {
         index++;
     }
 
     month = parseDateComponent(dateText, index, '-');
 
-    while (dateText[index] != '\0' && dateText[index] != '-') {
+    while (dateText[index] != '\0' && dateText[index] != '-')
+    {
         index++;
     }
-    if (dateText[index] == '-') {
+    if (dateText[index] == '-')
+    {
         index++;
     }
 
     year = parseDateComponent(dateText, index, '\0');
 }
 
-static int compareAppointmentsByDateTime(const Appointment& left, const Appointment& right) {
+static int compareAppointmentsByDateTime(const Appointment &left, const Appointment &right)
+{
     int leftDay;
     int leftMonth;
     int leftYear;
@@ -125,24 +148,30 @@ static int compareAppointmentsByDateTime(const Appointment& left, const Appointm
     parseDateText(left.getDate(), leftDay, leftMonth, leftYear);
     parseDateText(right.getDate(), rightDay, rightMonth, rightYear);
 
-    if (leftYear < rightYear) {
+    if (leftYear < rightYear)
+    {
         return -1;
     }
-    if (leftYear > rightYear) {
+    if (leftYear > rightYear)
+    {
         return 1;
     }
 
-    if (leftMonth < rightMonth) {
+    if (leftMonth < rightMonth)
+    {
         return -1;
     }
-    if (leftMonth > rightMonth) {
+    if (leftMonth > rightMonth)
+    {
         return 1;
     }
 
-    if (leftDay < rightDay) {
+    if (leftDay < rightDay)
+    {
         return -1;
     }
-    if (leftDay > rightDay) {
+    if (leftDay > rightDay)
+    {
         return 1;
     }
 
@@ -150,8 +179,9 @@ static int compareAppointmentsByDateTime(const Appointment& left, const Appointm
     return result;
 }
 
-static void sortAppointmentsByDate(Storage<Appointment>& appointments) {
-    Appointment* appointmentArray;
+static void sortAppointmentsByDate(Storage<Appointment> &appointments)
+{
+    Appointment *appointmentArray;
     int count;
     int pass;
     int index;
@@ -160,9 +190,12 @@ static void sortAppointmentsByDate(Storage<Appointment>& appointments) {
     count = appointments.size();
     appointmentArray = appointments.getAll();
 
-    for (pass = 0; pass < count - 1; pass++) {
-        for (index = 0; index < count - 1 - pass; index++) {
-            if (compareAppointmentsByDateTime(appointmentArray[index], appointmentArray[index + 1]) > 0) {
+    for (pass = 0; pass < count - 1; pass++)
+    {
+        for (index = 0; index < count - 1 - pass; index++)
+        {
+            if (compareAppointmentsByDateTime(appointmentArray[index], appointmentArray[index + 1]) > 0)
+            {
                 temp = appointmentArray[index];
                 appointmentArray[index] = appointmentArray[index + 1];
                 appointmentArray[index + 1] = temp;
@@ -171,7 +204,8 @@ static void sortAppointmentsByDate(Storage<Appointment>& appointments) {
     }
 }
 
-static int comparePrescriptionsByDateDesc(const Prescription& left, const Prescription& right) {
+static int comparePrescriptionsByDateDesc(const Prescription &left, const Prescription &right)
+{
     int leftDay;
     int leftMonth;
     int leftYear;
@@ -182,32 +216,39 @@ static int comparePrescriptionsByDateDesc(const Prescription& left, const Prescr
     parseDateText(left.getDate(), leftDay, leftMonth, leftYear);
     parseDateText(right.getDate(), rightDay, rightMonth, rightYear);
 
-    if (leftYear > rightYear) {
+    if (leftYear > rightYear)
+    {
         return -1;
     }
-    if (leftYear < rightYear) {
+    if (leftYear < rightYear)
+    {
         return 1;
     }
 
-    if (leftMonth > rightMonth) {
+    if (leftMonth > rightMonth)
+    {
         return -1;
     }
-    if (leftMonth < rightMonth) {
+    if (leftMonth < rightMonth)
+    {
         return 1;
     }
 
-    if (leftDay > rightDay) {
+    if (leftDay > rightDay)
+    {
         return -1;
     }
-    if (leftDay < rightDay) {
+    if (leftDay < rightDay)
+    {
         return 1;
     }
 
     return 0;
 }
 
-static void sortPrescriptionsByDateDesc(Storage<Prescription>& prescriptions) {
-    Prescription* prescriptionArray;
+static void sortPrescriptionsByDateDesc(Storage<Prescription> &prescriptions)
+{
+    Prescription *prescriptionArray;
     int count;
     int pass;
     int index;
@@ -216,9 +257,12 @@ static void sortPrescriptionsByDateDesc(Storage<Prescription>& prescriptions) {
     count = prescriptions.size();
     prescriptionArray = prescriptions.getAll();
 
-    for (pass = 0; pass < count - 1; pass++) {
-        for (index = 0; index < count - 1 - pass; index++) {
-            if (comparePrescriptionsByDateDesc(prescriptionArray[index], prescriptionArray[index + 1]) > 0) {
+    for (pass = 0; pass < count - 1; pass++)
+    {
+        for (index = 0; index < count - 1 - pass; index++)
+        {
+            if (comparePrescriptionsByDateDesc(prescriptionArray[index], prescriptionArray[index + 1]) > 0)
+            {
                 temp = prescriptionArray[index];
                 prescriptionArray[index] = prescriptionArray[index + 1];
                 prescriptionArray[index + 1] = temp;
@@ -227,7 +271,35 @@ static void sortPrescriptionsByDateDesc(Storage<Prescription>& prescriptions) {
     }
 }
 
-void App::setupUI() {
+static Storage<Bill> *collectPatientBills(HospitalSystem &system, int patientID, bool unpaidOnly)
+{
+    Storage<Bill> *result;
+    Bill *billList;
+    int i;
+
+    result = new Storage<Bill>();
+    billList = system.getBills().getAll();
+
+    for (i = 0; i < system.getBills().size(); i++)
+    {
+        if (billList[i].getPatientID() != patientID)
+        {
+            continue;
+        }
+
+        if (unpaidOnly && (StringHelper::textEquals(billList[i].getStatus(), "paid") || StringHelper::textEquals(billList[i].getStatus(), "cancelled")))
+        {
+            continue;
+        }
+
+        result->add(billList[i]);
+    }
+
+    return result;
+}
+
+void App::setupUI()
+{
     logoutButton = UIButton(regularFont, "Logout", sf::Vector2f(1100.f, 30.f), sf::Vector2f(130.f, 40.f));
 
     logoutButton.setFillColor(sf::Color(230, 80, 80));
@@ -239,212 +311,242 @@ void App::setupUI() {
     patientDash.initialize(regularFont, boldFont);
 }
 
-void App::processEvents() {
-    while (const std::optional event = window.pollEvent()) {
-        if (event->is<sf::Event::Closed>()) {
+void App::processEvents()
+{
+    while (const std::optional event = window.pollEvent())
+    {
+        if (event->is<sf::Event::Closed>())
+        {
             window.close();
         }
 
-        if (event->is<sf::Event::MouseButtonPressed>()) {
+        if (event->is<sf::Event::MouseButtonPressed>())
+        {
             handleMouseClick();
         }
 
-        if (const sf::Event::TextEntered* textEvent = event->getIf<sf::Event::TextEntered>()) {
+        if (const sf::Event::TextEntered *textEvent = event->getIf<sf::Event::TextEntered>())
+        {
             handleTextEntered(textEvent->unicode);
         }
     }
 }
 
-void App::handleMouseClick() {
-    if (state == LOGIN) {
+void App::handleMouseClick()
+{
+    if (state == LOGIN)
+    {
         loginScreen.handleMouseClick(window);
-        if (loginScreen.consumeLoginRequest()) {
+        if (loginScreen.consumeLoginRequest())
+        {
             attemptLogin();
         }
-        if (loginScreen.consumeSignupRequest()) {
+        if (loginScreen.consumeSignupRequest())
+        {
             attemptSignup();
         }
-    } else {
+    }
+    else
+    {
         sf::Vector2f mouseWorldPosition;
 
         mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-        if (logoutButton.getShape().getGlobalBounds().contains(mouseWorldPosition)) {
+        if (logoutButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
+        {
             logout();
             return;
         }
-        
-        if (state == PATIENT_MENU) {
+
+        if (state == PATIENT_MENU)
+        {
             patientDash.handleMouseClick(window);
 
             // Handle specialization search
-            if (patientDash.consumeSpecializationSearchRequest()) {
-                try {
-                    Storage<Doctor>* foundDoctors;
+            if (patientDash.consumeSpecializationSearchRequest())
+            {
+                try
+                {
+                    Storage<Doctor> *foundDoctors;
                     foundDoctors = system.getDoctorsBySpecialization(patientDash.getSpecializationText());
-                    
-                    if (foundDoctors == nullptr || foundDoctors->size() == 0) {
+
+                    if (foundDoctors == nullptr || foundDoctors->size() == 0)
+                    {
                         patientDash.setDialogStatus("No doctors available for that specialization.");
-                        if (foundDoctors != nullptr) {
+                        if (foundDoctors != nullptr)
+                        {
                             delete foundDoctors;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         patientDash.setFilteredDoctors(foundDoctors);
                         patientDash.advanceBookingStep();
                     }
-                } catch (const HospitalException& exception) {
+                }
+                catch (const HospitalException &exception)
+                {
                     patientDash.setDialogStatus(exception.what());
                 }
             }
 
-            if (patientDash.isCancelAppointmentClicked()) {
-                Patient* patient;
-                Storage<Appointment>* pendingAppointments;
-                Appointment* appointmentList;
+            if (patientDash.isCancelAppointmentClicked())
+            {
+                Patient *patient;
+                Storage<Appointment> *pendingAppointments;
+                Appointment *appointmentList;
                 int i;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
+                patient = reinterpret_cast<Patient *>(currentUser);
                 pendingAppointments = new Storage<Appointment>();
                 appointmentList = system.getAppointments().getAll();
 
-                for (i = 0; i < system.getAppointments().size(); i++) {
-                    if (appointmentList[i].getPatientID() == patient->getID() && StringHelper::textEquals(appointmentList[i].getStatus(), "pending")) {
+                for (i = 0; i < system.getAppointments().size(); i++)
+                {
+                    if (appointmentList[i].getPatientID() == patient->getID() && StringHelper::textEquals(appointmentList[i].getStatus(), "pending"))
+                    {
                         pendingAppointments->add(appointmentList[i]);
                     }
                 }
 
-                if (pendingAppointments->size() == 0) {
+                if (pendingAppointments->size() == 0)
+                {
                     delete pendingAppointments;
                     patientDash.setStatus("You have no pending appointments.");
-                } else {
+                }
+                else
+                {
                     patientDash.setPendingAppointments(pendingAppointments, &system.getDoctors());
                     patientDash.startCancelAppointmentMode();
                 }
             }
 
-            if (patientDash.isViewAppointmentsClicked()) {
-                Patient* patient;
-                Storage<Appointment>* patientAppointments;
-                Appointment* appointmentList;
+            if (patientDash.isViewAppointmentsClicked())
+            {
+                Patient *patient;
+                Storage<Appointment> *patientAppointments;
+                Appointment *appointmentList;
                 int i;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
+                patient = reinterpret_cast<Patient *>(currentUser);
                 patientAppointments = new Storage<Appointment>();
                 appointmentList = system.getAppointments().getAll();
 
-                for (i = 0; i < system.getAppointments().size(); i++) {
-                    if (appointmentList[i].getPatientID() == patient->getID()) {
+                for (i = 0; i < system.getAppointments().size(); i++)
+                {
+                    if (appointmentList[i].getPatientID() == patient->getID())
+                    {
                         patientAppointments->add(appointmentList[i]);
                     }
                 }
 
-                if (patientAppointments->size() == 0) {
+                if (patientAppointments->size() == 0)
+                {
                     delete patientAppointments;
                     patientDash.setStatus("No appointments found.");
-                } else {
+                }
+                else
+                {
                     sortAppointmentsByDate(*patientAppointments);
                     patientDash.setViewedAppointments(patientAppointments, &system.getDoctors());
                     patientDash.startViewAppointmentsMode();
                 }
             }
 
-            if (patientDash.isViewMedicalRecordsClicked()) {
-                Patient* patient;
-                Storage<Prescription>* patientRecords;
-                Prescription* recordList;
+            if (patientDash.isViewMedicalRecordsClicked())
+            {
+                Patient *patient;
+                Storage<Prescription> *patientRecords;
+                Prescription *recordList;
                 int i;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
+                patient = reinterpret_cast<Patient *>(currentUser);
                 patientRecords = new Storage<Prescription>();
                 recordList = system.getPrescriptions().getAll();
 
-                for (i = 0; i < system.getPrescriptions().size(); i++) {
-                    if (recordList[i].getPatientID() == patient->getID()) {
+                for (i = 0; i < system.getPrescriptions().size(); i++)
+                {
+                    if (recordList[i].getPatientID() == patient->getID())
+                    {
                         patientRecords->add(recordList[i]);
                     }
                 }
 
-                if (patientRecords->size() == 0) {
+                if (patientRecords->size() == 0)
+                {
                     delete patientRecords;
                     patientDash.setStatus("No medical records found.");
-                } else {
+                }
+                else
+                {
                     sortPrescriptionsByDateDesc(*patientRecords);
                     patientDash.setViewedMedicalRecords(patientRecords, &system.getDoctors());
                     patientDash.startViewMedicalRecordsMode();
                 }
             }
 
-            if (patientDash.isViewBillsClicked()) {
-                Patient* patient;
-                Storage<Bill>* patientBills;
-                Bill* billList;
-                int i;
+            if (patientDash.isViewBillsClicked())
+            {
+                Patient *patient;
+                Storage<Bill> *patientBills;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
-                patientBills = new Storage<Bill>();
-                billList = system.getBills().getAll();
+                patient = reinterpret_cast<Patient *>(currentUser);
+                patientBills = collectPatientBills(system, patient->getID(), false);
 
-                for (i = 0; i < system.getBills().size(); i++) {
-                    if (billList[i].getPatientID() == patient->getID()) {
-                        patientBills->add(billList[i]);
-                    }
-                }
-
-                if (patientBills->size() == 0) {
+                if (patientBills->size() == 0)
+                {
                     delete patientBills;
                     patientDash.setStatus("No bills found.");
-                } else {
+                }
+                else
+                {
                     patientDash.setViewedBills(patientBills);
                     patientDash.startViewBillsMode();
                 }
             }
 
-            if (patientDash.isTopUpBalanceClicked()) {
-                Patient* patient;
-
-                patient = reinterpret_cast<Patient*>(currentUser);
+            if (patientDash.isTopUpBalanceClicked())
+            {
                 patientDash.startTopUpMode();
             }
 
-            if (patientDash.isPayBillClicked()) {
-                Patient* patient;
-                Storage<Bill>* unpaidBills;
-                Bill* billList;
-                int i;
+            if (patientDash.isPayBillClicked())
+            {
+                Patient *patient;
+                Storage<Bill> *unpaidBills;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
-                unpaidBills = new Storage<Bill>();
-                billList = system.getBills().getAll();
+                patient = reinterpret_cast<Patient *>(currentUser);
+                unpaidBills = collectPatientBills(system, patient->getID(), true);
 
-                for (i = 0; i < system.getBills().size(); i++) {
-                    if (billList[i].getPatientID() == patient->getID() && !StringHelper::textEquals(billList[i].getStatus(), "paid") && !StringHelper::textEquals(billList[i].getStatus(), "cancelled")) {
-                        unpaidBills->add(billList[i]);
-                    }
-                }
-
-                if (unpaidBills->size() == 0) {
+                if (unpaidBills->size() == 0)
+                {
                     delete unpaidBills;
                     patientDash.setStatus("No unpaid bills.");
-                } else {
+                }
+                else
+                {
                     patientDash.setViewedBills(unpaidBills);
                     patientDash.startPayBillMode();
                 }
             }
 
-            if (patientDash.consumeCancelAppointmentRequest()) {
-                Patient* patient;
+            if (patientDash.consumeCancelAppointmentRequest())
+            {
+                Patient *patient;
                 int appointmentID;
                 double refundedFee;
                 char feeBuffer[32];
                 char successMessage[200];
                 int messageLength;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
+                patient = reinterpret_cast<Patient *>(currentUser);
                 appointmentID = ConversionHelper::toInt(patientDash.getCancelAppointmentIDText());
 
-                try {
+                try
+                {
                     refundedFee = system.cancelAppointment(patient, appointmentID);
                     patientDash.closeCancelAppointmentMode();
                     patientDash.setPatient(patient);
+                    patientDash.setAllAppointments(&system.getAppointments());
 
                     successMessage[0] = '\0';
                     StringHelper::stringCopy(successMessage, "Appointment cancelled. PKR ", 200);
@@ -454,128 +556,141 @@ void App::handleMouseClick() {
                     messageLength = StringHelper::stringLength(successMessage);
                     StringHelper::stringCopy(successMessage + messageLength, " refunded to your balance.", 200 - messageLength);
                     patientDash.setStatus(successMessage);
-                } catch (const HospitalException& exception) {
+                }
+                catch (const HospitalException &exception)
+                {
                     patientDash.closeCancelAppointmentMode();
                     patientDash.setStatus(exception.what());
                 }
             }
 
-            if (patientDash.consumePayBillRequest()) {
-                Patient* patient;
+            if (patientDash.consumePayBillRequest())
+            {
+                Patient *patient;
                 int billID;
                 char balanceBuffer[64];
                 char successMessage[200];
                 int msgLen;
+                const char *billText;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
-                billID = ConversionHelper::toInt(patientDash.getPayBillIDText());
+                patient = reinterpret_cast<Patient *>(currentUser);
+                billText = patientDash.getPayBillIDText();
 
-                // Validate bill belongs to this patient and is unpaid
-                Bill* targetBill = system.getBills().findByID(billID);
-                if (targetBill == nullptr) {
-                    patientDash.closePayBillMode();
-                    patientDash.setStatus("Invalid Bill ID.");
-                } else if (targetBill->getPatientID() != patient->getID()) {
-                    patientDash.closePayBillMode();
-                    patientDash.setStatus("Bill does not belong to you.");
-                } else if (StringHelper::textEquals(targetBill->getStatus(), "paid") || StringHelper::textEquals(targetBill->getStatus(), "cancelled")) {
-                    patientDash.closePayBillMode();
-                    patientDash.setStatus("Bill is not unpaid.");
-                } else {
-                    try {
-                        system.payBill(patient, billID);
-                        patientDash.closePayBillMode();
-                        patientDash.setPatient(patient);
+                billID = ConversionHelper::toInt(billText);
 
-                        successMessage[0] = '\0';
-                        StringHelper::stringCopy(successMessage, "Bill paid successfully. Remaining balance: PKR ", 200);
-                        msgLen = StringHelper::stringLength(successMessage);
-                        ConversionHelper::doubleToString(patient->getBalance(), balanceBuffer);
-                        StringHelper::stringCopy(successMessage + msgLen, balanceBuffer, 200 - msgLen);
-                        patientDash.setStatus(successMessage);
-                    } catch (const InsufficientFundsException& ex) {
-                        patientDash.closePayBillMode();
-                        patientDash.setStatus(ex.what());
-                    } catch (const HospitalException& ex) {
-                        patientDash.closePayBillMode();
-                        patientDash.setStatus(ex.what());
-                    }
+                try
+                {
+                    system.payBill(patient, billID);
+                    patientDash.closePayBillMode();
+                    patientDash.setPatient(patient);
+                    patientDash.setAllAppointments(&system.getAppointments());
+
+                    successMessage[0] = '\0';
+                    StringHelper::stringCopy(successMessage, "Bill paid successfully. Remaining balance: PKR ", 200);
+                    msgLen = StringHelper::stringLength(successMessage);
+                    ConversionHelper::doubleToString(patient->getBalance(), balanceBuffer);
+                    StringHelper::stringCopy(successMessage + msgLen, balanceBuffer, 200 - msgLen);
+                    patientDash.setStatus(successMessage);
+                }
+                catch (const InsufficientFundsException &ex)
+                {
+                    patientDash.closePayBillMode();
+                    patientDash.setStatus(ex.what());
+                }
+                catch (const HospitalException &ex)
+                {
+                    patientDash.closePayBillMode();
+                    patientDash.setStatus(ex.what());
                 }
             }
 
-            if (patientDash.consumeTopUpRequest()) {
-                Patient* patient;
-                const char* amtText;
+            if (patientDash.consumeTopUpRequest())
+            {
+                Patient *patient;
+                const char *amtText;
                 double amount;
+                char buf[128];
+                char balStr[64];
+                int len;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
+                patient = reinterpret_cast<Patient *>(currentUser);
                 amtText = patientDash.getTopUpAmountText();
 
-                try {
-                    if (amtText == nullptr || StringHelper::stringLength(amtText) == 0) {
-                        throw InvalidInputException("Amount is required.");
-                    }
-
+                try
+                {
                     amount = ConversionHelper::stringToDouble(amtText);
-                    if (amount <= 0.0) {
-                        throw InvalidInputException("Amount must be greater than 0.");
-                    }
 
-                    *patient += amount;
-                    FileHandler::saveAllPatients(system.getPatients());
+                    system.topUpBalance(patient, amount);
 
-                    char buf[128];
                     buf[0] = '\0';
                     StringHelper::stringCopy(buf, "Balance updated. New balance: PKR ", 128);
-                    char balStr[64];
                     ConversionHelper::doubleToString(patient->getBalance(), balStr);
-                    int len = StringHelper::stringLength(buf);
+                    len = StringHelper::stringLength(buf);
                     StringHelper::stringCopy(buf + len, balStr, 128 - len);
 
                     patientDash.closeTopUpMode();
                     patientDash.setPatient(patient);
+                    patientDash.setAllAppointments(&system.getAppointments());
                     patientDash.setStatus(buf);
-                } catch (const InvalidInputException& ex) {
+                }
+                catch (const InvalidInputException &ex)
+                {
                     patientDash.incrementTopUpAttempts();
-                    if (patientDash.getTopUpAttempts() >= 3) {
+                    if (patientDash.getTopUpAttempts() >= 3)
+                    {
                         patientDash.closeTopUpMode();
                         patientDash.setStatus("Top up cancelled after 3 attempts.");
-                    } else {
+                    }
+                    else
+                    {
                         patientDash.setStatus(ex.what());
                     }
-                } catch (const HospitalException& ex) {
+                }
+                catch (const HospitalException &ex)
+                {
                     patientDash.closeTopUpMode();
                     patientDash.setStatus(ex.what());
                 }
             }
 
             // Handle booking confirmation
-            if (patientDash.consumeBookAppointmentRequest()) {
-                Patient* patient;
+            if (patientDash.consumeBookAppointmentRequest())
+            {
+                Patient *patient;
                 int doctorID;
 
-                patient = reinterpret_cast<Patient*>(currentUser);
+                patient = reinterpret_cast<Patient *>(currentUser);
                 doctorID = patientDash.getSelectedDoctorID();
 
-                try {
-                    if (doctorID < 1) {
+                try
+                {
+                    if (doctorID < 1)
+                    {
                         patientDash.setDialogStatus("Doctor ID is invalid.");
-                    } else if (StringHelper::stringLength(patientDash.getBookingDateText()) < 1) {
+                    }
+                    else if (StringHelper::stringLength(patientDash.getBookingDateText()) < 1)
+                    {
                         patientDash.setDialogStatus("Date is required.");
-                    } else if (StringHelper::stringLength(patientDash.getBookingTimeText()) < 1) {
+                    }
+                    else if (StringHelper::stringLength(patientDash.getBookingTimeText()) < 1)
+                    {
                         patientDash.setDialogStatus("Time slot is required.");
-                    } else {
+                    }
+                    else
+                    {
                         system.bookAppointment(
                             patient,
                             doctorID,
                             patientDash.getBookingDateText(),
-                            patientDash.getBookingTimeText()
-                        );
+                            patientDash.getBookingTimeText());
                         patientDash.setDialogStatus("Appointment booked successfully!");
                         patientDash.cancelBookingMode();
                         patientDash.setPatient(patient);
+                        patientDash.setAllAppointments(&system.getAppointments());
                     }
-                } catch (const HospitalException& exception) {
+                }
+                catch (const HospitalException &exception)
+                {
                     patientDash.setDialogStatus(exception.what());
                 }
             }
@@ -585,9 +700,12 @@ void App::handleMouseClick() {
     }
 }
 
-void App::handleTextEntered(char32_t unicode) {
-    if (state != LOGIN) {
-        if (state == PATIENT_MENU) {
+void App::handleTextEntered(char32_t unicode)
+{
+    if (state != LOGIN)
+    {
+        if (state == PATIENT_MENU)
+        {
             patientDash.handleTextEntered(unicode);
         }
         return;
@@ -596,38 +714,47 @@ void App::handleTextEntered(char32_t unicode) {
     loginScreen.handleTextEntered(unicode);
 }
 
-void App::attemptLogin() {
-    Person* user;
+void App::attemptLogin()
+{
+    Person *user;
     Role selectedRole;
 
     selectedRole = loginScreen.getSelectedRole();
     user = system.login(loginScreen.getEnteredName(), loginScreen.getEnteredPassword(), "", selectedRole);
 
-    if (user == nullptr) {
+    if (user == nullptr)
+    {
         loginScreen.setStatus("Login failed. Check ID or password.");
         return;
     }
 
     currentUser = user;
-    if (selectedRole == ROLE_PATIENT) {
+    if (selectedRole == ROLE_PATIENT)
+    {
         state = PATIENT_MENU;
-        patientDash.setPatient(reinterpret_cast<Patient*>(user));
+        patientDash.setPatient(reinterpret_cast<Patient *>(user));
+        patientDash.setAllAppointments(&system.getAppointments());
         loginScreen.setStatus("Login successful. Welcome, patient.");
-    } else if (selectedRole == ROLE_DOCTOR) {
+    }
+    else if (selectedRole == ROLE_DOCTOR)
+    {
         state = DOCTOR_MENU;
         loginScreen.setStatus("Login successful. Welcome, doctor.");
-    } else {
+    }
+    else
+    {
         state = ADMIN_MENU;
         loginScreen.setStatus("Login successful. Welcome, admin.");
     }
 }
 
-void App::attemptSignup() {
-    const char* name;
+void App::attemptSignup()
+{
+    const char *name;
     int age;
-    const char* gender;
-    const char* contact;
-    const char* password;
+    const char *gender;
+    const char *contact;
+    const char *password;
     int newID;
     Patient newPatient;
     char successMsg[200];
@@ -640,23 +767,28 @@ void App::attemptSignup() {
     password = loginScreen.getEnteredSignupPassword();
 
     // Validate inputs
-    if (StringHelper::stringLength(name) < 2) {
+    if (StringHelper::stringLength(name) < 2)
+    {
         loginScreen.setStatus("Name must be at least 2 characters");
         return;
     }
-    if (age < 18 || age > 120) {
+    if (age < 18 || age > 120)
+    {
         loginScreen.setStatus("Age must be between 18 and 120");
         return;
     }
-    if (StringHelper::stringLength(gender) < 1) {
+    if (StringHelper::stringLength(gender) < 1)
+    {
         loginScreen.setStatus("Gender cannot be empty");
         return;
     }
-    if (!Validator::isValidContact(contact)) {
+    if (!Validator::isValidContact(contact))
+    {
         loginScreen.setStatus("Contact must be 11 digits");
         return;
     }
-    if (!Validator::isValidPassword(password)) {
+    if (!Validator::isValidPassword(password))
+    {
         loginScreen.setStatus("Password must be at least 6 characters");
         return;
     }
@@ -678,13 +810,14 @@ void App::attemptSignup() {
     StringHelper::stringCopy(successMsg, "New account created with ID: ", 200);
     i = StringHelper::stringLength(successMsg);
     ConversionHelper::intToString(newID, successMsg + i);
-    
+
     loginScreen.setSignupMode(false);
     loginScreen.clearInputs();
     loginScreen.setStatus(successMsg);
 }
 
-void App::logout() {
+void App::logout()
+{
     currentUser = nullptr;
     state = LOGIN;
     loginScreen.clearInputs();
@@ -692,15 +825,22 @@ void App::logout() {
     patientDash.setPatient(nullptr);
 }
 
-void App::drawDashboard() {
-    if (state == PATIENT_MENU) {
+void App::drawDashboard()
+{
+    if (state == PATIENT_MENU)
+    {
         patientDash.draw(window);
-    } else {
+    }
+    else
+    {
         sf::Text title(boldFont, "", 30);
 
-        if (state == DOCTOR_MENU) {
+        if (state == DOCTOR_MENU)
+        {
             title.setString("Doctor Dashboard");
-        } else {
+        }
+        else
+        {
             title.setString("Admin Dashboard");
         }
 
@@ -709,12 +849,13 @@ void App::drawDashboard() {
 
         window.draw(title);
     }
-    
+
     logoutButton.draw(window);
 }
 
 App::App()
-    : window(sf::VideoMode({1280, 720}), "MediCore") {
+    : window(sf::VideoMode({1280, 720}), "MediCore")
+{
     fontLoaded = false;
     state = LOGIN;
     currentUser = nullptr;
@@ -723,34 +864,43 @@ App::App()
                                       "assets/fonts/font.ttf",
                                       "../../../assets/fonts/font.ttf");
 
-    if (fontLoaded) {
+    if (fontLoaded)
+    {
         fontLoaded = loadFontWithFallback(boldFont,
                                           "assets/fonts/font-bold.ttf",
                                           "../../../assets/fonts/font-bold.ttf");
     }
 
-    if (fontLoaded) {
+    if (fontLoaded)
+    {
         setupUI();
     }
 }
 
-App::~App() {
+App::~App()
+{
 }
 
-void App::run() {
-    while (window.isOpen()) {
+void App::run()
+{
+    while (window.isOpen())
+    {
         processEvents();
 
         window.clear(sf::Color(245, 247, 248));
 
-        if (!fontLoaded) {
+        if (!fontLoaded)
+        {
             window.display();
             continue;
         }
 
-        if (state == LOGIN) {
+        if (state == LOGIN)
+        {
             loginScreen.draw(window);
-        } else {
+        }
+        else
+        {
             drawDashboard();
         }
 

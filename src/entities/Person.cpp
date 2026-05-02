@@ -3,13 +3,15 @@
 
 #include "../core/Validator.hpp"
 
-Person::Person() {
+Person::Person()
+{
     id = 0;
     name = 0;
     password = 0;
 }
 
-Person::Person(int personID, const char* personName, const char* personPassword) {
+Person::Person(int personID, const char *personName, const char *personPassword)
+{
     id = 0;
     name = 0;
     password = 0;
@@ -19,7 +21,8 @@ Person::Person(int personID, const char* personName, const char* personPassword)
     setPassword(personPassword);
 }
 
-Person::Person(const Person& other) {
+Person::Person(const Person &other)
+{
     id = 0;
     name = 0;
     password = 0;
@@ -29,15 +32,18 @@ Person::Person(const Person& other) {
     StringHelper::copyTextDynamic(password, other.password);
 }
 
-Person::~Person() {
+Person::~Person()
+{
     delete[] name;
     delete[] password;
     name = 0;
     password = 0;
 }
 
-Person& Person::operator=(const Person& other) {
-    if (this != &other) {
+Person &Person::operator=(const Person &other)
+{
+    if (this != &other)
+    {
         id = other.id;
         StringHelper::copyTextDynamic(name, other.name);
         StringHelper::copyTextDynamic(password, other.password);
@@ -46,31 +52,38 @@ Person& Person::operator=(const Person& other) {
     return *this;
 }
 
-
-int Person::getID() const {
+int Person::getID() const
+{
     return id;
 }
 
-const char* Person::getName() const {
+const char *Person::getName() const
+{
     return name;
 }
 
-const char* Person::getPassword() const {
+const char *Person::getPassword() const
+{
     return password;
 }
 
-void Person::setID(int personID) {
-    if (Validator::isValidID(personID)) {
+void Person::setID(int personID)
+{
+    if (Validator::isValidID(personID))
+    {
         id = personID;
     }
 }
 
-void Person::setName(const char* personName) {
+void Person::setName(const char *personName)
+{
     StringHelper::copyTextDynamic(name, personName);
 }
 
-bool Person::setPassword(const char* personPassword) {
-    if (!Validator::isValidPassword(personPassword)) {
+bool Person::setPassword(const char *personPassword)
+{
+    if (!Validator::isValidPassword(personPassword))
+    {
         return false;
     }
 
