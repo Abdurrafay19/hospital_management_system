@@ -6,6 +6,7 @@
 #include "../ui/UIButton.hpp"
 #include "../ui/LoginScreen.hpp"
 #include "../ui/PatientDash.hpp"
+#include "../ui/DoctorDash.hpp"
 
 class App
 {
@@ -31,6 +32,7 @@ private:
     UIButton logoutButton;
     LoginScreen loginScreen;
     PatientDash patientDash;
+    DoctorDash doctorDash;
 
     void setupUI();
 

@@ -228,3 +228,45 @@ int TimeHelper::compareDates(const char *date1, const char *date2)
 
     return 0;
 }
+
+int TimeHelper::compareTimeSlotsAscending(const char *left, const char *right)
+{
+    int index;
+
+    index = 0;
+    while (left != nullptr && right != nullptr)
+    {
+        if (left[index] == '\0' && right[index] == '\0')
+        {
+            return 0;
+        }
+        if (left[index] == '\0')
+        {
+            return -1;
+        }
+        if (right[index] == '\0')
+        {
+            return 1;
+        }
+        if (left[index] < right[index])
+        {
+            return -1;
+        }
+        if (left[index] > right[index])
+        {
+            return 1;
+        }
+        index++;
+    }
+
+    if (left == nullptr && right == nullptr)
+    {
+        return 0;
+    }
+    if (left == nullptr)
+    {
+        return -1;
+    }
+
+    return 1;
+}

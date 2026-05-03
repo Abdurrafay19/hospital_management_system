@@ -6,6 +6,7 @@
 #include "../core/FileHandler.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../helpers/StringHelper.hpp"
+#include "../helpers/TimeHelper.hpp"
 
 static bool pathExists(const char *path)
 {
@@ -271,6 +272,54 @@ static void sortPrescriptionsByDateDesc(Storage<Prescription> &prescriptions)
     }
 }
 
+static Storage<Appointment> *collectTodaysDoctorAppointments(HospitalSystem &system, int doctorID, const char *todayDate, bool pendingOnly)
+{
+    Storage<Appointment> *result;
+    Appointment *appointmentList;
+    int i;
+
+    result = new Storage<Appointment>();
+    appointmentList = system.getAppointments().getAll();
+
+    for (i = 0; i < system.getAppointments().size(); i++)
+    {
+        if (appointmentList[i].getDoctorID() != doctorID)
+        {
+            continue;
+        }
+
+        if (!StringHelper::textEquals(appointmentList[i].getDate(), todayDate))
+        {
+            continue;
+        }
+
+        if (pendingOnly && !StringHelper::textEquals(appointmentList[i].getStatus(), "pending"))
+        {
+            continue;
+        }
+
+        result->add(appointmentList[i]);
+    }
+
+    appointmentList = result->getAll();
+    for (i = 0; i < result->size() - 1; i++)
+    {
+        int j;
+        for (j = 0; j < result->size() - 1 - i; j++)
+        {
+            if (TimeHelper::compareTimeSlotsAscending(appointmentList[j].getTimeSlot(), appointmentList[j + 1].getTimeSlot()) > 0)
+            {
+                Appointment temp;
+                temp = appointmentList[j];
+                appointmentList[j] = appointmentList[j + 1];
+                appointmentList[j + 1] = temp;
+            }
+        }
+    }
+
+    return result;
+}
+
 static Storage<Bill> *collectPatientBills(HospitalSystem &system, int patientID, bool unpaidOnly)
 {
     Storage<Bill> *result;
@@ -298,6 +347,46 @@ static Storage<Bill> *collectPatientBills(HospitalSystem &system, int patientID,
     return result;
 }
 
+static bool prescriptionExistsForAppointment(Storage<Prescription> &prescriptions, int appointmentID)
+{
+    Prescription *prescriptionList;
+    int i;
+
+    prescriptionList = prescriptions.getAll();
+
+    for (i = 0; i < prescriptions.size(); i++)
+    {
+        if (prescriptionList[i].getAppointmentID() == appointmentID)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+static int getNextPrescriptionID(Storage<Prescription> &prescriptions)
+{
+    int i;
+    int maxID;
+
+    maxID = 0;
+    for (i = 0; i < prescriptions.size(); i++)
+    {
+        if (prescriptions.getAll()[i].getPrescriptionID() > maxID)
+        {
+            maxID = prescriptions.getAll()[i].getPrescriptionID();
+        }
+    }
+
+    return maxID + 1;
+}
+
+static void truncateText(char *destination, const char *source, int maxLength)
+{
+    StringHelper::stringCopy(destination, source, maxLength);
+}
+
 void App::setupUI()
 {
     logoutButton = UIButton(regularFont, "Logout", sf::Vector2f(1100.f, 30.f), sf::Vector2f(130.f, 40.f));
@@ -309,6 +398,7 @@ void App::setupUI()
 
     loginScreen.initialize(regularFont, boldFont);
     patientDash.initialize(regularFont, boldFont);
+    doctorDash.initialize(regularFont, boldFont);
 }
 
 void App::processEvents()
@@ -361,7 +451,6 @@ void App::handleMouseClick()
         {
             patientDash.handleMouseClick(window);
 
-            // Handle specialization search
             if (patientDash.consumeSpecializationSearchRequest())
             {
                 try
@@ -653,7 +742,6 @@ void App::handleMouseClick()
                 }
             }
 
-            // Handle booking confirmation
             if (patientDash.consumeBookAppointmentRequest())
             {
                 Patient *patient;
@@ -697,6 +785,298 @@ void App::handleMouseClick()
 
             patientDash.clearClickStates();
         }
+        else if (state == DOCTOR_MENU)
+        {
+            doctorDash.handleMouseClick(window);
+
+            if (doctorDash.consumeViewTodayAppointmentsRequest())
+            {
+                Doctor *doctor;
+                Storage<Appointment> *todayAppointments;
+                char todayDate[11];
+
+                doctor = reinterpret_cast<Doctor *>(currentUser);
+                TimeHelper::getTodayDate(todayDate, 11);
+                todayAppointments = collectTodaysDoctorAppointments(system, doctor->getID(), todayDate, false);
+
+                if (todayAppointments->size() == 0)
+                {
+                    delete todayAppointments;
+                    doctorDash.closeTodayAppointmentsMode();
+                    doctorDash.setStatus("No appointments scheduled for today.");
+                }
+                else
+                {
+                    doctorDash.setTodayAppointments(todayAppointments, &system.getPatients());
+                    doctorDash.startTodayAppointmentsMode();
+                }
+            }
+
+            if (doctorDash.consumeMarkAppointmentCompleteRequest())
+            {
+                Doctor *doctor;
+                Storage<Appointment> *pendingAppointments;
+                char todayDate[11];
+
+                doctor = reinterpret_cast<Doctor *>(currentUser);
+                TimeHelper::getTodayDate(todayDate, 11);
+                pendingAppointments = collectTodaysDoctorAppointments(system, doctor->getID(), todayDate, true);
+
+                if (pendingAppointments->size() == 0)
+                {
+                    delete pendingAppointments;
+                    doctorDash.closeMarkCompleteMode();
+                    doctorDash.setStatus("No pending appointments scheduled for today.");
+                }
+                else
+                {
+                    doctorDash.setTodayAppointments(pendingAppointments, &system.getPatients());
+                    doctorDash.startMarkCompleteMode();
+                }
+            }
+
+            if (doctorDash.consumeMarkAppointmentNoShowRequest())
+            {
+                Doctor *doctor;
+                Storage<Appointment> *pendingAppointments;
+                char todayDate[11];
+
+                doctor = reinterpret_cast<Doctor *>(currentUser);
+                TimeHelper::getTodayDate(todayDate, 11);
+                pendingAppointments = collectTodaysDoctorAppointments(system, doctor->getID(), todayDate, true);
+
+                if (pendingAppointments->size() == 0)
+                {
+                    delete pendingAppointments;
+                    doctorDash.closeMarkNoShowMode();
+                    doctorDash.setStatus("No pending appointments scheduled for today.");
+                }
+                else
+                {
+                    doctorDash.setTodayAppointments(pendingAppointments, &system.getPatients());
+                    doctorDash.startMarkNoShowMode();
+                }
+            }
+
+            if (doctorDash.consumeWritePrescriptionRequest())
+            {
+                doctorDash.startWritePrescriptionMode();
+            }
+
+            if (doctorDash.consumeMarkAppointmentCompleteSubmitRequest())
+            {
+                Doctor *doctor;
+                Appointment *appointment;
+                int appointmentID;
+                char todayDate[11];
+                char successMessage[200];
+
+                doctor = reinterpret_cast<Doctor *>(currentUser);
+                appointmentID = ConversionHelper::toInt(doctorDash.getMarkCompleteAppointmentIDText());
+                TimeHelper::getTodayDate(todayDate, 11);
+
+                appointment = system.getAppointments().findByID(appointmentID);
+                if (appointment == nullptr)
+                {
+                    doctorDash.setStatus("Invalid appointment ID.");
+                }
+                else if (appointment->getDoctorID() != doctor->getID())
+                {
+                    doctorDash.setStatus("Invalid appointment ID.");
+                }
+                else if (!StringHelper::textEquals(appointment->getStatus(), "pending"))
+                {
+                    doctorDash.setStatus("Appointment must be pending.");
+                }
+                else if (!StringHelper::textEquals(appointment->getDate(), todayDate))
+                {
+                    doctorDash.setStatus("Appointment must be dated today.");
+                }
+                else
+                {
+                    appointment->setStatus("completed");
+                    FileHandler::saveAllAppointments(system.getAppointments());
+                    doctorDash.closeMarkCompleteMode();
+                    successMessage[0] = '\0';
+                    StringHelper::stringCopy(successMessage, "Appointment marked as completed.", 200);
+                    doctorDash.setStatus(successMessage);
+                }
+            }
+
+            if (doctorDash.consumeWritePrescriptionSubmitRequest())
+            {
+                Doctor *doctor;
+                Appointment *appointment;
+                Prescription prescription;
+                int appointmentID;
+                int prescriptionID;
+                char todayDate[11];
+
+                doctor = reinterpret_cast<Doctor *>(currentUser);
+                appointmentID = ConversionHelper::toInt(doctorDash.getWritePrescriptionAppointmentIDText());
+                TimeHelper::getTodayDate(todayDate, 11);
+
+                appointment = system.getAppointments().findByID(appointmentID);
+                if (appointment == nullptr)
+                {
+                    doctorDash.setStatus("Invalid appointment ID.");
+                }
+                else if (appointment->getDoctorID() != doctor->getID())
+                {
+                    doctorDash.setStatus("Invalid appointment ID.");
+                }
+                else if (!StringHelper::textEquals(appointment->getStatus(), "completed"))
+                {
+                    doctorDash.setStatus("Appointment must be completed.");
+                }
+                else if (prescriptionExistsForAppointment(system.getPrescriptions(), appointmentID))
+                {
+                    doctorDash.closeWritePrescriptionMode();
+                    doctorDash.setStatus("Prescription already written for this appointment.");
+                }
+                else
+                {
+                    prescriptionID = getNextPrescriptionID(system.getPrescriptions());
+                    prescription = Prescription(
+                        prescriptionID,
+                        appointmentID,
+                        appointment->getPatientID(),
+                        doctor->getID(),
+                        todayDate,
+                        doctorDash.getWritePrescriptionMedicinesText(),
+                        doctorDash.getWritePrescriptionNotesText());
+
+                    FileHandler::savePrescription(prescription, true);
+                    system.getPrescriptions().add(prescription);
+                    doctorDash.closeWritePrescriptionMode();
+                    doctorDash.setStatus("Prescription saved.");
+                }
+            }
+
+            if (doctorDash.consumeMarkAppointmentNoShowSubmitRequest())
+            {
+                Doctor *doctor;
+                Appointment *appointment;
+                Bill *bill;
+                int appointmentID;
+                char todayDate[11];
+                char successMessage[200];
+
+                doctor = reinterpret_cast<Doctor *>(currentUser);
+                appointmentID = ConversionHelper::toInt(doctorDash.getMarkNoShowAppointmentIDText());
+                TimeHelper::getTodayDate(todayDate, 11);
+
+                appointment = system.getAppointments().findByID(appointmentID);
+                if (appointment == nullptr)
+                {
+                    doctorDash.setStatus("Invalid appointment ID.");
+                }
+                else if (appointment->getDoctorID() != doctor->getID())
+                {
+                    doctorDash.setStatus("Invalid appointment ID.");
+                }
+                else if (!StringHelper::textEquals(appointment->getStatus(), "pending"))
+                {
+                    doctorDash.setStatus("Appointment must be pending.");
+                }
+                else if (!StringHelper::textEquals(appointment->getDate(), todayDate))
+                {
+                    doctorDash.setStatus("Appointment must be dated today.");
+                }
+                else
+                {
+                    bill = nullptr;
+                    for (int i = 0; i < system.getBills().size(); i++)
+                    {
+                        if (system.getBills().getAll()[i].getPatientID() == appointment->getPatientID() && system.getBills().getAll()[i].getAppointmentID() == appointmentID)
+                        {
+                            bill = &system.getBills().getAll()[i];
+                            break;
+                        }
+                    }
+
+                    if (bill == nullptr)
+                    {
+                        doctorDash.setStatus("Invalid appointment ID.");
+                    }
+                    else
+                    {
+                        appointment->setStatus("no-show");
+                        bill->setStatus("cancelled");
+                        FileHandler::saveAllAppointments(system.getAppointments());
+                        FileHandler::saveAllBills(system.getBills());
+                        doctorDash.closeMarkNoShowMode();
+                        successMessage[0] = '\0';
+                        StringHelper::stringCopy(successMessage, "Appointment marked as no-show.", 200);
+                        doctorDash.setStatus(successMessage);
+                    }
+                }
+            }
+
+            if (doctorDash.consumeViewPatientHistoryRequest())
+            {
+                Doctor *doctor;
+
+                doctor = reinterpret_cast<Doctor *>(currentUser);
+                doctorDash.setPatientListForMedicalHistory(&system.getPatients(), &system.getAppointments());
+                doctorDash.startViewMedicalHistoryMode();
+            }
+
+            if (doctorDash.consumeViewMedicalHistorySubmitRequest())
+            {
+                Doctor *doctor;
+                Patient *patient;
+                int patientID;
+                int i;
+                bool hasCompletedAppointment;
+                Appointment *appointmentArray;
+                const char *inputText;
+
+                doctor = reinterpret_cast<Doctor *>(currentUser);
+                inputText = doctorDash.getViewMedicalHistoryPatientIDText();
+
+                if (inputText == nullptr || inputText[0] == '\0')
+                {
+                    doctorDash.setStatus("Please enter a Patient ID.");
+                }
+                else
+                {
+                    patientID = ConversionHelper::toInt(inputText);
+                    patient = system.getPatients().findByID(patientID);
+
+                    if (patient == nullptr)
+                    {
+                        doctorDash.setStatus("Access denied. You can only view records of your own patients.");
+                    }
+                    else
+                    {
+                        hasCompletedAppointment = false;
+                        appointmentArray = system.getAppointments().getAll();
+
+                        for (i = 0; i < system.getAppointments().size(); i++)
+                        {
+                            if (appointmentArray[i].getPatientID() == patientID &&
+                                appointmentArray[i].getDoctorID() == doctor->getID() &&
+                                StringHelper::textEquals(appointmentArray[i].getStatus(), "completed"))
+                            {
+                                hasCompletedAppointment = true;
+                                break;
+                            }
+                        }
+
+                        if (!hasCompletedAppointment)
+                        {
+                            doctorDash.setStatus("Access denied. You can only view records of your own patients.");
+                        }
+                        else
+                        {
+                            doctorDash.setPrescriptionsForPatient(&system.getPrescriptions(), patientID, doctor->getID());
+                            doctorDash.displayPrescriptionsForPatient();
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -707,6 +1087,10 @@ void App::handleTextEntered(char32_t unicode)
         if (state == PATIENT_MENU)
         {
             patientDash.handleTextEntered(unicode);
+        }
+        else if (state == DOCTOR_MENU)
+        {
+            doctorDash.handleTextEntered(unicode);
         }
         return;
     }
@@ -739,6 +1123,12 @@ void App::attemptLogin()
     else if (selectedRole == ROLE_DOCTOR)
     {
         state = DOCTOR_MENU;
+        doctorDash.setDoctor(reinterpret_cast<Doctor *>(user));
+        doctorDash.closeTodayAppointmentsMode();
+        doctorDash.closeMarkCompleteMode();
+        doctorDash.closeMarkNoShowMode();
+        doctorDash.closeWritePrescriptionMode();
+        doctorDash.closeViewMedicalHistoryMode();
         loginScreen.setStatus("Login successful. Welcome, doctor.");
     }
     else
@@ -823,6 +1213,11 @@ void App::logout()
     loginScreen.clearInputs();
     loginScreen.setStatus("Logged out.");
     patientDash.setPatient(nullptr);
+    doctorDash.closeTodayAppointmentsMode();
+    doctorDash.closeMarkCompleteMode();
+    doctorDash.closeMarkNoShowMode();
+    doctorDash.closeWritePrescriptionMode();
+    doctorDash.closeViewMedicalHistoryMode();
 }
 
 void App::drawDashboard()
@@ -831,22 +1226,16 @@ void App::drawDashboard()
     {
         patientDash.draw(window);
     }
+    else if (state == DOCTOR_MENU)
+    {
+        doctorDash.draw(window);
+    }
     else
     {
         sf::Text title(boldFont, "", 30);
-
-        if (state == DOCTOR_MENU)
-        {
-            title.setString("Doctor Dashboard");
-        }
-        else
-        {
-            title.setString("Admin Dashboard");
-        }
-
+        title.setString("Admin Dashboard");
         title.setPosition(sf::Vector2f(80.f, 34.f));
         title.setFillColor(sf::Color(44, 62, 80));
-
         window.draw(title);
     }
 
