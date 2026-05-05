@@ -1,4 +1,13 @@
 #include "DataHelper.hpp"
+#include "../entities/Appointment.hpp"
+#include "../entities/Patient.hpp"
+#include "../entities/Doctor.hpp"
+#include "../entities/Bill.hpp"
+#include "../entities/Storage.hpp"
+#include "TimeHelper.hpp"
+#include "StringHelper.hpp"
+
+#include <stddef.h>
 
 void DataHelper::splitByComma(const char *line, char **fields, int maxFields, int &fieldCount)
 {
@@ -77,4 +86,108 @@ bool DataHelper::isLeapYear(int year)
     }
 
     return false;
+}
+
+int DataHelper::countUnpaidBillsForPatient(Storage<Bill> *bills, int patientID)
+{
+    int i;
+    int count;
+
+    count = 0;
+    if (bills == nullptr)
+    {
+        return 0;
+    }
+
+    for (i = 0; i < bills->size(); i++)
+    {
+        if (bills->getAll()[i].getPatientID() == patientID && StringHelper::textEquals(bills->getAll()[i].getStatus(), "unpaid"))
+        {
+            count++;
+        }
+    }
+
+    return count;
+}
+
+const char *DataHelper::findPatientName(Storage<Patient> *patients, int patientID)
+{
+    Patient *patient;
+
+    if (patients == nullptr)
+    {
+        return "";
+    }
+
+    patient = patients->findByID(patientID);
+    if (patient == nullptr)
+    {
+        return "";
+    }
+
+    return patient->getName();
+}
+
+const char *DataHelper::findDoctorName(Storage<Doctor> *doctors, int doctorID)
+{
+    Doctor *doctor;
+
+    if (doctors == nullptr)
+    {
+        return "";
+    }
+
+    doctor = doctors->findByID(doctorID);
+    if (doctor == nullptr)
+    {
+        return "";
+    }
+
+    return doctor->getName();
+}
+
+int DataHelper::compareAppointmentPointersByDateDesc(const Appointment *left, const Appointment *right)
+{
+    int dateCompare;
+
+    if (left == nullptr && right == nullptr)
+    {
+        return 0;
+    }
+    if (left == nullptr)
+    {
+        return 1;
+    }
+    if (right == nullptr)
+    {
+        return -1;
+    }
+
+    dateCompare = TimeHelper::compareDates(left->getDate(), right->getDate());
+    if (dateCompare != 0)
+    {
+        return -dateCompare;
+    }
+
+    return TimeHelper::compareTimeSlotsAscending(left->getTimeSlot(), right->getTimeSlot());
+}
+
+void DataHelper::sortAppointmentPointersByDateDesc(Appointment *items[], int count)
+{
+    int pass;
+    int index;
+    Appointment *temp;
+
+    for (pass = 0; pass < count - 1; pass++)
+    {
+        for (index = 0; index < count - 1 - pass; index++)
+        {
+            if (compareAppointmentPointersByDateDesc(items[index], items[index + 1]) > 0)
+            {
+                temp = items[index];
+                items[index] = items[index + 1];
+                items[index + 1] = temp;
+            }
+        }
+    }
 }

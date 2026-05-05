@@ -1,5 +1,7 @@
 #pragma once
 
+#include <time.h>
+
 class TimeHelper
 {
 public:
@@ -8,4 +10,6 @@ public:
     static int compareDates(const char *date1, const char *date2);
     static int compareTimeSlotsAscending(const char *left, const char *right);
     static bool normalizeToYMD(const char *input, char *outBuffer, int outSize);
+    static bool parseDateToTime(const char *dateText, time_t &value);
+    static bool isBillOverdueByMoreThan7Days(const char *billDate);
 };

@@ -1,7 +1,7 @@
 doctor_id,name,specialization,contact,password,fee
 1,Sara Khan,Cardiology,03111234567,doc456,1500.00
 2,Dr. Omar Farooq,General Medicine,03112223344,omar123,800.00
-3,Dr. Nida Ali,Pediatrics,03115556677,nidaP,700.00
+3,Dr. Nida Ali,Pediatrics,03115556677,,700.00
 4,Dr. Kamran Siddiqui,Orthopedics,03116667788,kamranO,1200.00
 5,Dr. Ayesha Iqbal,Dermatology,03117778899,ayeshaD,600.00
 6,Dr. Bilal Shah,Cardiology,03118889900,bilalC,1500.00
@@ -14,8 +14,8 @@ doctor_id,name,specialization,contact,password,fee
 13,Dr. Irene Novak,Gastroenterology,03125556677,ireneG,1300.00
 14,Dr. Jamal Ahmed,Psychiatry,03126667788,jamalP,1000.00
 15,Dr. Katrina Holt,Ophthalmology,03127778899,katrinaO,700.00
-16,Dr. Liam O'Connor,Nephrology,03128889900,liamN,1400.00
-17,Dr. Mona Zafar,Rheumatology,03129990011,monaR,1150.00
+16,Dr. Liam O'Connor,Nephrology,03128889900,,1400.00
+17,Dr. Mona Zafar,Rheumatology,03129990011,,1150.00
 18,Dr. Naveed Khan,Pulmonology,03130001122,naveedP,1250.00
 19,Dr. Olivia Brown,General Medicine,03131112233,oliviaG,800.00
 20,Dr. Parvez Siddiqui,Cardiology,03132223344,parvezC,1600.00

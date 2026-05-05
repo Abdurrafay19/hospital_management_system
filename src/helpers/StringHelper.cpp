@@ -1,4 +1,5 @@
 #include "StringHelper.hpp"
+#include "ConversionHelper.hpp"
 
 bool StringHelper::textEquals(const char *left, const char *right)
 {
@@ -118,4 +119,66 @@ char StringHelper::toLowerASCII(char c)
     }
 
     return c;
+}
+
+void StringHelper::copyPreviewText(char *destination, int destinationSize, const char *source, int previewLimit)
+{
+    int index;
+
+    if (destination == nullptr || destinationSize <= 0)
+    {
+        return;
+    }
+
+    destination[0] = '\0';
+    if (source == nullptr)
+    {
+        return;
+    }
+
+    index = 0;
+    while (source[index] != '\0' && index < previewLimit && index < destinationSize - 1)
+    {
+        destination[index] = source[index];
+        index++;
+    }
+
+    if (source[index] != '\0' && index < destinationSize - 4)
+    {
+        destination[index] = '.';
+        destination[index + 1] = '.';
+        destination[index + 2] = '.';
+        index += 3;
+    }
+
+    destination[index] = '\0';
+}
+
+void StringHelper::appendTextField(char *destination, int destinationSize, const char *text)
+{
+    int len;
+
+    if (destination == nullptr || destinationSize <= 0 || text == nullptr)
+    {
+        return;
+    }
+
+    len = StringHelper::stringLength(destination);
+    StringHelper::stringCopy(destination + len, text, destinationSize - len);
+}
+
+void StringHelper::appendIntField(char *destination, int destinationSize, int value)
+{
+    char buffer[32];
+
+    ConversionHelper::intToString(value, buffer);
+    appendTextField(destination, destinationSize, buffer);
+}
+
+void StringHelper::appendDoubleField(char *destination, int destinationSize, double value)
+{
+    char buffer[32];
+
+    ConversionHelper::doubleToString(value, buffer);
+    appendTextField(destination, destinationSize, buffer);
 }

@@ -7,6 +7,7 @@
 #include "../ui/LoginScreen.hpp"
 #include "../ui/PatientDash.hpp"
 #include "../ui/DoctorDash.hpp"
+#include "../ui/AdminDash.hpp"
 
 class App
 {
@@ -33,6 +34,7 @@ private:
     LoginScreen loginScreen;
     PatientDash patientDash;
     DoctorDash doctorDash;
+    AdminDash adminDash;
 
     void setupUI();
 

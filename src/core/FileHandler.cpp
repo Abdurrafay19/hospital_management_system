@@ -314,6 +314,10 @@ void FileHandler::saveDoctor(const Doctor &doctor, bool append)
 {
     std::ofstream file;
     char feeBuffer[32];
+    const char *safeName;
+    const char *safeSpecialization;
+    const char *safeContact;
+    const char *safePassword;
 
     if (append)
     {
@@ -331,11 +335,16 @@ void FileHandler::saveDoctor(const Doctor &doctor, bool append)
 
     ConversionHelper::doubleToString(doctor.getFee(), feeBuffer);
 
+    safeName = doctor.getName() != nullptr ? doctor.getName() : "";
+    safeSpecialization = doctor.getSpecialization() != nullptr ? doctor.getSpecialization() : "";
+    safeContact = doctor.getContact() != nullptr ? doctor.getContact() : "";
+    safePassword = doctor.getPassword() != nullptr ? doctor.getPassword() : "";
+
     file << doctor.getID() << ","
-         << doctor.getName() << ","
-         << doctor.getSpecialization() << ","
-         << doctor.getContact() << ","
-         << doctor.getPassword() << ","
+        << safeName << ","
+        << safeSpecialization << ","
+        << safeContact << ","
+        << safePassword << ","
          << feeBuffer << "\n";
 
     file.close();
@@ -508,17 +517,31 @@ void FileHandler::saveAllDoctors(Storage<Doctor> &storage)
 {
     std::ofstream file;
     int i;
+    char feeBuffer[32];
+    const char *safeName;
+    const char *safeSpecialization;
+    const char *safeContact;
+    const char *safePassword;
 
-    // Truncate and write header
     if (FilePathHelper::openOutputDataFile(file, "doctors.txt", std::ios::out))
     {
         file << "doctor_id,name,specialization,contact,password,fee\n";
-        file.close();
-    }
+        for (i = 0; i < storage.size(); i++)
+        {
+            ConversionHelper::doubleToString(storage.getAll()[i].getFee(), feeBuffer);
+            safeName = storage.getAll()[i].getName() != nullptr ? storage.getAll()[i].getName() : "";
+            safeSpecialization = storage.getAll()[i].getSpecialization() != nullptr ? storage.getAll()[i].getSpecialization() : "";
+            safeContact = storage.getAll()[i].getContact() != nullptr ? storage.getAll()[i].getContact() : "";
+            safePassword = storage.getAll()[i].getPassword() != nullptr ? storage.getAll()[i].getPassword() : "";
 
-    for (i = 0; i < storage.size(); i++)
-    {
-        saveDoctor(storage.getAll()[i], true);
+            file << storage.getAll()[i].getID() << ","
+                 << safeName << ","
+                 << safeSpecialization << ","
+                 << safeContact << ","
+                 << safePassword << ","
+                 << feeBuffer << "\n";
+        }
+        file.close();
     }
 }
 

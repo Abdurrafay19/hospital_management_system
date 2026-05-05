@@ -4,39 +4,6 @@
 #include "../entities/Prescription.hpp"
 #include "../helpers/TimeHelper.hpp"
 
-static void copyPreviewText(char *destination, int destinationSize, const char *source, int previewLimit)
-{
-    int index;
-
-    if (destination == nullptr || destinationSize <= 0)
-    {
-        return;
-    }
-
-    destination[0] = '\0';
-    if (source == nullptr)
-    {
-        return;
-    }
-
-    index = 0;
-    while (source[index] != '\0' && index < previewLimit && index < destinationSize - 1)
-    {
-        destination[index] = source[index];
-        index++;
-    }
-
-    if (source[index] != '\0' && index < destinationSize - 4)
-    {
-        destination[index] = '.';
-        destination[index + 1] = '.';
-        destination[index + 2] = '.';
-        index += 3;
-    }
-
-    destination[index] = '\0';
-}
-
 DoctorDash::DoctorDash()
     : doctor(nullptr), titleText(nullptr), welcomeText(nullptr), specializationText(nullptr), statusText(nullptr),
       todayAppointmentsMode(false), todayAppointmentsTitleText(nullptr), todayAppointmentsStatusText(nullptr),
@@ -629,14 +596,14 @@ void DoctorDash::setPrescriptionsForPatient(Storage<Prescription> *prescriptions
         StringHelper::stringCopy(buf + len, "\nMedicines: ", 700 - len);
 
         medicinesText = prescriptionArray[selectedIndices[i]].getMedicines();
-        copyPreviewText(medicinesBuffer, 120, medicinesText, 100);
+        StringHelper::copyPreviewText(medicinesBuffer, 120, medicinesText, 100);
         len = StringHelper::stringLength(buf);
         StringHelper::stringCopy(buf + len, medicinesBuffer, 700 - len);
         len = StringHelper::stringLength(buf);
         StringHelper::stringCopy(buf + len, "\nNotes: ", 700 - len);
 
         notesText = prescriptionArray[selectedIndices[i]].getNotes();
-        copyPreviewText(notesBuffer, 120, notesText, 100);
+        StringHelper::copyPreviewText(notesBuffer, 120, notesText, 100);
         len = StringHelper::stringLength(buf);
         StringHelper::stringCopy(buf + len, notesBuffer, 700 - len);
 

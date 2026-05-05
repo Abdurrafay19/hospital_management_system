@@ -399,6 +399,7 @@ void App::setupUI()
     loginScreen.initialize(regularFont, boldFont);
     patientDash.initialize(regularFont, boldFont);
     doctorDash.initialize(regularFont, boldFont);
+    adminDash.initialize(regularFont, boldFont);
 }
 
 void App::processEvents()
@@ -1077,6 +1078,193 @@ void App::handleMouseClick()
                 }
             }
         }
+        else if (state == ADMIN_MENU)
+        {
+            adminDash.handleMouseClick(window);
+
+            if (adminDash.consumeAddDoctorRequest())
+            {
+                adminDash.startAddDoctorMode();
+                adminDash.setStatus("");
+            }
+
+            if (adminDash.consumeAddDoctorSubmitRequest())
+            {
+                const char *name;
+                const char *specialization;
+                const char *contact;
+                const char *password;
+                const char *feeText;
+                double consultationFee;
+                int newDoctorID;
+                int i;
+                char successMessage[200];
+                int messageLength;
+                Doctor newDoctor;
+
+                name = adminDash.getAddDoctorNameText();
+                specialization = adminDash.getAddDoctorSpecializationText();
+                contact = adminDash.getAddDoctorContactText();
+                password = adminDash.getAddDoctorPasswordText();
+                feeText = adminDash.getAddDoctorFeeText();
+
+                if (name == nullptr || name[0] == '\0')
+                {
+                    adminDash.setStatus("Name is required.");
+                }
+                else if (StringHelper::stringLength(name) > 50)
+                {
+                    adminDash.setStatus("Name must be at most 50 characters.");
+                }
+                else if (specialization == nullptr || specialization[0] == '\0')
+                {
+                    adminDash.setStatus("Specialization is required.");
+                }
+                else if (StringHelper::stringLength(specialization) > 50)
+                {
+                    adminDash.setStatus("Specialization must be at most 50 characters.");
+                }
+                else if (!Validator::isValidContact(contact))
+                {
+                    adminDash.setStatus("Contact must be exactly 11 numeric digits.");
+                }
+                else if (!Validator::isValidPassword(password))
+                {
+                    adminDash.setStatus("Password must be at least 6 characters.");
+                }
+                else if (!Validator::isValidPositiveNumberText(feeText))
+                {
+                    adminDash.setStatus("Consultation fee must be a positive number.");
+                }
+                else
+                {
+                    consultationFee = ConversionHelper::stringToDouble(feeText);
+                    if (consultationFee <= 0.0)
+                    {
+                        adminDash.setStatus("Consultation fee must be greater than 0.");
+                    }
+                    else if (system.getDoctors().size() >= 100)
+                    {
+                        adminDash.setStatus("Doctor storage is full.");
+                    }
+                    else
+                    {
+                        newDoctorID = 0;
+                        for (i = 0; i < system.getDoctors().size(); i++)
+                        {
+                            if (system.getDoctors().getAll()[i].getID() > newDoctorID)
+                            {
+                                newDoctorID = system.getDoctors().getAll()[i].getID();
+                            }
+                        }
+                        newDoctorID++;
+
+                        newDoctor = Doctor(newDoctorID, name, password, specialization, contact, consultationFee);
+                        system.getDoctors().add(newDoctor);
+                        FileHandler::saveDoctor(newDoctor, true);
+
+                        successMessage[0] = '\0';
+                        StringHelper::stringCopy(successMessage, "Doctor added successfully. ID: ", 200);
+                        messageLength = StringHelper::stringLength(successMessage);
+                        ConversionHelper::intToString(newDoctorID, successMessage + messageLength);
+                        adminDash.closeAddDoctorMode();
+                        adminDash.setStatus(successMessage);
+                    }
+                }
+            }
+
+            if (adminDash.consumeRemoveDoctorRequest())
+            {
+                if (system.getDoctors().size() == 0)
+                {
+                    adminDash.setStatus("No doctors available.");
+                }
+                else
+                {
+                    adminDash.setDoctorsForRemoval(&system.getDoctors());
+                    adminDash.startRemoveDoctorMode();
+                    adminDash.setStatus("");
+                }
+            }
+
+            if (adminDash.consumeRemoveDoctorSubmitRequest())
+            {
+                const char *doctorIDText;
+                int doctorID;
+                int i;
+                bool hasPendingAppointments;
+                Doctor *doctor;
+
+                doctorIDText = adminDash.getRemoveDoctorIDText();
+                if (!Validator::isValidPositiveIntegerText(doctorIDText))
+                {
+                    adminDash.setStatus("Please enter a valid Doctor ID.");
+                }
+                else
+                {
+                    doctorID = ConversionHelper::toInt(doctorIDText);
+                    doctor = system.getDoctors().findByID(doctorID);
+
+                    if (doctor == nullptr)
+                    {
+                        adminDash.setStatus("Doctor not found.");
+                    }
+                    else
+                    {
+                        hasPendingAppointments = false;
+                        for (i = 0; i < system.getAppointments().size(); i++)
+                        {
+                            if (system.getAppointments().getAll()[i].getDoctorID() == doctorID &&
+                                StringHelper::textEquals(system.getAppointments().getAll()[i].getStatus(), "pending"))
+                            {
+                                hasPendingAppointments = true;
+                                break;
+                            }
+                        }
+
+                        if (hasPendingAppointments)
+                        {
+                            adminDash.setStatus("Cannot remove doctor with pending appointments. Cancel or reassign them first.");
+                        }
+                        else
+                        {
+                            system.getDoctors().removeByID(doctorID);
+                            FileHandler::saveAllDoctors(system.getDoctors());
+                            adminDash.closeRemoveDoctorMode();
+                            adminDash.setStatus("Doctor removed.");
+                        }
+                    }
+                }
+            }
+            if (adminDash.consumeViewAllPatientsRequest())
+            {
+                adminDash.setPatientsForView(&system.getPatients(), &system.getBills());
+            }
+            if (adminDash.consumeViewAllDoctorsRequest())
+            {
+                adminDash.setDoctorsForView(&system.getDoctors());
+            }
+            if (adminDash.consumeViewAllAppointmentsRequest())
+            {
+                adminDash.setAppointmentsForView(&system.getAppointments(), &system.getPatients(), &system.getDoctors());
+            }
+            if (adminDash.consumeViewUnpaidBillsRequest())
+            {
+                adminDash.setUnpaidBillsForView(&system.getBills(), &system.getPatients());
+            }
+            if (adminDash.consumeDischargePatientRequest())
+            {
+                adminDash.setStatus("Discharge Patient clicked.");
+            }
+            if (adminDash.consumeViewSecurityLogRequest())
+            {
+                adminDash.setStatus("View Security Log clicked.");
+            }
+            if (adminDash.consumeGenerateDailyReportRequest())
+            {
+                adminDash.setStatus("Generate Daily Report clicked.");
+            }
+        }
     }
 }
 
@@ -1091,6 +1279,10 @@ void App::handleTextEntered(char32_t unicode)
         else if (state == DOCTOR_MENU)
         {
             doctorDash.handleTextEntered(unicode);
+        }
+        else if (state == ADMIN_MENU)
+        {
+            adminDash.handleTextEntered(unicode);
         }
         return;
     }
@@ -1134,6 +1326,15 @@ void App::attemptLogin()
     else
     {
         state = ADMIN_MENU;
+        adminDash.clearClickStates();
+        adminDash.closeAddDoctorMode();
+        adminDash.closeRemoveDoctorMode();
+        adminDash.setStatus("");
+        // Show welcome message with admin name
+        if (user != nullptr)
+        {
+            adminDash.setWelcome(user->getName());
+        }
         loginScreen.setStatus("Login successful. Welcome, admin.");
     }
 }
@@ -1218,6 +1419,11 @@ void App::logout()
     doctorDash.closeMarkNoShowMode();
     doctorDash.closeWritePrescriptionMode();
     doctorDash.closeViewMedicalHistoryMode();
+    adminDash.clearClickStates();
+    adminDash.closeAddDoctorMode();
+    adminDash.closeRemoveDoctorMode();
+    adminDash.setStatus("");
+    adminDash.setWelcome("");
 }
 
 void App::drawDashboard()
@@ -1230,13 +1436,9 @@ void App::drawDashboard()
     {
         doctorDash.draw(window);
     }
-    else
+    else if (state == ADMIN_MENU)
     {
-        sf::Text title(boldFont, "", 30);
-        title.setString("Admin Dashboard");
-        title.setPosition(sf::Vector2f(80.f, 34.f));
-        title.setFillColor(sf::Color(44, 62, 80));
-        window.draw(title);
+        adminDash.draw(window);
     }
 
     logoutButton.draw(window);

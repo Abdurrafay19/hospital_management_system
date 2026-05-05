@@ -270,3 +270,49 @@ int TimeHelper::compareTimeSlotsAscending(const char *left, const char *right)
 
     return 1;
 }
+
+bool TimeHelper::parseDateToTime(const char *dateText, time_t &value)
+{
+    struct tm dateInfo;
+    int day;
+    int month;
+    int year;
+
+    if (dateText == nullptr || StringHelper::stringLength(dateText) < 10)
+    {
+        return false;
+    }
+
+    day = (dateText[0] - '0') * 10 + (dateText[1] - '0');
+    month = (dateText[3] - '0') * 10 + (dateText[4] - '0');
+    year = (dateText[6] - '0') * 1000 + (dateText[7] - '0') * 100 + (dateText[8] - '0') * 10 + (dateText[9] - '0');
+
+    dateInfo.tm_sec = 0;
+    dateInfo.tm_min = 0;
+    dateInfo.tm_hour = 12;
+    dateInfo.tm_mday = day;
+    dateInfo.tm_mon = month - 1;
+    dateInfo.tm_year = year - 1900;
+    dateInfo.tm_isdst = -1;
+    dateInfo.tm_wday = 0;
+    dateInfo.tm_yday = 0;
+
+    value = mktime(&dateInfo);
+    return value != (time_t)-1;
+}
+
+bool TimeHelper::isBillOverdueByMoreThan7Days(const char *billDate)
+{
+    time_t billTime;
+    time_t todayTime;
+    time_t now;
+
+    if (!parseDateToTime(billDate, billTime))
+    {
+        return false;
+    }
+
+    now = time(nullptr);
+    todayTime = now;
+    return difftime(todayTime, billTime) > (7.0 * 24.0 * 60.0 * 60.0);
+}
