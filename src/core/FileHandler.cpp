@@ -8,28 +8,27 @@
 void FileHandler::loadPatients(Storage<Patient> &storage)
 {
     std::ifstream file;
-    char line[1024];
-    char *fields[7];
+    char line[MAX_LINE_BUFFER];
+    char *fields[MAX_PATIENT_FIELDS];
     int fieldCount;
-    int i;
 
     if (!FilePathHelper::openInputDataFile(file, "patients.txt"))
     {
         return;
     }
 
-    for (i = 0; i < 7; i++)
+    for (int i = 0; i < MAX_PATIENT_FIELDS; i++)
     {
-        fields[i] = new char[256];
+        fields[i] = new char[MAX_FIELD_BUFFER];
     }
 
-    file.getline(line, 1024);
+    file.getline(line, MAX_LINE_BUFFER);
 
-    while (file.getline(line, 1024))
+    while (file.getline(line, MAX_LINE_BUFFER))
     {
-        DataHelper::splitByComma(line, fields, 7, fieldCount);
+        DataHelper::splitByComma(line, fields, MAX_PATIENT_FIELDS, fieldCount);
 
-        if (fieldCount == 7)
+        if (fieldCount == MAX_PATIENT_FIELDS)
         {
             Patient *patient = new Patient(
                 ConversionHelper::stringToInt(fields[0]),
@@ -44,7 +43,7 @@ void FileHandler::loadPatients(Storage<Patient> &storage)
         }
     }
 
-    for (i = 0; i < 7; i++)
+    for (int i = 0; i < MAX_PATIENT_FIELDS; i++)
     {
         delete[] fields[i];
     }
@@ -55,26 +54,25 @@ void FileHandler::loadPatients(Storage<Patient> &storage)
 void FileHandler::loadDoctors(Storage<Doctor> &storage)
 {
     std::ifstream file;
-    char line[1024];
-    char *fields[6];
+    char line[MAX_LINE_BUFFER];
+    char *fields[MAX_DOCTOR_FIELDS];
     int fieldCount;
-    int i;
 
     if (!FilePathHelper::openInputDataFile(file, "doctors.txt"))
     {
         return;
     }
 
-    for (i = 0; i < 6; i++)
+    for (int i = 0; i < MAX_DOCTOR_FIELDS; i++)
     {
-        fields[i] = new char[256];
+        fields[i] = new char[MAX_FIELD_BUFFER];
     }
-    file.getline(line, 2048);
-    while (file.getline(line, 1024))
+    file.getline(line, MAX_LARGE_LINE_BUFFER);
+    while (file.getline(line, MAX_LINE_BUFFER))
     {
-        DataHelper::splitByComma(line, fields, 6, fieldCount);
+        DataHelper::splitByComma(line, fields, MAX_DOCTOR_FIELDS, fieldCount);
 
-        if (fieldCount == 6)
+        if (fieldCount == MAX_DOCTOR_FIELDS)
         {
             Doctor *doctor = new Doctor(
                 ConversionHelper::stringToInt(fields[0]),
@@ -88,7 +86,7 @@ void FileHandler::loadDoctors(Storage<Doctor> &storage)
         }
     }
 
-    for (i = 0; i < 6; i++)
+    for (int i = 0; i < MAX_DOCTOR_FIELDS; i++)
     {
         delete[] fields[i];
     }
@@ -99,28 +97,27 @@ void FileHandler::loadDoctors(Storage<Doctor> &storage)
 void FileHandler::loadAdmin(Storage<Admin> &storage)
 {
     std::ifstream file;
-    char line[1024];
-    char *fields[3];
+    char line[MAX_LINE_BUFFER];
+    char *fields[MAX_ADMIN_FIELDS];
     int fieldCount;
-    int i;
 
     if (!FilePathHelper::openInputDataFile(file, "admin.txt"))
     {
         return;
     }
 
-    for (i = 0; i < 3; i++)
+    for (int i = 0; i < MAX_ADMIN_FIELDS; i++)
     {
-        fields[i] = new char[256];
+        fields[i] = new char[MAX_FIELD_BUFFER];
     }
 
-    file.getline(line, 1024);
+    file.getline(line, MAX_LINE_BUFFER);
 
-    while (file.getline(line, 1024))
+    while (file.getline(line, MAX_LINE_BUFFER))
     {
-        DataHelper::splitByComma(line, fields, 3, fieldCount);
+        DataHelper::splitByComma(line, fields, MAX_ADMIN_FIELDS, fieldCount);
 
-        if (fieldCount == 3)
+        if (fieldCount == MAX_ADMIN_FIELDS)
         {
             Admin *admin = new Admin(
                 ConversionHelper::stringToInt(fields[0]),
@@ -131,7 +128,7 @@ void FileHandler::loadAdmin(Storage<Admin> &storage)
         }
     }
 
-    for (i = 0; i < 3; i++)
+    for (int i = 0; i < MAX_ADMIN_FIELDS; i++)
     {
         delete[] fields[i];
     }
@@ -142,28 +139,27 @@ void FileHandler::loadAdmin(Storage<Admin> &storage)
 void FileHandler::loadAppointments(Storage<Appointment> &storage)
 {
     std::ifstream file;
-    char line[1024];
-    char *fields[6];
+    char line[MAX_LINE_BUFFER];
+    char *fields[MAX_APPOINTMENT_FIELDS];
     int fieldCount;
-    int i;
 
     if (!FilePathHelper::openInputDataFile(file, "appointments.txt"))
     {
         return;
     }
 
-    for (i = 0; i < 6; i++)
+    for (int i = 0; i < MAX_APPOINTMENT_FIELDS; i++)
     {
-        fields[i] = new char[256];
+        fields[i] = new char[MAX_FIELD_BUFFER];
     }
     // skip header line
-    file.getline(line, 1024);
+    file.getline(line, MAX_LINE_BUFFER);
 
-    while (file.getline(line, 1024))
+    while (file.getline(line, MAX_LINE_BUFFER))
     {
-        DataHelper::splitByComma(line, fields, 6, fieldCount);
+        DataHelper::splitByComma(line, fields, MAX_APPOINTMENT_FIELDS, fieldCount);
 
-        if (fieldCount == 6)
+        if (fieldCount == MAX_APPOINTMENT_FIELDS)
         {
             Appointment *appointment = new Appointment(
                 ConversionHelper::stringToInt(fields[0]),
@@ -177,7 +173,7 @@ void FileHandler::loadAppointments(Storage<Appointment> &storage)
         }
     }
 
-    for (i = 0; i < 6; i++)
+    for (int i = 0; i < MAX_APPOINTMENT_FIELDS; i++)
     {
         delete[] fields[i];
     }
@@ -188,28 +184,27 @@ void FileHandler::loadAppointments(Storage<Appointment> &storage)
 void FileHandler::loadBills(Storage<Bill> &storage)
 {
     std::ifstream file;
-    char line[1024];
-    char *fields[6];
+    char line[MAX_LINE_BUFFER];
+    char *fields[MAX_BILL_FIELDS];
     int fieldCount;
-    int i;
 
     if (!FilePathHelper::openInputDataFile(file, "bills.txt"))
     {
         return;
     }
 
-    for (i = 0; i < 6; i++)
+    for (int i = 0; i < MAX_BILL_FIELDS; i++)
     {
-        fields[i] = new char[256];
+        fields[i] = new char[MAX_FIELD_BUFFER];
     }
     // skip header line
-    file.getline(line, 1024);
+    file.getline(line, MAX_LINE_BUFFER);
 
-    while (file.getline(line, 1024))
+    while (file.getline(line, MAX_LINE_BUFFER))
     {
-        DataHelper::splitByComma(line, fields, 6, fieldCount);
+        DataHelper::splitByComma(line, fields, MAX_BILL_FIELDS, fieldCount);
 
-        if (fieldCount == 6)
+        if (fieldCount == MAX_BILL_FIELDS)
         {
             Bill *bill = new Bill(
                 ConversionHelper::stringToInt(fields[0]),
@@ -223,7 +218,7 @@ void FileHandler::loadBills(Storage<Bill> &storage)
         }
     }
 
-    for (i = 0; i < 6; i++)
+    for (int i = 0; i < MAX_BILL_FIELDS; i++)
     {
         delete[] fields[i];
     }
@@ -234,28 +229,27 @@ void FileHandler::loadBills(Storage<Bill> &storage)
 void FileHandler::loadPrescriptions(Storage<Prescription> &storage)
 {
     std::ifstream file;
-    char line[2048];
-    char *fields[7];
+    char line[MAX_LARGE_LINE_BUFFER];
+    char *fields[MAX_PRESCRIPTION_FIELDS];
     int fieldCount;
-    int i;
 
     if (!FilePathHelper::openInputDataFile(file, "prescriptions.txt"))
     {
         return;
     }
 
-    for (i = 0; i < 7; i++)
+    for (int i = 0; i < MAX_PRESCRIPTION_FIELDS; i++)
     {
-        fields[i] = new char[512];
+        fields[i] = new char[MAX_LARGE_FIELD_BUFFER];
     }
 
-    file.getline(line, 2048);
+    file.getline(line, MAX_LARGE_LINE_BUFFER);
 
-    while (file.getline(line, 2048))
+    while (file.getline(line, MAX_LARGE_LINE_BUFFER))
     {
-        DataHelper::splitByComma(line, fields, 7, fieldCount);
+        DataHelper::splitByComma(line, fields, MAX_PRESCRIPTION_FIELDS, fieldCount);
 
-        if (fieldCount == 7)
+        if (fieldCount == MAX_PRESCRIPTION_FIELDS)
         {
             Prescription *prescription = new Prescription(
                 ConversionHelper::stringToInt(fields[0]),
@@ -270,7 +264,7 @@ void FileHandler::loadPrescriptions(Storage<Prescription> &storage)
         }
     }
 
-    for (i = 0; i < 7; i++)
+    for (int i = 0; i < MAX_PRESCRIPTION_FIELDS; i++)
     {
         delete[] fields[i];
     }

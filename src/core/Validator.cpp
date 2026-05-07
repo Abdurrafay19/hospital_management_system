@@ -10,18 +10,12 @@ bool Validator::isValidID(int id)
 
 bool Validator::isValidDate(const char *date)
 {
-    int i;
-    int day;
-    int month;
-    int year;
-    int maxDay;
-
-    if (date == 0)
+    if (date == nullptr)
     {
         return false;
     }
 
-    i = 0;
+    int i = 0;
     while (date[i] != '\0')
     {
         i++;
@@ -47,9 +41,9 @@ bool Validator::isValidDate(const char *date)
         i++;
     }
 
-    day = ConversionHelper::toIntFromDigits(date, 0, 2);
-    month = ConversionHelper::toIntFromDigits(date, 3, 2);
-    year = ConversionHelper::toIntFromDigits(date, 6, 4);
+    int day = ConversionHelper::toIntFromDigits(date, 0, 2);
+    int month = ConversionHelper::toIntFromDigits(date, 3, 2);
+    int year = ConversionHelper::toIntFromDigits(date, 6, 4);
 
     if (year <= 0)
     {
@@ -61,6 +55,7 @@ bool Validator::isValidDate(const char *date)
         return false;
     }
 
+    int maxDay;
     if (month == 1 || month == 3 || month == 5 || month == 7 ||
         month == 8 || month == 10 || month == 12)
     {
@@ -92,14 +87,12 @@ bool Validator::isValidDate(const char *date)
 
 bool Validator::isValidContact(const char *contact)
 {
-    int i;
-
-    if (contact == 0)
+    if (contact == nullptr)
     {
         return false;
     }
 
-    i = 0;
+    int i = 0;
     while (contact[i] != '\0')
     {
         if (!CharHelper::isDigitChar(contact[i]))
@@ -114,14 +107,12 @@ bool Validator::isValidContact(const char *contact)
 
 bool Validator::isValidPassword(const char *password)
 {
-    int length;
-
-    if (password == 0)
+    if (password == nullptr)
     {
         return false;
     }
 
-    length = 0;
+    int length = 0;
     while (password[length] != '\0')
     {
         length++;
@@ -132,14 +123,12 @@ bool Validator::isValidPassword(const char *password)
 
 bool Validator::isValidPositiveIntegerText(const char *text)
 {
-    int i;
-
-    if (text == 0 || text[0] == '\0')
+    if (text == nullptr || text[0] == '\0')
     {
         return false;
     }
 
-    i = 0;
+    int i = 0;
     while (text[i] != '\0')
     {
         if (!CharHelper::isDigitChar(text[i]))
@@ -154,18 +143,14 @@ bool Validator::isValidPositiveIntegerText(const char *text)
 
 bool Validator::isValidPositiveNumberText(const char *text)
 {
-    int i;
-    int dotCount;
-    int digitCount;
-
-    if (text == 0 || text[0] == '\0')
+    if (text == nullptr || text[0] == '\0')
     {
         return false;
     }
 
-    i = 0;
-    dotCount = 0;
-    digitCount = 0;
+    int i = 0;
+    int dotCount = 0;
+    int digitCount = 0;
     while (text[i] != '\0')
     {
         if (text[i] == '.')

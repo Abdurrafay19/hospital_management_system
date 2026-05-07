@@ -11,6 +11,7 @@
 #include "../helpers/ConversionHelper.hpp"
 #include "../helpers/FilePathHelper.hpp"
 #include "../helpers/DataHelper.hpp"
+#include "Constants.hpp"
 
 class FileHandler
 {
