@@ -1,4 +1,5 @@
 #include "AdminDash.hpp"
+#include "UIThemeHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../helpers/TimeHelper.hpp"
@@ -88,29 +89,25 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     // Fit within 1280x720 window (leave some margin at bottom)
     dashboardCard.setSize(sf::Vector2f(1100.f, 560.f));
     dashboardCard.setPosition(sf::Vector2f(90.f, 80.f));
-    dashboardCard.setFillColor(sf::Color(255, 255, 255));
-    dashboardCard.setOutlineColor(sf::Color(220, 225, 230));
-    dashboardCard.setOutlineThickness(2.f);
+    UIThemeHelper::styleDashboardCard(dashboardCard);
 
     titleText = new sf::Text(boldFont, "Admin Dashboard", 32);
     welcomeText = new sf::Text(regularFont, "", 18);
     statusText = new sf::Text(regularFont, "", 16);
 
     titleText->setPosition(sf::Vector2f(110.f, 100.f));
-    titleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(titleText);
 
     // Welcome text just below title
     welcomeText->setPosition(sf::Vector2f(110.f, 140.f));
-    welcomeText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(welcomeText);
 
     statusText->setPosition(sf::Vector2f(110.f, 600.f));
-    statusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(statusText);
 
     addDoctorPanel.setSize(sf::Vector2f(880.f, 500.f));
     addDoctorPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    addDoctorPanel.setFillColor(sf::Color(250, 251, 252));
-    addDoctorPanel.setOutlineColor(sf::Color(220, 225, 230));
-    addDoctorPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(addDoctorPanel);
 
     addDoctorTitleText = new sf::Text(boldFont, "Add Doctor", 24);
     addDoctorStatusText = new sf::Text(regularFont, "", 14);
@@ -121,9 +118,9 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     addDoctorFeeLabelText = new sf::Text(regularFont, "Consultation Fee:", 16);
 
     addDoctorTitleText->setPosition(sf::Vector2f(230.f, 155.f));
-    addDoctorTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(addDoctorTitleText);
     addDoctorStatusText->setPosition(sf::Vector2f(230.f, 588.f));
-    addDoctorStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(addDoctorStatusText);
 
     addDoctorNameLabelText->setPosition(sf::Vector2f(230.f, 205.f));
     addDoctorSpecializationLabelText->setPosition(sf::Vector2f(230.f, 275.f));
@@ -131,11 +128,11 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     addDoctorPasswordLabelText->setPosition(sf::Vector2f(230.f, 415.f));
     addDoctorFeeLabelText->setPosition(sf::Vector2f(230.f, 485.f));
 
-    addDoctorNameLabelText->setFillColor(sf::Color(127, 140, 141));
-    addDoctorSpecializationLabelText->setFillColor(sf::Color(127, 140, 141));
-    addDoctorContactLabelText->setFillColor(sf::Color(127, 140, 141));
-    addDoctorPasswordLabelText->setFillColor(sf::Color(127, 140, 141));
-    addDoctorFeeLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(addDoctorNameLabelText);
+    UIThemeHelper::styleLabelText(addDoctorSpecializationLabelText);
+    UIThemeHelper::styleLabelText(addDoctorContactLabelText);
+    UIThemeHelper::styleLabelText(addDoctorPasswordLabelText);
+    UIThemeHelper::styleLabelText(addDoctorFeeLabelText);
 
     addDoctorNameInput = UITextBox(regularFont, sf::Vector2f(230.f, 230.f), sf::Vector2f(820.f, 38.f), 50);
     addDoctorSpecializationInput = UITextBox(regularFont, sf::Vector2f(230.f, 300.f), sf::Vector2f(820.f, 38.f), 50);
@@ -143,23 +140,11 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     addDoctorPasswordInput = UITextBox(regularFont, sf::Vector2f(230.f, 440.f), sf::Vector2f(820.f, 38.f), 50);
     addDoctorFeeInput = UITextBox(regularFont, sf::Vector2f(230.f, 510.f), sf::Vector2f(820.f, 38.f), 20);
 
-    addDoctorNameInput.setFillColor(sf::Color(255, 255, 255));
-    addDoctorSpecializationInput.setFillColor(sf::Color(255, 255, 255));
-    addDoctorContactInput.setFillColor(sf::Color(255, 255, 255));
-    addDoctorPasswordInput.setFillColor(sf::Color(255, 255, 255));
-    addDoctorFeeInput.setFillColor(sf::Color(255, 255, 255));
-
-    addDoctorNameInput.setOutlineColor(sf::Color(189, 195, 199));
-    addDoctorSpecializationInput.setOutlineColor(sf::Color(189, 195, 199));
-    addDoctorContactInput.setOutlineColor(sf::Color(189, 195, 199));
-    addDoctorPasswordInput.setOutlineColor(sf::Color(189, 195, 199));
-    addDoctorFeeInput.setOutlineColor(sf::Color(189, 195, 199));
-
-    addDoctorNameInput.setTextColor(sf::Color(44, 62, 80));
-    addDoctorSpecializationInput.setTextColor(sf::Color(44, 62, 80));
-    addDoctorContactInput.setTextColor(sf::Color(44, 62, 80));
-    addDoctorPasswordInput.setTextColor(sf::Color(44, 62, 80));
-    addDoctorFeeInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(addDoctorNameInput);
+    UIThemeHelper::styleInput(addDoctorSpecializationInput);
+    UIThemeHelper::styleInput(addDoctorContactInput);
+    UIThemeHelper::styleInput(addDoctorPasswordInput);
+    UIThemeHelper::styleInput(addDoctorFeeInput);
 
     confirmAddDoctorBtn = UIButton(regularFont, "Add Doctor", sf::Vector2f(850.f, 560.f), sf::Vector2f(200.f, 40.f));
     confirmAddDoctorBtn.setFillColor(sf::Color(39, 174, 96));
@@ -167,15 +152,11 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     confirmAddDoctorBtn.setTextColor(sf::Color::White);
 
     backFromAddDoctorBtn = UIButton(regularFont, "Back", sf::Vector2f(740.f, 560.f), sf::Vector2f(90.f, 40.f));
-    backFromAddDoctorBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromAddDoctorBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromAddDoctorBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromAddDoctorBtn);
 
     removeDoctorPanel.setSize(sf::Vector2f(880.f, 500.f));
     removeDoctorPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    removeDoctorPanel.setFillColor(sf::Color(250, 251, 252));
-    removeDoctorPanel.setOutlineColor(sf::Color(220, 225, 230));
-    removeDoctorPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(removeDoctorPanel);
 
     removeDoctorTitleText = new sf::Text(boldFont, "Remove Doctor", 24);
     removeDoctorStatusText = new sf::Text(regularFont, "", 14);
@@ -184,79 +165,61 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     removeDoctorPageInfoText = new sf::Text(regularFont, "", 14);
 
     removeDoctorTitleText->setPosition(sf::Vector2f(230.f, 155.f));
-    removeDoctorTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(removeDoctorTitleText);
     removeDoctorStatusText->setPosition(sf::Vector2f(230.f, 588.f));
-    removeDoctorStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(removeDoctorStatusText);
     removeDoctorLabelText->setPosition(sf::Vector2f(230.f, 215.f));
-    removeDoctorLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(removeDoctorLabelText);
     removeDoctorIdLabelText->setPosition(sf::Vector2f(230.f, 520.f));
-    removeDoctorIdLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(removeDoctorIdLabelText);
     removeDoctorPageInfoText->setPosition(sf::Vector2f(470.f, 570.f));
-    removeDoctorPageInfoText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(removeDoctorPageInfoText);
 
     removeDoctorIdInput = UITextBox(regularFont, sf::Vector2f(470.f, 513.f), sf::Vector2f(140.f, 36.f), 10);
-    removeDoctorIdInput.setFillColor(sf::Color(255, 255, 255));
-    removeDoctorIdInput.setOutlineColor(sf::Color(189, 195, 199));
-    removeDoctorIdInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(removeDoctorIdInput);
 
     confirmRemoveDoctorBtn = UIButton(regularFont, "Remove", sf::Vector2f(850.f, 560.f), sf::Vector2f(200.f, 40.f));
-    confirmRemoveDoctorBtn.setFillColor(sf::Color(230, 80, 80));
-    confirmRemoveDoctorBtn.setOutlineColor(sf::Color(230, 80, 80));
-    confirmRemoveDoctorBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleCriticalButton(confirmRemoveDoctorBtn);
 
     backFromRemoveDoctorBtn = UIButton(regularFont, "Back", sf::Vector2f(740.f, 560.f), sf::Vector2f(90.f, 40.f));
-    backFromRemoveDoctorBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromRemoveDoctorBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromRemoveDoctorBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromRemoveDoctorBtn);
 
     removeDoctorPrevBtn = UIButton(regularFont, "Prev", sf::Vector2f(230.f, 560.f), sf::Vector2f(100.f, 40.f));
-    removeDoctorPrevBtn.setFillColor(sf::Color(52, 152, 219));
-    removeDoctorPrevBtn.setOutlineColor(sf::Color(52, 152, 219));
-    removeDoctorPrevBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(removeDoctorPrevBtn);
 
     removeDoctorNextBtn = UIButton(regularFont, "Next", sf::Vector2f(345.f, 560.f), sf::Vector2f(100.f, 40.f));
-    removeDoctorNextBtn.setFillColor(sf::Color(52, 152, 219));
-    removeDoctorNextBtn.setOutlineColor(sf::Color(52, 152, 219));
-    removeDoctorNextBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(removeDoctorNextBtn);
 
     dischargePatientPanel.setSize(sf::Vector2f(880.f, 500.f));
     dischargePatientPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    dischargePatientPanel.setFillColor(sf::Color(250, 251, 252));
-    dischargePatientPanel.setOutlineColor(sf::Color(220, 225, 230));
-    dischargePatientPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(dischargePatientPanel);
 
     dischargePatientTitleText = new sf::Text(boldFont, "Discharge Patient", 24);
     dischargePatientStatusText = new sf::Text(regularFont, "", 14);
     dischargePatientIdLabelText = new sf::Text(regularFont, "Enter Patient ID:", 16);
 
     dischargePatientTitleText->setPosition(sf::Vector2f(230.f, 155.f));
-    dischargePatientTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(dischargePatientTitleText);
     dischargePatientStatusText->setPosition(sf::Vector2f(230.f, 588.f));
-    dischargePatientStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(dischargePatientStatusText);
     dischargePatientIdLabelText->setPosition(sf::Vector2f(230.f, 215.f));
-    dischargePatientIdLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(dischargePatientIdLabelText);
 
     dischargePatientIdInput = UITextBox(regularFont, sf::Vector2f(470.f, 208.f), sf::Vector2f(140.f, 36.f), 10);
-    dischargePatientIdInput.setFillColor(sf::Color(255, 255, 255));
-    dischargePatientIdInput.setOutlineColor(sf::Color(189, 195, 199));
-    dischargePatientIdInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(dischargePatientIdInput);
 
     confirmDischargePatientBtn = UIButton(regularFont, "Discharge", sf::Vector2f(850.f, 560.f), sf::Vector2f(200.f, 40.f));
-    confirmDischargePatientBtn.setFillColor(sf::Color(230, 80, 80));
-    confirmDischargePatientBtn.setOutlineColor(sf::Color(230, 80, 80));
-    confirmDischargePatientBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleCriticalButton(confirmDischargePatientBtn);
 
     backFromDischargePatientBtn = UIButton(regularFont, "Back", sf::Vector2f(740.f, 560.f), sf::Vector2f(90.f, 40.f));
-    backFromDischargePatientBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromDischargePatientBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromDischargePatientBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromDischargePatientBtn);
 
     int removeIndex;
     for (removeIndex = 0; removeIndex < 30; removeIndex++)
     {
         removeDoctorListText[removeIndex] = new sf::Text(regularFont, "", 14);
         removeDoctorListText[removeIndex]->setPosition(sf::Vector2f(230.f, 240.f + (removeIndex * 18.f)));
-        removeDoctorListText[removeIndex]->setFillColor(sf::Color(44, 62, 80));
+        UIThemeHelper::styleBodyText(removeDoctorListText[removeIndex]);
     }
 
     sf::Vector2f btnSize(320.f, 48.f);
@@ -283,9 +246,7 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     for (int i = 0; i < 9; i++)
     {
         btns[i]->setFont(regularFont);
-        btns[i]->setFillColor(sf::Color(52, 152, 219));
-        btns[i]->setOutlineColor(sf::Color(52, 152, 219));
-        btns[i]->setTextColor(sf::Color::White);
+        UIThemeHelper::stylePrimaryButton(*btns[i]);
     }
 
     return true;
@@ -1283,6 +1244,214 @@ void AdminDash::setSecurityLogForView()
     }
 
     startPagedListMode(PAGED_LIST_SECURITY_LOG);
+    setStatus("");
+}
+
+void AdminDash::setDailyReportForView(Storage<Appointment> *appointments, Storage<Bill> *bills, Storage<Patient> *patients, Storage<Doctor> *doctors)
+{
+    int i;
+    int j;
+    int totalAppointments;
+    int pendingCount;
+    int completedCount;
+    int noShowCount;
+    int cancelledCount;
+    double revenueCollected;
+    char todayDate[16];
+    char line[260];
+    char numberBuffer[32];
+    char amountBuffer[32];
+    char namePreview[64];
+    bool hasOutstandingPatients;
+    bool hasDoctorSummaryRows;
+
+    clearPagedListItems();
+    setPagedListHeader("Generate Daily Report", "Daily Report", "");
+    TimeHelper::getTodayDate(todayDate, 16);
+
+    totalAppointments = 0;
+    pendingCount = 0;
+    completedCount = 0;
+    noShowCount = 0;
+    cancelledCount = 0;
+    revenueCollected = 0.0;
+
+    if (appointments != nullptr)
+    {
+        for (i = 0; i < appointments->size(); i++)
+        {
+            if (!StringHelper::textEquals(appointments->getAll()[i].getDate(), todayDate))
+            {
+                continue;
+            }
+
+            totalAppointments++;
+            if (StringHelper::textEquals(appointments->getAll()[i].getStatus(), "pending"))
+            {
+                pendingCount++;
+            }
+            else if (StringHelper::textEquals(appointments->getAll()[i].getStatus(), "completed"))
+            {
+                completedCount++;
+            }
+            else if (StringHelper::textEquals(appointments->getAll()[i].getStatus(), "no-show"))
+            {
+                noShowCount++;
+            }
+            else if (StringHelper::textEquals(appointments->getAll()[i].getStatus(), "cancelled"))
+            {
+                cancelledCount++;
+            }
+        }
+    }
+
+    if (bills != nullptr)
+    {
+        for (i = 0; i < bills->size(); i++)
+        {
+            if (StringHelper::textEquals(bills->getAll()[i].getDate(), todayDate) &&
+                StringHelper::textEquals(bills->getAll()[i].getStatus(), "paid"))
+            {
+                revenueCollected = revenueCollected + bills->getAll()[i].getAmount();
+            }
+        }
+    }
+
+    line[0] = '\0';
+    StringHelper::appendTextField(line, 260, "Date: ");
+    StringHelper::appendTextField(line, 260, todayDate);
+    appendPagedListItem(line);
+
+    line[0] = '\0';
+    StringHelper::appendTextField(line, 260, "Total appointments today: ");
+    ConversionHelper::intToString(totalAppointments, numberBuffer);
+    StringHelper::appendTextField(line, 260, numberBuffer);
+    StringHelper::appendTextField(line, 260, " (Pending: ");
+    ConversionHelper::intToString(pendingCount, numberBuffer);
+    StringHelper::appendTextField(line, 260, numberBuffer);
+    StringHelper::appendTextField(line, 260, " Completed: ");
+    ConversionHelper::intToString(completedCount, numberBuffer);
+    StringHelper::appendTextField(line, 260, numberBuffer);
+    StringHelper::appendTextField(line, 260, " No-show: ");
+    ConversionHelper::intToString(noShowCount, numberBuffer);
+    StringHelper::appendTextField(line, 260, numberBuffer);
+    StringHelper::appendTextField(line, 260, " Cancelled: ");
+    ConversionHelper::intToString(cancelledCount, numberBuffer);
+    StringHelper::appendTextField(line, 260, numberBuffer);
+    StringHelper::appendTextField(line, 260, ")");
+    appendPagedListItem(line);
+
+    line[0] = '\0';
+    ConversionHelper::doubleToString(revenueCollected, amountBuffer);
+    StringHelper::appendTextField(line, 260, "Revenue collected today (paid bills): PKR ");
+    StringHelper::appendTextField(line, 260, amountBuffer);
+    appendPagedListItem(line);
+
+    appendPagedListItem("");
+    appendPagedListItem("Patients with outstanding unpaid bills:");
+    appendPagedListItem("Patient Name | Total Owed");
+
+    hasOutstandingPatients = false;
+    if (patients != nullptr && bills != nullptr)
+    {
+        for (i = 0; i < patients->size(); i++)
+        {
+            double totalOwed;
+
+            totalOwed = 0.0;
+            for (j = 0; j < bills->size(); j++)
+            {
+                if (bills->getAll()[j].getPatientID() == patients->getAll()[i].getID() &&
+                    StringHelper::textEquals(bills->getAll()[j].getStatus(), "unpaid"))
+                {
+                    totalOwed = totalOwed + bills->getAll()[j].getAmount();
+                }
+            }
+
+            if (totalOwed > 0.0)
+            {
+                line[0] = '\0';
+                StringHelper::copyPreviewText(namePreview, 64, patients->getAll()[i].getName(), 28);
+                ConversionHelper::doubleToString(totalOwed, amountBuffer);
+                StringHelper::appendTextField(line, 260, namePreview);
+                StringHelper::appendTextField(line, 260, " | PKR ");
+                StringHelper::appendTextField(line, 260, amountBuffer);
+                appendPagedListItem(line);
+                hasOutstandingPatients = true;
+            }
+        }
+    }
+
+    if (!hasOutstandingPatients)
+    {
+        appendPagedListItem("No patients with outstanding unpaid bills.");
+    }
+
+    appendPagedListItem("");
+    appendPagedListItem("Doctor-wise summary for today:");
+    appendPagedListItem("Doctor Name | Completed | Pending | No-show");
+
+    hasDoctorSummaryRows = false;
+    if (doctors != nullptr && appointments != nullptr)
+    {
+        for (i = 0; i < doctors->size(); i++)
+        {
+            int doctorCompleted;
+            int doctorPending;
+            int doctorNoShow;
+
+            doctorCompleted = 0;
+            doctorPending = 0;
+            doctorNoShow = 0;
+
+            for (j = 0; j < appointments->size(); j++)
+            {
+                if (appointments->getAll()[j].getDoctorID() != doctors->getAll()[i].getID() ||
+                    !StringHelper::textEquals(appointments->getAll()[j].getDate(), todayDate))
+                {
+                    continue;
+                }
+
+                if (StringHelper::textEquals(appointments->getAll()[j].getStatus(), "completed"))
+                {
+                    doctorCompleted++;
+                }
+                else if (StringHelper::textEquals(appointments->getAll()[j].getStatus(), "pending"))
+                {
+                    doctorPending++;
+                }
+                else if (StringHelper::textEquals(appointments->getAll()[j].getStatus(), "no-show"))
+                {
+                    doctorNoShow++;
+                }
+            }
+
+            if (doctorCompleted > 0 || doctorPending > 0 || doctorNoShow > 0)
+            {
+                line[0] = '\0';
+                StringHelper::copyPreviewText(namePreview, 64, doctors->getAll()[i].getName(), 28);
+                StringHelper::appendTextField(line, 260, namePreview);
+                StringHelper::appendTextField(line, 260, " | ");
+                ConversionHelper::intToString(doctorCompleted, numberBuffer);
+                StringHelper::appendTextField(line, 260, numberBuffer);
+                StringHelper::appendTextField(line, 260, " | ");
+                ConversionHelper::intToString(doctorPending, numberBuffer);
+                StringHelper::appendTextField(line, 260, numberBuffer);
+                StringHelper::appendTextField(line, 260, " | ");
+                ConversionHelper::intToString(doctorNoShow, numberBuffer);
+                StringHelper::appendTextField(line, 260, numberBuffer);
+                appendPagedListItem(line);
+                hasDoctorSummaryRows = true;
+            }
+        }
+    }
+
+    if (!hasDoctorSummaryRows)
+    {
+        appendPagedListItem("No doctor activity today.");
+    }
+
+    startPagedListMode(PAGED_LIST_DAILY_REPORT);
     setStatus("");
 }
 

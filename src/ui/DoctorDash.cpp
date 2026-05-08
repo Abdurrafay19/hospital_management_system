@@ -1,4 +1,5 @@
 #include "DoctorDash.hpp"
+#include "UIThemeHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../entities/Prescription.hpp"
@@ -88,9 +89,7 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
 
     dashboardCard.setSize(sf::Vector2f(1100.f, 650.f));
     dashboardCard.setPosition(sf::Vector2f(90.f, 80.f));
-    dashboardCard.setFillColor(sf::Color(255, 255, 255));
-    dashboardCard.setOutlineColor(sf::Color(220, 225, 230));
-    dashboardCard.setOutlineThickness(2.f);
+    UIThemeHelper::styleDashboardCard(dashboardCard);
 
     titleText = new sf::Text(boldFont, "Doctor Dashboard", 32);
     welcomeText = new sf::Text(regularFont, "", 18);
@@ -98,22 +97,20 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     statusText = new sf::Text(regularFont, "", 16);
 
     titleText->setPosition(sf::Vector2f(110.f, 100.f));
-    titleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(titleText);
 
     welcomeText->setPosition(sf::Vector2f(110.f, 150.f));
-    welcomeText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(welcomeText);
 
     specializationText->setPosition(sf::Vector2f(110.f, 180.f));
-    specializationText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(specializationText);
 
     statusText->setPosition(sf::Vector2f(110.f, 600.f));
-    statusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(statusText);
 
     todayAppointmentsPanel.setSize(sf::Vector2f(900.f, 500.f));
     todayAppointmentsPanel.setPosition(sf::Vector2f(200.f, 150.f));
-    todayAppointmentsPanel.setFillColor(sf::Color(250, 251, 252));
-    todayAppointmentsPanel.setOutlineColor(sf::Color(220, 225, 230));
-    todayAppointmentsPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(todayAppointmentsPanel);
 
     todayAppointmentsTitleText = new sf::Text(boldFont, "Today's Appointments", 24);
     todayAppointmentsStatusText = new sf::Text(regularFont, "", 13);
@@ -138,168 +135,140 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     viewMedicalHistoryLabelText = new sf::Text(regularFont, "Enter the Patient ID to view their medical history:", 16);
 
     todayAppointmentsTitleText->setPosition(sf::Vector2f(220.f, 170.f));
-    todayAppointmentsTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(todayAppointmentsTitleText);
 
     todayAppointmentsStatusText->setPosition(sf::Vector2f(220.f, 600.f));
-    todayAppointmentsStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(todayAppointmentsStatusText);
 
     todayAppointmentsLabelText->setPosition(sf::Vector2f(220.f, 220.f));
-    todayAppointmentsLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(todayAppointmentsLabelText);
 
     markCompletePanel.setSize(sf::Vector2f(900.f, 500.f));
     markCompletePanel.setPosition(sf::Vector2f(200.f, 150.f));
-    markCompletePanel.setFillColor(sf::Color(250, 251, 252));
-    markCompletePanel.setOutlineColor(sf::Color(220, 225, 230));
-    markCompletePanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(markCompletePanel);
 
     markCompleteTitleText->setPosition(sf::Vector2f(220.f, 170.f));
-    markCompleteTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(markCompleteTitleText);
 
     markCompleteStatusText->setPosition(sf::Vector2f(220.f, 600.f));
-    markCompleteStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(markCompleteStatusText);
 
     markCompleteLabelText->setPosition(sf::Vector2f(220.f, 220.f));
-    markCompleteLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(markCompleteLabelText);
 
     markCompleteIdLabelText->setPosition(sf::Vector2f(220.f, 525.f));
-    markCompleteIdLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(markCompleteIdLabelText);
 
     markNoShowPanel.setSize(sf::Vector2f(900.f, 500.f));
     markNoShowPanel.setPosition(sf::Vector2f(200.f, 150.f));
-    markNoShowPanel.setFillColor(sf::Color(250, 251, 252));
-    markNoShowPanel.setOutlineColor(sf::Color(220, 225, 230));
-    markNoShowPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(markNoShowPanel);
 
     markNoShowTitleText->setPosition(sf::Vector2f(220.f, 170.f));
-    markNoShowTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(markNoShowTitleText);
 
     markNoShowStatusText->setPosition(sf::Vector2f(220.f, 600.f));
-    markNoShowStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(markNoShowStatusText);
 
     markNoShowLabelText->setPosition(sf::Vector2f(220.f, 220.f));
-    markNoShowLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(markNoShowLabelText);
 
     markNoShowIdLabelText->setPosition(sf::Vector2f(220.f, 525.f));
-    markNoShowIdLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(markNoShowIdLabelText);
 
     writePrescriptionPanel.setSize(sf::Vector2f(900.f, 500.f));
     writePrescriptionPanel.setPosition(sf::Vector2f(200.f, 150.f));
-    writePrescriptionPanel.setFillColor(sf::Color(250, 251, 252));
-    writePrescriptionPanel.setOutlineColor(sf::Color(220, 225, 230));
-    writePrescriptionPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(writePrescriptionPanel);
 
     writePrescriptionTitleText->setPosition(sf::Vector2f(220.f, 170.f));
-    writePrescriptionTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(writePrescriptionTitleText);
 
     writePrescriptionStatusText->setPosition(sf::Vector2f(220.f, 600.f));
-    writePrescriptionStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(writePrescriptionStatusText);
 
     writePrescriptionLabelText->setPosition(sf::Vector2f(220.f, 220.f));
-    writePrescriptionLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(writePrescriptionLabelText);
 
     writePrescriptionAppointmentIdLabelText->setPosition(sf::Vector2f(220.f, 255.f));
-    writePrescriptionAppointmentIdLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(writePrescriptionAppointmentIdLabelText);
 
     writePrescriptionAppointmentIdInput.setFont(regularFont);
     writePrescriptionAppointmentIdInput.setCapacity(20);
     writePrescriptionAppointmentIdInput.setPosition(sf::Vector2f(220.f, 280.f));
     writePrescriptionAppointmentIdInput.setSize(sf::Vector2f(320.f, 36.f));
-    writePrescriptionAppointmentIdInput.setFillColor(sf::Color::White);
-    writePrescriptionAppointmentIdInput.setOutlineColor(sf::Color(189, 195, 199));
-    writePrescriptionAppointmentIdInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(writePrescriptionAppointmentIdInput);
 
     writePrescriptionMedicinesLabelText->setPosition(sf::Vector2f(220.f, 325.f));
-    writePrescriptionMedicinesLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(writePrescriptionMedicinesLabelText);
 
     writePrescriptionMedicinesInput.setFont(regularFont);
     writePrescriptionMedicinesInput.setCapacity(499);
     writePrescriptionMedicinesInput.setPosition(sf::Vector2f(220.f, 350.f));
     writePrescriptionMedicinesInput.setSize(sf::Vector2f(720.f, 36.f));
-    writePrescriptionMedicinesInput.setFillColor(sf::Color::White);
-    writePrescriptionMedicinesInput.setOutlineColor(sf::Color(189, 195, 199));
-    writePrescriptionMedicinesInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(writePrescriptionMedicinesInput);
 
     writePrescriptionNotesLabelText->setPosition(sf::Vector2f(220.f, 395.f));
-    writePrescriptionNotesLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(writePrescriptionNotesLabelText);
 
     writePrescriptionNotesInput.setFont(regularFont);
     writePrescriptionNotesInput.setCapacity(299);
     writePrescriptionNotesInput.setPosition(sf::Vector2f(220.f, 420.f));
     writePrescriptionNotesInput.setSize(sf::Vector2f(720.f, 36.f));
-    writePrescriptionNotesInput.setFillColor(sf::Color::White);
-    writePrescriptionNotesInput.setOutlineColor(sf::Color(189, 195, 199));
-    writePrescriptionNotesInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(writePrescriptionNotesInput);
 
     confirmWritePrescriptionBtn.setFont(regularFont);
     confirmWritePrescriptionBtn.setText("Save Prescription");
     confirmWritePrescriptionBtn.setPosition(sf::Vector2f(650.f, 550.f));
     confirmWritePrescriptionBtn.setSize(sf::Vector2f(180.f, 36.f));
-    confirmWritePrescriptionBtn.setFillColor(sf::Color(46, 204, 113));
-    confirmWritePrescriptionBtn.setOutlineColor(sf::Color(46, 204, 113));
-    confirmWritePrescriptionBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSuccessButton(confirmWritePrescriptionBtn);
 
     backFromWritePrescriptionBtn.setFont(regularFont);
     backFromWritePrescriptionBtn.setText("Back");
     backFromWritePrescriptionBtn.setPosition(sf::Vector2f(840.f, 550.f));
     backFromWritePrescriptionBtn.setSize(sf::Vector2f(90.f, 36.f));
-    backFromWritePrescriptionBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromWritePrescriptionBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromWritePrescriptionBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromWritePrescriptionBtn);
 
     markNoShowIdInput.setFont(regularFont);
     markNoShowIdInput.setCapacity(20);
     markNoShowIdInput.setPosition(sf::Vector2f(220.f, 550.f));
     markNoShowIdInput.setSize(sf::Vector2f(320.f, 36.f));
-    markNoShowIdInput.setFillColor(sf::Color::White);
-    markNoShowIdInput.setOutlineColor(sf::Color(189, 195, 199));
-    markNoShowIdInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(markNoShowIdInput);
 
     confirmMarkNoShowBtn.setFont(regularFont);
     confirmMarkNoShowBtn.setText("Mark No-Show");
     confirmMarkNoShowBtn.setPosition(sf::Vector2f(680.f, 550.f));
     confirmMarkNoShowBtn.setSize(sf::Vector2f(160.f, 36.f));
-    confirmMarkNoShowBtn.setFillColor(sf::Color(231, 76, 60));
-    confirmMarkNoShowBtn.setOutlineColor(sf::Color(231, 76, 60));
-    confirmMarkNoShowBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleDangerButton(confirmMarkNoShowBtn);
 
     backFromMarkNoShowBtn.setFont(regularFont);
     backFromMarkNoShowBtn.setText("Back");
     backFromMarkNoShowBtn.setPosition(sf::Vector2f(850.f, 550.f));
     backFromMarkNoShowBtn.setSize(sf::Vector2f(90.f, 36.f));
-    backFromMarkNoShowBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromMarkNoShowBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromMarkNoShowBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromMarkNoShowBtn);
 
     markCompleteIdInput.setFont(regularFont);
     markCompleteIdInput.setCapacity(20);
     markCompleteIdInput.setPosition(sf::Vector2f(220.f, 550.f));
     markCompleteIdInput.setSize(sf::Vector2f(320.f, 36.f));
-    markCompleteIdInput.setFillColor(sf::Color::White);
-    markCompleteIdInput.setOutlineColor(sf::Color(189, 195, 199));
-    markCompleteIdInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(markCompleteIdInput);
 
     confirmMarkCompleteBtn.setFont(regularFont);
     confirmMarkCompleteBtn.setText("Mark Completed");
     confirmMarkCompleteBtn.setPosition(sf::Vector2f(680.f, 550.f));
     confirmMarkCompleteBtn.setSize(sf::Vector2f(160.f, 36.f));
-    confirmMarkCompleteBtn.setFillColor(sf::Color(46, 204, 113));
-    confirmMarkCompleteBtn.setOutlineColor(sf::Color(46, 204, 113));
-    confirmMarkCompleteBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSuccessButton(confirmMarkCompleteBtn);
 
     backFromMarkCompleteBtn.setFont(regularFont);
     backFromMarkCompleteBtn.setText("Back");
     backFromMarkCompleteBtn.setPosition(sf::Vector2f(850.f, 550.f));
     backFromMarkCompleteBtn.setSize(sf::Vector2f(90.f, 36.f));
-    backFromMarkCompleteBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromMarkCompleteBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromMarkCompleteBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromMarkCompleteBtn);
 
     int i;
     for (i = 0; i < 20; i++)
     {
         todayAppointmentListText[i] = new sf::Text(regularFont, "", 14);
         todayAppointmentListText[i]->setPosition(sf::Vector2f(220.f, 255.f + i * 18.f));
-        todayAppointmentListText[i]->setFillColor(sf::Color(44, 62, 80));
+        UIThemeHelper::styleBodyText(todayAppointmentListText[i]);
     }
 
     // Buttons list
@@ -313,96 +282,74 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     viewTodayAppointmentsBtn.setText("View Today's Appointments");
     viewTodayAppointmentsBtn.setPosition(sf::Vector2f(startX, startY));
     viewTodayAppointmentsBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    viewTodayAppointmentsBtn.setFillColor(sf::Color(52, 152, 219));
-    viewTodayAppointmentsBtn.setOutlineColor(sf::Color(52, 152, 219));
-    viewTodayAppointmentsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(viewTodayAppointmentsBtn);
 
     markAppointmentCompleteBtn.setFont(regularFont);
     markAppointmentCompleteBtn.setText("Mark Appointment Complete");
     markAppointmentCompleteBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 1));
     markAppointmentCompleteBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    markAppointmentCompleteBtn.setFillColor(sf::Color(52, 152, 219));
-    markAppointmentCompleteBtn.setOutlineColor(sf::Color(52, 152, 219));
-    markAppointmentCompleteBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(markAppointmentCompleteBtn);
 
     markAppointmentNoShowBtn.setFont(regularFont);
     markAppointmentNoShowBtn.setText("Mark Appointment No-Show");
     markAppointmentNoShowBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 2));
     markAppointmentNoShowBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    markAppointmentNoShowBtn.setFillColor(sf::Color(52, 152, 219));
-    markAppointmentNoShowBtn.setOutlineColor(sf::Color(52, 152, 219));
-    markAppointmentNoShowBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(markAppointmentNoShowBtn);
 
     writePrescriptionBtn.setFont(regularFont);
     writePrescriptionBtn.setText("Write Prescription");
     writePrescriptionBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 3));
     writePrescriptionBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    writePrescriptionBtn.setFillColor(sf::Color(52, 152, 219));
-    writePrescriptionBtn.setOutlineColor(sf::Color(52, 152, 219));
-    writePrescriptionBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(writePrescriptionBtn);
 
     viewPatientHistoryBtn.setFont(regularFont);
     viewPatientHistoryBtn.setText("View Patient Medical History");
     viewPatientHistoryBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 4));
     viewPatientHistoryBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    viewPatientHistoryBtn.setFillColor(sf::Color(52, 152, 219));
-    viewPatientHistoryBtn.setOutlineColor(sf::Color(52, 152, 219));
-    viewPatientHistoryBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(viewPatientHistoryBtn);
 
     viewMedicalHistoryPanel.setSize(sf::Vector2f(900.f, 500.f));
     viewMedicalHistoryPanel.setPosition(sf::Vector2f(200.f, 150.f));
-    viewMedicalHistoryPanel.setFillColor(sf::Color(250, 251, 252));
-    viewMedicalHistoryPanel.setOutlineColor(sf::Color(220, 225, 230));
-    viewMedicalHistoryPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(viewMedicalHistoryPanel);
 
     viewMedicalHistoryTitleText->setPosition(sf::Vector2f(220.f, 170.f));
-    viewMedicalHistoryTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(viewMedicalHistoryTitleText);
 
     viewMedicalHistoryStatusText->setPosition(sf::Vector2f(220.f, 600.f));
-    viewMedicalHistoryStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(viewMedicalHistoryStatusText);
 
     viewMedicalHistoryLabelText->setPosition(sf::Vector2f(220.f, 450.f));
-    viewMedicalHistoryLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(viewMedicalHistoryLabelText);
 
     viewMedicalHistoryPatientIdInput.setFont(regularFont);
     viewMedicalHistoryPatientIdInput.setCapacity(20);
     viewMedicalHistoryPatientIdInput.setPosition(sf::Vector2f(220.f, 475.f));
     viewMedicalHistoryPatientIdInput.setSize(sf::Vector2f(320.f, 36.f));
-    viewMedicalHistoryPatientIdInput.setFillColor(sf::Color::White);
-    viewMedicalHistoryPatientIdInput.setOutlineColor(sf::Color(189, 195, 199));
-    viewMedicalHistoryPatientIdInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(viewMedicalHistoryPatientIdInput);
 
     confirmViewMedicalHistoryBtn.setFont(regularFont);
     confirmViewMedicalHistoryBtn.setText("View History");
     confirmViewMedicalHistoryBtn.setPosition(sf::Vector2f(650.f, 550.f));
     confirmViewMedicalHistoryBtn.setSize(sf::Vector2f(180.f, 36.f));
-    confirmViewMedicalHistoryBtn.setFillColor(sf::Color(46, 204, 113));
-    confirmViewMedicalHistoryBtn.setOutlineColor(sf::Color(46, 204, 113));
-    confirmViewMedicalHistoryBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSuccessButton(confirmViewMedicalHistoryBtn);
 
     backFromViewMedicalHistoryBtn.setFont(regularFont);
     backFromViewMedicalHistoryBtn.setText("Back");
     backFromViewMedicalHistoryBtn.setPosition(sf::Vector2f(840.f, 550.f));
     backFromViewMedicalHistoryBtn.setSize(sf::Vector2f(90.f, 36.f));
-    backFromViewMedicalHistoryBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromViewMedicalHistoryBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromViewMedicalHistoryBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromViewMedicalHistoryBtn);
 
     backFromPrescriptionsBtn.setFont(regularFont);
     backFromPrescriptionsBtn.setText("Back to Patients");
     backFromPrescriptionsBtn.setPosition(sf::Vector2f(650.f, 550.f));
     backFromPrescriptionsBtn.setSize(sf::Vector2f(180.f, 36.f));
-    backFromPrescriptionsBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromPrescriptionsBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromPrescriptionsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromPrescriptionsBtn);
 
     backFromTodayAppointmentsBtn.setFont(regularFont);
     backFromTodayAppointmentsBtn.setText("Back");
     backFromTodayAppointmentsBtn.setPosition(sf::Vector2f(850.f, 550.f));
     backFromTodayAppointmentsBtn.setSize(sf::Vector2f(90.f, 36.f));
-    backFromTodayAppointmentsBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromTodayAppointmentsBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromTodayAppointmentsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromTodayAppointmentsBtn);
 
     return true;
 }

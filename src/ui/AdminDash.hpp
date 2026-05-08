@@ -14,7 +14,7 @@ class AdminDash
 private:
     enum
     {
-        PAGED_LIST_MAX_ITEMS = 100,
+        PAGED_LIST_MAX_ITEMS = 240,
         PAGED_LIST_MAX_LINE_LENGTH = 260,
         PAGED_LIST_MAX_VISIBLE_ROWS = 14
     };
@@ -27,7 +27,8 @@ private:
         PAGED_LIST_DOCTORS,
         PAGED_LIST_APPOINTMENTS,
         PAGED_LIST_UNPAID_BILLS,
-        PAGED_LIST_SECURITY_LOG
+        PAGED_LIST_SECURITY_LOG,
+        PAGED_LIST_DAILY_REPORT
     };
 
     sf::Font regularFont;
@@ -148,6 +149,7 @@ public:
     void setAppointmentsForView(Storage<Appointment> *appointments, Storage<Patient> *patients, Storage<Doctor> *doctors);
     void setUnpaidBillsForView(Storage<Bill> *bills, Storage<Patient> *patients);
     void setSecurityLogForView();
+    void setDailyReportForView(Storage<Appointment> *appointments, Storage<Bill> *bills, Storage<Patient> *patients, Storage<Doctor> *doctors);
     void startRemoveDoctorMode();
     void closeRemoveDoctorMode();
 

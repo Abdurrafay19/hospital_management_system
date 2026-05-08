@@ -6,7 +6,9 @@
 #include "../core/FileHandler.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../helpers/StringHelper.hpp"
+#include "../helpers/StorageHelper.hpp"
 #include "../helpers/TimeHelper.hpp"
+#include "../ui/UIThemeHelper.hpp"
 
 static bool pathExists(const char *path)
 {
@@ -28,54 +30,6 @@ static bool loadFontWithFallback(sf::Font &font, const char *rootPath, const cha
     }
 
     return false;
-}
-
-static int compareText(const char *left, const char *right)
-{
-    int index;
-    char leftChar;
-    char rightChar;
-
-    index = 0;
-    while (left != nullptr && right != nullptr)
-    {
-        leftChar = left[index];
-        rightChar = right[index];
-
-        if (leftChar == '\0' && rightChar == '\0')
-        {
-            return 0;
-        }
-        if (leftChar == '\0')
-        {
-            return -1;
-        }
-        if (rightChar == '\0')
-        {
-            return 1;
-        }
-        if (leftChar < rightChar)
-        {
-            return -1;
-        }
-        if (leftChar > rightChar)
-        {
-            return 1;
-        }
-
-        index++;
-    }
-
-    if (left == nullptr && right == nullptr)
-    {
-        return 0;
-    }
-    if (left == nullptr)
-    {
-        return -1;
-    }
-
-    return 1;
 }
 
 static int parseDateComponent(const char *dateText, int startIndex, int endMarker)
@@ -176,7 +130,7 @@ static int compareAppointmentsByDateTime(const Appointment &left, const Appointm
         return 1;
     }
 
-    result = compareText(left.getTimeSlot(), right.getTimeSlot());
+    result = StringHelper::compareText(left.getTimeSlot(), right.getTimeSlot());
     return result;
 }
 
@@ -365,23 +319,6 @@ static bool prescriptionExistsForAppointment(Storage<Prescription> &prescription
     return false;
 }
 
-static int getNextPrescriptionID(Storage<Prescription> &prescriptions)
-{
-    int i;
-    int maxID;
-
-    maxID = 0;
-    for (i = 0; i < prescriptions.size(); i++)
-    {
-        if (prescriptions.getAll()[i].getID() > maxID)
-        {
-            maxID = prescriptions.getAll()[i].getID();
-        }
-    }
-
-    return maxID + 1;
-}
-
 static void truncateText(char *destination, const char *source, int maxLength)
 {
     StringHelper::stringCopy(destination, source, maxLength);
@@ -391,10 +328,7 @@ void App::setupUI()
 {
     logoutButton = UIButton(regularFont, "Logout", sf::Vector2f(1100.f, 30.f), sf::Vector2f(130.f, 40.f));
 
-    logoutButton.setFillColor(sf::Color(230, 80, 80));
-
-    logoutButton.setOutlineColor(sf::Color(230, 80, 80));
-    logoutButton.setTextColor(sf::Color::White);
+    UIThemeHelper::styleCriticalButton(logoutButton);
 
     loginScreen.initialize(regularFont, boldFont);
     patientDash.initialize(regularFont, boldFont);
@@ -937,7 +871,7 @@ void App::handleMouseClick()
                 }
                 else
                 {
-                    prescriptionID = getNextPrescriptionID(system.getPrescriptions());
+                    prescriptionID = StorageHelper::nextIDFromStorage(system.getPrescriptions());
                     prescription = Prescription(
                         prescriptionID,
                         appointmentID,
@@ -1097,7 +1031,6 @@ void App::handleMouseClick()
                 const char *feeText;
                 double consultationFee;
                 int newDoctorID;
-                int i;
                 char successMessage[200];
                 int messageLength;
                 Doctor newDoctor;
@@ -1149,15 +1082,7 @@ void App::handleMouseClick()
                     }
                     else
                     {
-                        newDoctorID = 0;
-                        for (i = 0; i < system.getDoctors().size(); i++)
-                        {
-                            if (system.getDoctors().getAll()[i].getID() > newDoctorID)
-                            {
-                                newDoctorID = system.getDoctors().getAll()[i].getID();
-                            }
-                        }
-                        newDoctorID++;
+                        newDoctorID = StorageHelper::nextIDFromStorage(system.getDoctors());
 
                         newDoctor = Doctor(newDoctorID, name, password, specialization, contact, consultationFee);
                         system.getDoctors().add(newDoctor);
@@ -1376,7 +1301,16 @@ void App::handleMouseClick()
             }
             if (adminDash.consumeGenerateDailyReportRequest())
             {
-                adminDash.setStatus("Generate Daily Report clicked.");
+                Storage<Appointment> reportAppointments;
+                Storage<Bill> reportBills;
+                Storage<Patient> reportPatients;
+                Storage<Doctor> reportDoctors;
+
+                FileHandler::loadAppointments(reportAppointments);
+                FileHandler::loadBills(reportBills);
+                FileHandler::loadPatients(reportPatients);
+                FileHandler::loadDoctors(reportDoctors);
+                adminDash.setDailyReportForView(&reportAppointments, &reportBills, &reportPatients, &reportDoctors);
             }
         }
     }

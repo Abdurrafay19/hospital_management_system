@@ -1,4 +1,5 @@
 #include "PatientDash.hpp"
+#include "UIThemeHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../core/Validator.hpp"
@@ -185,9 +186,7 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
 
     dashboardCard.setSize(sf::Vector2f(1100.f, 650.f));
     dashboardCard.setPosition(sf::Vector2f(90.f, 80.f));
-    dashboardCard.setFillColor(sf::Color(255, 255, 255));
-    dashboardCard.setOutlineColor(sf::Color(220, 225, 230));
-    dashboardCard.setOutlineThickness(2.f);
+    UIThemeHelper::styleDashboardCard(dashboardCard);
 
     titleText = new sf::Text(boldFont, "Patient Dashboard", 32);
     patientNameText = new sf::Text(regularFont, "", 18);
@@ -207,13 +206,13 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     cancelAppointmentIdLabelText = new sf::Text(regularFont, "Enter Appointment ID to cancel:", 16);
 
     titleText->setPosition(sf::Vector2f(110.f, 100.f));
-    titleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(titleText);
 
     patientNameText->setPosition(sf::Vector2f(110.f, 150.f));
-    patientNameText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(patientNameText);
 
     balanceText->setPosition(sf::Vector2f(110.f, 180.f));
-    balanceText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(balanceText);
 
     statusText->setPosition(sf::Vector2f(110.f, 600.f));
     statusText->setFillColor(sf::Color(231, 76, 60));
@@ -221,88 +220,76 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     // Expand booking panel to 900x550 for multi-step booking
     bookingPanel.setSize(sf::Vector2f(900.f, 550.f));
     bookingPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    bookingPanel.setFillColor(sf::Color(250, 251, 252));
-    bookingPanel.setOutlineColor(sf::Color(220, 225, 230));
-    bookingPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(bookingPanel);
 
     bookingTitleText->setPosition(sf::Vector2f(220.f, 150.f));
-    bookingTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(bookingTitleText);
 
     bookingStepIndicatorText->setPosition(sf::Vector2f(820.f, 153.f));
     bookingStepIndicatorText->setFillColor(sf::Color(149, 165, 166));
 
     bookingDialogStatusText->setPosition(sf::Vector2f(220.f, 467.f));
-    bookingDialogStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(bookingDialogStatusText);
 
     int i;
 
     cancelPanel.setSize(sf::Vector2f(900.f, 550.f));
     cancelPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    cancelPanel.setFillColor(sf::Color(250, 251, 252));
-    cancelPanel.setOutlineColor(sf::Color(220, 225, 230));
-    cancelPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(cancelPanel);
 
     cancelTitleText->setPosition(sf::Vector2f(220.f, 150.f));
-    cancelTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(cancelTitleText);
 
     cancelDialogStatusText->setPosition(sf::Vector2f(220.f, 605.f));
-    cancelDialogStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(cancelDialogStatusText);
 
     cancelAppointmentsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
-    cancelAppointmentsLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(cancelAppointmentsLabelText);
 
     cancelAppointmentIdLabelText->setPosition(sf::Vector2f(220.f, 490.f));
-    cancelAppointmentIdLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(cancelAppointmentIdLabelText);
 
     viewAppointmentsPanel.setSize(sf::Vector2f(900.f, 550.f));
     viewAppointmentsPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    viewAppointmentsPanel.setFillColor(sf::Color(250, 251, 252));
-    viewAppointmentsPanel.setOutlineColor(sf::Color(220, 225, 230));
-    viewAppointmentsPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(viewAppointmentsPanel);
 
     viewAppointmentsTitleText = new sf::Text(boldFont, "My Appointments", 24);
     viewAppointmentsStatusText = new sf::Text(regularFont, "", 13);
     viewAppointmentsLabelText = new sf::Text(regularFont, "Appointments:", 16);
 
     viewAppointmentsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
-    viewAppointmentsTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(viewAppointmentsTitleText);
 
     viewAppointmentsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
-    viewAppointmentsStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(viewAppointmentsStatusText);
 
     viewAppointmentsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
-    viewAppointmentsLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(viewAppointmentsLabelText);
 
     viewMedicalRecordsPanel.setSize(sf::Vector2f(900.f, 550.f));
     viewMedicalRecordsPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    viewMedicalRecordsPanel.setFillColor(sf::Color(250, 251, 252));
-    viewMedicalRecordsPanel.setOutlineColor(sf::Color(220, 225, 230));
-    viewMedicalRecordsPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(viewMedicalRecordsPanel);
 
     viewMedicalRecordsTitleText = new sf::Text(boldFont, "My Medical Records", 24);
     viewMedicalRecordsStatusText = new sf::Text(regularFont, "", 13);
     viewMedicalRecordsLabelText = new sf::Text(regularFont, "Records:", 16);
 
     viewMedicalRecordsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
-    viewMedicalRecordsTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(viewMedicalRecordsTitleText);
 
     viewMedicalRecordsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
-    viewMedicalRecordsStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(viewMedicalRecordsStatusText);
 
     viewMedicalRecordsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
-    viewMedicalRecordsLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(viewMedicalRecordsLabelText);
 
     viewBillsPanel.setSize(sf::Vector2f(900.f, 550.f));
     viewBillsPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    viewBillsPanel.setFillColor(sf::Color(250, 251, 252));
-    viewBillsPanel.setOutlineColor(sf::Color(220, 225, 230));
-    viewBillsPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(viewBillsPanel);
 
     payBillPanel.setSize(sf::Vector2f(900.f, 550.f));
     payBillPanel.setPosition(sf::Vector2f(200.f, 130.f));
-    payBillPanel.setFillColor(sf::Color(250, 251, 252));
-    payBillPanel.setOutlineColor(sf::Color(220, 225, 230));
-    payBillPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(payBillPanel);
 
     viewBillsTitleText = new sf::Text(boldFont, "My Bills", 24);
     viewBillsStatusText = new sf::Text(regularFont, "", 13);
@@ -313,209 +300,173 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     payBillLabelText = new sf::Text(regularFont, "Unpaid Bills:", 16);
 
     viewBillsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
-    viewBillsTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(viewBillsTitleText);
 
     payBillTitleText->setPosition(sf::Vector2f(220.f, 150.f));
-    payBillTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(payBillTitleText);
 
     viewBillsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
-    viewBillsStatusText->setFillColor(sf::Color(192, 57, 43));
+    UIThemeHelper::styleStatusText(viewBillsStatusText);
 
     viewBillsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
-    viewBillsLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(viewBillsLabelText);
 
     payBillLabelText->setPosition(sf::Vector2f(220.f, 200.f));
-    payBillLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(payBillLabelText);
 
     viewBillsTotalText->setPosition(sf::Vector2f(220.f, 560.f));
-    viewBillsTotalText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleBodyText(viewBillsTotalText);
 
     payBillIdLabelText = new sf::Text(regularFont, "Enter Bill ID to pay:", 16);
     payBillIdLabelText->setPosition(sf::Vector2f(220.f, 490.f));
-    payBillIdLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(payBillIdLabelText);
 
     payBillIdInput.setFont(regularFont);
     payBillIdInput.setCapacity(20);
     payBillIdInput.setPosition(sf::Vector2f(220.f, 515.f));
     payBillIdInput.setSize(sf::Vector2f(360.f, 36.f));
-    payBillIdInput.setFillColor(sf::Color::White);
-    payBillIdInput.setOutlineColor(sf::Color(189, 195, 199));
-    payBillIdInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(payBillIdInput);
 
     confirmPayBillBtn.setFont(regularFont);
     confirmPayBillBtn.setText("Pay Bill");
     confirmPayBillBtn.setPosition(sf::Vector2f(720.f, 560.f));
     confirmPayBillBtn.setSize(sf::Vector2f(160.f, 38.f));
-    confirmPayBillBtn.setFillColor(sf::Color(46, 204, 113));
-    confirmPayBillBtn.setOutlineColor(sf::Color(46, 204, 113));
-    confirmPayBillBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSuccessButton(confirmPayBillBtn);
 
     backFromPayBillBtn.setFont(regularFont);
     backFromPayBillBtn.setText("Back");
     backFromPayBillBtn.setPosition(sf::Vector2f(890.f, 560.f));
     backFromPayBillBtn.setSize(sf::Vector2f(90.f, 38.f));
-    backFromPayBillBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromPayBillBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromPayBillBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromPayBillBtn);
 
     topUpPanel.setSize(sf::Vector2f(650.f, 260.f));
     topUpPanel.setPosition(sf::Vector2f(320.f, 220.f));
-    topUpPanel.setFillColor(sf::Color(250, 251, 252));
-    topUpPanel.setOutlineColor(sf::Color(220, 225, 230));
-    topUpPanel.setOutlineThickness(2.f);
+    UIThemeHelper::stylePanel(topUpPanel);
 
     topUpTitleText = new sf::Text(boldFont, "Top Up Balance", 24);
     topUpTitleText->setPosition(sf::Vector2f(340.f, 240.f));
-    topUpTitleText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleTitleText(topUpTitleText);
 
     topUpLabelText = new sf::Text(regularFont, "Enter amount to add (PKR):", 16);
     topUpLabelText->setPosition(sf::Vector2f(340.f, 295.f));
-    topUpLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(topUpLabelText);
 
     topUpAmountInput.setFont(regularFont);
     topUpAmountInput.setCapacity(20);
     topUpAmountInput.setPosition(sf::Vector2f(340.f, 320.f));
     topUpAmountInput.setSize(sf::Vector2f(380.f, 36.f));
-    topUpAmountInput.setFillColor(sf::Color::White);
-    topUpAmountInput.setOutlineColor(sf::Color(189, 195, 199));
-    topUpAmountInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(topUpAmountInput);
 
     confirmTopUpBtn.setFont(regularFont);
     confirmTopUpBtn.setText("Top Up");
     confirmTopUpBtn.setPosition(sf::Vector2f(560.f, 380.f));
     confirmTopUpBtn.setSize(sf::Vector2f(160.f, 38.f));
-    confirmTopUpBtn.setFillColor(sf::Color(46, 204, 113));
-    confirmTopUpBtn.setOutlineColor(sf::Color(46, 204, 113));
-    confirmTopUpBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSuccessButton(confirmTopUpBtn);
 
     backFromTopUpBtn.setFont(regularFont);
     backFromTopUpBtn.setText("Back");
     backFromTopUpBtn.setPosition(sf::Vector2f(730.f, 380.f));
     backFromTopUpBtn.setSize(sf::Vector2f(90.f, 38.f));
-    backFromTopUpBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromTopUpBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromTopUpBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromTopUpBtn);
 
     cancelAppointmentIdInput.setFont(regularFont);
     cancelAppointmentIdInput.setCapacity(20);
     cancelAppointmentIdInput.setPosition(sf::Vector2f(220.f, 515.f));
     cancelAppointmentIdInput.setSize(sf::Vector2f(360.f, 36.f));
-    cancelAppointmentIdInput.setFillColor(sf::Color::White);
-    cancelAppointmentIdInput.setOutlineColor(sf::Color(189, 195, 199));
-    cancelAppointmentIdInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(cancelAppointmentIdInput);
 
     for (i = 0; i < 20; i++)
     {
         pendingAppointmentListText[i] = new sf::Text(regularFont, "", 12);
         pendingAppointmentListText[i]->setPosition(sf::Vector2f(220.f, 225.f + i * 14.f));
-        pendingAppointmentListText[i]->setFillColor(sf::Color(44, 62, 80));
+        UIThemeHelper::styleBodyText(pendingAppointmentListText[i]);
     }
 
     confirmCancelAppointmentBtn.setFont(regularFont);
     confirmCancelAppointmentBtn.setText("Cancel Appointment");
     confirmCancelAppointmentBtn.setPosition(sf::Vector2f(700.f, 560.f));
     confirmCancelAppointmentBtn.setSize(sf::Vector2f(180.f, 38.f));
-    confirmCancelAppointmentBtn.setFillColor(sf::Color(231, 76, 60));
-    confirmCancelAppointmentBtn.setOutlineColor(sf::Color(231, 76, 60));
-    confirmCancelAppointmentBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleDangerButton(confirmCancelAppointmentBtn);
 
     backFromCancelAppointmentBtn.setFont(regularFont);
     backFromCancelAppointmentBtn.setText("Back");
     backFromCancelAppointmentBtn.setPosition(sf::Vector2f(890.f, 560.f));
     backFromCancelAppointmentBtn.setSize(sf::Vector2f(90.f, 38.f));
-    backFromCancelAppointmentBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromCancelAppointmentBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromCancelAppointmentBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromCancelAppointmentBtn);
 
     backFromViewAppointmentsBtn.setFont(regularFont);
     backFromViewAppointmentsBtn.setText("Back");
     backFromViewAppointmentsBtn.setPosition(sf::Vector2f(890.f, 560.f));
     backFromViewAppointmentsBtn.setSize(sf::Vector2f(90.f, 38.f));
-    backFromViewAppointmentsBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromViewAppointmentsBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromViewAppointmentsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromViewAppointmentsBtn);
 
     backFromViewMedicalRecordsBtn.setFont(regularFont);
     backFromViewMedicalRecordsBtn.setText("Back");
     backFromViewMedicalRecordsBtn.setPosition(sf::Vector2f(890.f, 560.f));
     backFromViewMedicalRecordsBtn.setSize(sf::Vector2f(90.f, 38.f));
-    backFromViewMedicalRecordsBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromViewMedicalRecordsBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromViewMedicalRecordsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromViewMedicalRecordsBtn);
 
     backFromViewBillsBtn.setFont(regularFont);
     backFromViewBillsBtn.setText("Back");
     backFromViewBillsBtn.setPosition(sf::Vector2f(890.f, 560.f));
     backFromViewBillsBtn.setSize(sf::Vector2f(90.f, 38.f));
-    backFromViewBillsBtn.setFillColor(sf::Color(149, 165, 166));
-    backFromViewBillsBtn.setOutlineColor(sf::Color(149, 165, 166));
-    backFromViewBillsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(backFromViewBillsBtn);
 
     // Step 1: Specialization
     specializationLabelText->setPosition(sf::Vector2f(220.f, 210.f));
-    specializationLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(specializationLabelText);
 
     specializationInput.setFont(regularFont);
     specializationInput.setCapacity(50);
     specializationInput.setPosition(sf::Vector2f(220.f, 235.f));
     specializationInput.setSize(sf::Vector2f(400.f, 36.f));
-    specializationInput.setFillColor(sf::Color::White);
-    specializationInput.setOutlineColor(sf::Color(189, 195, 199));
-    specializationInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(specializationInput);
 
     searchDoctorsBtn.setFont(regularFont);
     searchDoctorsBtn.setText("Search");
     searchDoctorsBtn.setPosition(sf::Vector2f(640.f, 235.f));
     searchDoctorsBtn.setSize(sf::Vector2f(120.f, 36.f));
-    searchDoctorsBtn.setFillColor(sf::Color(52, 152, 219));
-    searchDoctorsBtn.setOutlineColor(sf::Color(52, 152, 219));
-    searchDoctorsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(searchDoctorsBtn);
 
     // Step 2: Doctor Selection
     doctorListLabelText->setPosition(sf::Vector2f(220.f, 280.f));
-    doctorListLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(doctorListLabelText);
 
     for (i = 0; i < 20; i++)
     {
         doctorListText[i] = new sf::Text(regularFont, "", 14);
         doctorListText[i]->setPosition(sf::Vector2f(220.f, 305.f + i * 22.f));
-        doctorListText[i]->setFillColor(sf::Color(44, 62, 80));
+        UIThemeHelper::styleBodyText(doctorListText[i]);
     }
 
     selectDoctorBtn.setFont(regularFont);
     selectDoctorBtn.setText("Select Doctor");
     selectDoctorBtn.setPosition(sf::Vector2f(220.f, 300.f));
     selectDoctorBtn.setSize(sf::Vector2f(150.f, 36.f));
-    selectDoctorBtn.setFillColor(sf::Color(52, 152, 219));
-    selectDoctorBtn.setOutlineColor(sf::Color(52, 152, 219));
-    selectDoctorBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(selectDoctorBtn);
 
     // Step 3: Date Input
     dateInputLabelText->setPosition(sf::Vector2f(220.f, 280.f));
-    dateInputLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(dateInputLabelText);
 
     dateInput.setFont(regularFont);
     dateInput.setCapacity(20);
     dateInput.setPosition(sf::Vector2f(220.f, 305.f));
     dateInput.setSize(sf::Vector2f(300.f, 36.f));
-    dateInput.setFillColor(sf::Color::White);
-    dateInput.setOutlineColor(sf::Color(189, 195, 199));
-    dateInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleInput(dateInput);
 
     confirmDateBtn.setFont(regularFont);
     confirmDateBtn.setText("Confirm Date");
     confirmDateBtn.setPosition(sf::Vector2f(540.f, 305.f));
     confirmDateBtn.setSize(sf::Vector2f(120.f, 36.f));
-    confirmDateBtn.setFillColor(sf::Color(52, 152, 219));
-    confirmDateBtn.setOutlineColor(sf::Color(52, 152, 219));
-    confirmDateBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(confirmDateBtn);
 
     // Step 4: Time Slots
     timeSlotsLabelText->setPosition(sf::Vector2f(220.f, 255.f));
-    timeSlotsLabelText->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(timeSlotsLabelText);
 
     timeSlotDisplayText->setPosition(sf::Vector2f(220.f, 280.f));
-    timeSlotDisplayText->setFillColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleBodyText(timeSlotDisplayText);
 
     const char *timeSlots[] = {"09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"};
     int j;
@@ -527,9 +478,7 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
         int row = i / 4;
         timeSlotButtons[i].setPosition(sf::Vector2f(220.f + j * 150.f, 305.f + row * 50.f));
         timeSlotButtons[i].setSize(sf::Vector2f(130.f, 40.f));
-        timeSlotButtons[i].setFillColor(sf::Color(189, 195, 199));
-        timeSlotButtons[i].setOutlineColor(sf::Color(189, 195, 199));
-        timeSlotButtons[i].setTextColor(sf::Color::White);
+        UIThemeHelper::styleMutedTimeSlotButton(timeSlotButtons[i]);
     }
 
     // Step 5: Confirm
@@ -537,34 +486,26 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     confirmBookingBtn.setText("Confirm Booking");
     confirmBookingBtn.setPosition(sf::Vector2f(720.f, 510.f));
     confirmBookingBtn.setSize(sf::Vector2f(160.f, 38.f));
-    confirmBookingBtn.setFillColor(sf::Color(46, 204, 113));
-    confirmBookingBtn.setOutlineColor(sf::Color(46, 204, 113));
-    confirmBookingBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSuccessButton(confirmBookingBtn);
 
     cancelBookingBtn.setFont(regularFont);
     cancelBookingBtn.setText("Cancel");
     cancelBookingBtn.setPosition(sf::Vector2f(890.f, 510.f));
     cancelBookingBtn.setSize(sf::Vector2f(90.f, 38.f));
-    cancelBookingBtn.setFillColor(sf::Color(231, 76, 60));
-    cancelBookingBtn.setOutlineColor(sf::Color(231, 76, 60));
-    cancelBookingBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleDangerButton(cancelBookingBtn);
 
     // Previous/Next buttons
     previousStepBtn.setFont(regularFont);
     previousStepBtn.setText("< Previous");
     previousStepBtn.setPosition(sf::Vector2f(220.f, 510.f));
     previousStepBtn.setSize(sf::Vector2f(90.f, 38.f));
-    previousStepBtn.setFillColor(sf::Color(149, 165, 166));
-    previousStepBtn.setOutlineColor(sf::Color(149, 165, 166));
-    previousStepBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(previousStepBtn);
 
     nextStepBtn.setFont(regularFont);
     nextStepBtn.setText("Next >");
     nextStepBtn.setPosition(sf::Vector2f(320.f, 510.f));
     nextStepBtn.setSize(sf::Vector2f(90.f, 38.f));
-    nextStepBtn.setFillColor(sf::Color(149, 165, 166));
-    nextStepBtn.setOutlineColor(sf::Color(149, 165, 166));
-    nextStepBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSecondaryButton(nextStepBtn);
 
     // Dashboard buttons
     int startX = 130;
@@ -578,57 +519,43 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     bookAppointmentBtn.setText("Book Appointment");
     bookAppointmentBtn.setPosition(sf::Vector2f(startX, startY));
     bookAppointmentBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    bookAppointmentBtn.setFillColor(sf::Color(52, 152, 219));
-    bookAppointmentBtn.setOutlineColor(sf::Color(52, 152, 219));
-    bookAppointmentBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(bookAppointmentBtn);
 
     cancelAppointmentBtn.setFont(regularFont);
     cancelAppointmentBtn.setText("Cancel Appointment");
     cancelAppointmentBtn.setPosition(sf::Vector2f(startX + btnWidth + spacingX, startY));
     cancelAppointmentBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    cancelAppointmentBtn.setFillColor(sf::Color(52, 152, 219));
-    cancelAppointmentBtn.setOutlineColor(sf::Color(52, 152, 219));
-    cancelAppointmentBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(cancelAppointmentBtn);
 
     viewAppointmentsBtn.setFont(regularFont);
     viewAppointmentsBtn.setText("View Appointments");
     viewAppointmentsBtn.setPosition(sf::Vector2f(startX + (btnWidth + spacingX) * 2, startY));
     viewAppointmentsBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    viewAppointmentsBtn.setFillColor(sf::Color(52, 152, 219));
-    viewAppointmentsBtn.setOutlineColor(sf::Color(52, 152, 219));
-    viewAppointmentsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(viewAppointmentsBtn);
 
     viewMedicalRecordsBtn.setFont(regularFont);
     viewMedicalRecordsBtn.setText("Medical Records");
     viewMedicalRecordsBtn.setPosition(sf::Vector2f(startX, startY + btnHeight + spacingY));
     viewMedicalRecordsBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    viewMedicalRecordsBtn.setFillColor(sf::Color(52, 152, 219));
-    viewMedicalRecordsBtn.setOutlineColor(sf::Color(52, 152, 219));
-    viewMedicalRecordsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(viewMedicalRecordsBtn);
 
     viewBillsBtn.setFont(regularFont);
     viewBillsBtn.setText("View Bills");
     viewBillsBtn.setPosition(sf::Vector2f(startX + btnWidth + spacingX, startY + btnHeight + spacingY));
     viewBillsBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    viewBillsBtn.setFillColor(sf::Color(52, 152, 219));
-    viewBillsBtn.setOutlineColor(sf::Color(52, 152, 219));
-    viewBillsBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(viewBillsBtn);
 
     payBillBtn.setFont(regularFont);
     payBillBtn.setText("Pay Bill");
     payBillBtn.setPosition(sf::Vector2f(startX + (btnWidth + spacingX) * 2, startY + btnHeight + spacingY));
     payBillBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    payBillBtn.setFillColor(sf::Color(52, 152, 219));
-    payBillBtn.setOutlineColor(sf::Color(52, 152, 219));
-    payBillBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(payBillBtn);
 
     topUpBalanceBtn.setFont(regularFont);
     topUpBalanceBtn.setText("Top Up Balance");
     topUpBalanceBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 2));
     topUpBalanceBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
-    topUpBalanceBtn.setFillColor(sf::Color(52, 152, 219));
-    topUpBalanceBtn.setOutlineColor(sf::Color(52, 152, 219));
-    topUpBalanceBtn.setTextColor(sf::Color::White);
+    UIThemeHelper::stylePrimaryButton(topUpBalanceBtn);
 
     return true;
 }
@@ -1168,10 +1095,10 @@ void PatientDash::draw(sf::RenderWindow &window) const
 
 void PatientDash::handleMouseClick(sf::RenderWindow &window)
 {
+    sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
     if (cancelAppointmentMode)
     {
-        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
         if (cancelAppointmentIdInput.contains(mouseWorldPosition))
         {
             cancelAppointmentIdInput.setActive(true);
@@ -1196,8 +1123,6 @@ void PatientDash::handleMouseClick(sf::RenderWindow &window)
 
     if (viewAppointmentsMode)
     {
-        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
         if (backFromViewAppointmentsBtn.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
             closeViewAppointmentsMode();
@@ -1209,8 +1134,6 @@ void PatientDash::handleMouseClick(sf::RenderWindow &window)
 
     if (viewMedicalRecordsMode)
     {
-        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
         if (backFromViewMedicalRecordsBtn.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
             closeViewMedicalRecordsMode();
@@ -1222,8 +1145,6 @@ void PatientDash::handleMouseClick(sf::RenderWindow &window)
 
     if (viewBillsMode)
     {
-        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
         if (backFromViewBillsBtn.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
             closeViewBillsMode();
@@ -1235,8 +1156,6 @@ void PatientDash::handleMouseClick(sf::RenderWindow &window)
 
     if (payBillMode)
     {
-        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
         if (payBillIdInput.contains(mouseWorldPosition))
         {
             payBillIdInput.setActive(true);
@@ -1261,8 +1180,6 @@ void PatientDash::handleMouseClick(sf::RenderWindow &window)
 
     if (topUpMode)
     {
-        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
         if (topUpAmountInput.contains(mouseWorldPosition))
         {
             topUpAmountInput.setActive(true);
@@ -1287,8 +1204,6 @@ void PatientDash::handleMouseClick(sf::RenderWindow &window)
 
     if (bookingMode)
     {
-        sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
-
         if (currentBookingStep == STEP_SPECIALIZATION)
         {
             if (specializationInput.contains(mouseWorldPosition))
@@ -1444,8 +1359,6 @@ void PatientDash::handleMouseClick(sf::RenderWindow &window)
 
         return;
     }
-
-    sf::Vector2f mouseWorldPosition = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
     if (bookAppointmentBtn.getShape().getGlobalBounds().contains(mouseWorldPosition))
     {

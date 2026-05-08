@@ -6,6 +6,7 @@ public:
     static bool isNullOrEmpty(const char *str);
     static bool textEquals(const char *left, const char *right);
     static bool textEqualsIgnoreCase(const char *left, const char *right);
+    static int compareText(const char *left, const char *right);
     static int stringLength(const char *str);
     static void stringCopy(char *destination, const char *source, int maxLength);
     static void copyTextDynamic(char *&destination, const char *source);

@@ -2,108 +2,6 @@
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/TimeHelper.hpp"
 
-int HospitalSystem::nextIDFromPatients(Storage<Patient> &storage)
-{
-    int i;
-    int maxID;
-
-    maxID = 0;
-    for (i = 0; i < storage.size(); i++)
-    {
-        if (storage.getAll()[i].getID() > maxID)
-        {
-            maxID = storage.getAll()[i].getID();
-        }
-    }
-
-    return maxID + 1;
-}
-
-int HospitalSystem::nextIDFromDoctors(Storage<Doctor> &storage)
-{
-    int i;
-    int maxID;
-
-    maxID = 0;
-    for (i = 0; i < storage.size(); i++)
-    {
-        if (storage.getAll()[i].getID() > maxID)
-        {
-            maxID = storage.getAll()[i].getID();
-        }
-    }
-
-    return maxID + 1;
-}
-
-int HospitalSystem::nextIDFromAdmins(Storage<Admin> &storage)
-{
-    int i;
-    int maxID;
-
-    maxID = 0;
-    for (i = 0; i < storage.size(); i++)
-    {
-        if (storage.getAll()[i].getID() > maxID)
-        {
-            maxID = storage.getAll()[i].getID();
-        }
-    }
-
-    return maxID + 1;
-}
-
-int HospitalSystem::nextIDFromAppointments(Storage<Appointment> &storage)
-{
-    int i;
-    int maxID;
-
-    maxID = 0;
-    for (i = 0; i < storage.size(); i++)
-    {
-        if (storage.getAll()[i].getID() > maxID)
-        {
-            maxID = storage.getAll()[i].getID();
-        }
-    }
-
-    return maxID + 1;
-}
-
-int HospitalSystem::nextIDFromBills(Storage<Bill> &storage)
-{
-    int i;
-    int maxID;
-
-    maxID = 0;
-    for (i = 0; i < storage.size(); i++)
-    {
-        if (storage.getAll()[i].getID() > maxID)
-        {
-            maxID = storage.getAll()[i].getID();
-        }
-    }
-
-    return maxID + 1;
-}
-
-int HospitalSystem::nextIDFromPrescriptions(Storage<Prescription> &storage)
-{
-    int i;
-    int maxID;
-
-    maxID = 0;
-    for (i = 0; i < storage.size(); i++)
-    {
-        if (storage.getAll()[i].getID() > maxID)
-        {
-            maxID = storage.getAll()[i].getID();
-        }
-    }
-
-    return maxID + 1;
-}
-
 HospitalSystem::HospitalSystem()
 {
     failedLoginAttempts = 0;
@@ -221,8 +119,8 @@ void HospitalSystem::bookAppointment(Patient *patient, int doctorID, const char 
         }
     }
 
-    newAppointmentID = nextIDFromAppointments(appointments);
-    newBillID = nextIDFromBills(bills);
+    newAppointmentID = StorageHelper::nextIDFromStorage(appointments);
+    newBillID = StorageHelper::nextIDFromStorage(bills);
 
     newAppointment = Appointment(newAppointmentID, patient->getID(), doctorID, date, timeSlot, "pending");
     appointments.add(newAppointment);
@@ -425,7 +323,7 @@ void HospitalSystem::dischargePatient(int patientID)
 
 int HospitalSystem::getNextPatientID()
 {
-    return nextIDFromPatients(patients);
+    return StorageHelper::nextIDFromStorage(patients);
 }
 
 Storage<Doctor> *HospitalSystem::getDoctorsBySpecialization(const char *specialization)

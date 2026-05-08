@@ -50,6 +50,54 @@ bool StringHelper::textEqualsIgnoreCase(const char *left, const char *right)
     return left[i] == '\0' && right[i] == '\0';
 }
 
+int StringHelper::compareText(const char *left, const char *right)
+{
+    int index;
+    char leftChar;
+    char rightChar;
+
+    index = 0;
+    while (left != nullptr && right != nullptr)
+    {
+        leftChar = left[index];
+        rightChar = right[index];
+
+        if (leftChar == '\0' && rightChar == '\0')
+        {
+            return 0;
+        }
+        if (leftChar == '\0')
+        {
+            return -1;
+        }
+        if (rightChar == '\0')
+        {
+            return 1;
+        }
+        if (leftChar < rightChar)
+        {
+            return -1;
+        }
+        if (leftChar > rightChar)
+        {
+            return 1;
+        }
+
+        index++;
+    }
+
+    if (left == nullptr && right == nullptr)
+    {
+        return 0;
+    }
+    if (left == nullptr)
+    {
+        return -1;
+    }
+
+    return 1;
+}
+
 int StringHelper::stringLength(const char *str)
 {
     int length;

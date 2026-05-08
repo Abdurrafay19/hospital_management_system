@@ -15,6 +15,7 @@
 #include "Validator.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
+#include "../helpers/StorageHelper.hpp"
 
 enum Role
 {
@@ -34,13 +35,6 @@ private:
     Storage<Prescription> prescriptions;
     int failedLoginAttempts;
     bool sessionLocked;
-
-    static int nextIDFromPatients(Storage<Patient> &storage);
-    static int nextIDFromDoctors(Storage<Doctor> &storage);
-    static int nextIDFromAdmins(Storage<Admin> &storage);
-    static int nextIDFromAppointments(Storage<Appointment> &storage);
-    static int nextIDFromBills(Storage<Bill> &storage);
-    static int nextIDFromPrescriptions(Storage<Prescription> &storage);
 
 public:
     HospitalSystem();

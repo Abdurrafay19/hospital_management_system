@@ -1,4 +1,5 @@
 #include "LoginScreen.hpp"
+#include "UIThemeHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 
@@ -217,9 +218,7 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
 
     cardBackground.setSize(sf::Vector2f(640.f, 540.f));
     cardBackground.setPosition(sf::Vector2f(startX, startY));
-    cardBackground.setFillColor(sf::Color(255, 255, 255));    // Different white shade for the card itself
-    cardBackground.setOutlineColor(sf::Color(220, 225, 230)); // Faint border
-    cardBackground.setOutlineThickness(2.f);
+    UIThemeHelper::styleDashboardCard(cardBackground);
 
     // Login UI setup
     // Base layout coordinates derived from the card's startX and startY.
@@ -238,22 +237,13 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
     toggleModeButton = UIButton(regularFont, "Sign Up", sf::Vector2f(innerX, startY + 430.f), sf::Vector2f(560.f, 50.f));
 
     // Patient is selected by default, so use darker gray
-    patientRoleButton.setFillColor(sf::Color(200, 200, 200));
-    doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
-    adminRoleButton.setFillColor(sf::Color(230, 235, 240));
-    loginButton.setFillColor(sf::Color(52, 152, 219));
+    UIThemeHelper::styleSelectedOptionButton(patientRoleButton);
+    UIThemeHelper::styleNeutralButton(doctorRoleButton);
+    UIThemeHelper::styleNeutralButton(adminRoleButton);
+    UIThemeHelper::stylePrimaryButton(loginButton);
     toggleModeButton.setFillColor(sf::Color(245, 247, 248)); // Subtle button style
 
-    patientRoleButton.setOutlineColor(sf::Color(170, 170, 170));
-    doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
-    adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
-    loginButton.setOutlineColor(sf::Color(52, 152, 219));
     toggleModeButton.setOutlineColor(sf::Color(200, 205, 210));
-
-    patientRoleButton.setTextColor(sf::Color(44, 62, 80));
-    doctorRoleButton.setTextColor(sf::Color(44, 62, 80));
-    adminRoleButton.setTextColor(sf::Color(44, 62, 80));
-    loginButton.setTextColor(sf::Color::White);
     toggleModeButton.setTextColor(sf::Color(44, 62, 80));
 
     // Login form: ID and Password (Contact field reused for signup)
@@ -261,15 +251,9 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
     passwordInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(560.f, 40.f), 30);
     contactInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(270.f, 40.f), 11);
 
-    nameInput.setFillColor(sf::Color(250, 251, 252));
-    passwordInput.setFillColor(sf::Color(250, 251, 252));
-    contactInput.setFillColor(sf::Color(250, 251, 252));
-    nameInput.setOutlineColor(sf::Color(200, 205, 210));
-    passwordInput.setOutlineColor(sf::Color(200, 205, 210));
-    contactInput.setOutlineColor(sf::Color(200, 205, 210));
-    nameInput.setTextColor(sf::Color(44, 62, 80));
-    passwordInput.setTextColor(sf::Color(44, 62, 80));
-    contactInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleSoftInput(nameInput);
+    UIThemeHelper::styleSoftInput(passwordInput);
+    UIThemeHelper::styleSoftInput(contactInput);
 
     // Signup UI setup
     ageInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(120.f, 40.f), 3);
@@ -278,31 +262,17 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
     genderFButton = UIButton(regularFont, "F", sf::Vector2f(innerX + 180.f, startY + 280.f), sf::Vector2f(35.f, 40.f));
     genderNAButton = UIButton(regularFont, "N/A", sf::Vector2f(innerX + 220.f, startY + 280.f), sf::Vector2f(50.f, 40.f));
 
-    genderMButton.setFillColor(sf::Color(230, 235, 240));
-    genderFButton.setFillColor(sf::Color(230, 235, 240));
-    genderNAButton.setFillColor(sf::Color(230, 235, 240));
-    genderMButton.setOutlineColor(sf::Color(200, 205, 210));
-    genderFButton.setOutlineColor(sf::Color(200, 205, 210));
-    genderNAButton.setOutlineColor(sf::Color(200, 205, 210));
-    genderMButton.setTextColor(sf::Color(44, 62, 80));
-    genderFButton.setTextColor(sf::Color(44, 62, 80));
-    genderNAButton.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleNeutralButton(genderMButton);
+    UIThemeHelper::styleNeutralButton(genderFButton);
+    UIThemeHelper::styleNeutralButton(genderNAButton);
 
     signupPasswordInput = UITextBox(regularFont, sf::Vector2f(innerX + 290.f, startY + 280.f), sf::Vector2f(270.f, 40.f), 30);
 
-    ageInput.setFillColor(sf::Color(250, 251, 252));
-    signupPasswordInput.setFillColor(sf::Color(250, 251, 252));
-
-    ageInput.setOutlineColor(sf::Color(200, 205, 210));
-    signupPasswordInput.setOutlineColor(sf::Color(200, 205, 210));
-
-    ageInput.setTextColor(sf::Color(44, 62, 80));
-    signupPasswordInput.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleSoftInput(ageInput);
+    UIThemeHelper::styleSoftInput(signupPasswordInput);
 
     signupButton = UIButton(boldFont, "Create Account", sf::Vector2f(innerX, startY + 360.f), sf::Vector2f(560.f, 50.f));
-    signupButton.setFillColor(sf::Color(46, 204, 113));
-    signupButton.setOutlineColor(sf::Color(46, 204, 113));
-    signupButton.setTextColor(sf::Color::White);
+    UIThemeHelper::styleSuccessButton(signupButton);
 
     // Text labels setup
     titleText = new sf::Text(boldFont, "MediCore", 40);
@@ -335,15 +305,15 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
     genderLabel->setPosition(sf::Vector2f(innerX + 140.f, startY + 260.f));
 
     // Text colors
-    titleText->setFillColor(sf::Color(44, 62, 80));
-    roleText->setFillColor(sf::Color(127, 140, 141));
-    nameLabel->setFillColor(sf::Color(127, 140, 141));
-    contactLabel->setFillColor(sf::Color(127, 140, 141));
-    passwordLabel->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleTitleText(titleText);
+    UIThemeHelper::styleLabelText(roleText);
+    UIThemeHelper::styleLabelText(nameLabel);
+    UIThemeHelper::styleLabelText(contactLabel);
+    UIThemeHelper::styleLabelText(passwordLabel);
     statusText->setFillColor(sf::Color(231, 76, 60)); // Red for errors typically
-    ageLabel->setFillColor(sf::Color(127, 140, 141));
-    genderLabel->setFillColor(sf::Color(127, 140, 141));
-    signupPasswordLabel->setFillColor(sf::Color(127, 140, 141));
+    UIThemeHelper::styleLabelText(ageLabel);
+    UIThemeHelper::styleLabelText(genderLabel);
+    UIThemeHelper::styleLabelText(signupPasswordLabel);
 
     selectedRole = ROLE_PATIENT;
     loginRequested = false;
@@ -373,23 +343,17 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
         {
             selectedGender[0] = 'M';
             selectedGender[1] = '\0';
-            genderMButton.setFillColor(sf::Color(200, 200, 200));
-            genderMButton.setOutlineColor(sf::Color(170, 170, 170));
-            genderFButton.setFillColor(sf::Color(230, 235, 240));
-            genderFButton.setOutlineColor(sf::Color(200, 205, 210));
-            genderNAButton.setFillColor(sf::Color(230, 235, 240));
-            genderNAButton.setOutlineColor(sf::Color(200, 205, 210));
+            UIThemeHelper::styleSelectedOptionButton(genderMButton);
+            UIThemeHelper::styleNeutralButton(genderFButton);
+            UIThemeHelper::styleNeutralButton(genderNAButton);
         }
         if (genderFButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
             selectedGender[0] = 'F';
             selectedGender[1] = '\0';
-            genderMButton.setFillColor(sf::Color(230, 235, 240));
-            genderMButton.setOutlineColor(sf::Color(200, 205, 210));
-            genderFButton.setFillColor(sf::Color(200, 200, 200));
-            genderFButton.setOutlineColor(sf::Color(170, 170, 170));
-            genderNAButton.setFillColor(sf::Color(230, 235, 240));
-            genderNAButton.setOutlineColor(sf::Color(200, 205, 210));
+            UIThemeHelper::styleNeutralButton(genderMButton);
+            UIThemeHelper::styleSelectedOptionButton(genderFButton);
+            UIThemeHelper::styleNeutralButton(genderNAButton);
         }
         if (genderNAButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
@@ -397,12 +361,9 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
             selectedGender[1] = '/';
             selectedGender[2] = 'A';
             selectedGender[3] = '\0';
-            genderMButton.setFillColor(sf::Color(230, 235, 240));
-            genderMButton.setOutlineColor(sf::Color(200, 205, 210));
-            genderFButton.setFillColor(sf::Color(230, 235, 240));
-            genderFButton.setOutlineColor(sf::Color(200, 205, 210));
-            genderNAButton.setFillColor(sf::Color(200, 200, 200));
-            genderNAButton.setOutlineColor(sf::Color(170, 170, 170));
+            UIThemeHelper::styleNeutralButton(genderMButton);
+            UIThemeHelper::styleNeutralButton(genderFButton);
+            UIThemeHelper::styleSelectedOptionButton(genderNAButton);
         }
 
         if (signupButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
@@ -438,12 +399,9 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
 
             // Reset Patient role as default
             selectedRole = ROLE_PATIENT;
-            patientRoleButton.setFillColor(sf::Color(200, 200, 200));
-            patientRoleButton.setOutlineColor(sf::Color(170, 170, 170));
-            doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
-            doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
-            adminRoleButton.setFillColor(sf::Color(230, 235, 240));
-            adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            UIThemeHelper::styleSelectedOptionButton(patientRoleButton);
+            UIThemeHelper::styleNeutralButton(doctorRoleButton);
+            UIThemeHelper::styleNeutralButton(adminRoleButton);
 
             // Reset login form labels and inputs
             nameLabel->setPosition(sf::Vector2f(innerX, startY + 190.f));
@@ -469,36 +427,27 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
         if (patientRoleButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
             selectedRole = ROLE_PATIENT;
-            patientRoleButton.setFillColor(sf::Color(200, 200, 200));
-            patientRoleButton.setOutlineColor(sf::Color(170, 170, 170));
-            doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
-            doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
-            adminRoleButton.setFillColor(sf::Color(230, 235, 240));
-            adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            UIThemeHelper::styleSelectedOptionButton(patientRoleButton);
+            UIThemeHelper::styleNeutralButton(doctorRoleButton);
+            UIThemeHelper::styleNeutralButton(adminRoleButton);
             nameLabel->setString("Patient ID");
             setStatus("Selected role: Patient");
         }
         if (doctorRoleButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
             selectedRole = ROLE_DOCTOR;
-            patientRoleButton.setFillColor(sf::Color(230, 235, 240));
-            patientRoleButton.setOutlineColor(sf::Color(200, 205, 210));
-            doctorRoleButton.setFillColor(sf::Color(200, 200, 200));
-            doctorRoleButton.setOutlineColor(sf::Color(170, 170, 170));
-            adminRoleButton.setFillColor(sf::Color(230, 235, 240));
-            adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+            UIThemeHelper::styleNeutralButton(patientRoleButton);
+            UIThemeHelper::styleSelectedOptionButton(doctorRoleButton);
+            UIThemeHelper::styleNeutralButton(adminRoleButton);
             nameLabel->setString("Doctor ID");
             setStatus("Selected role: Doctor");
         }
         if (adminRoleButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
             selectedRole = ROLE_ADMIN;
-            patientRoleButton.setFillColor(sf::Color(230, 235, 240));
-            patientRoleButton.setOutlineColor(sf::Color(200, 205, 210));
-            doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
-            doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
-            adminRoleButton.setFillColor(sf::Color(200, 200, 200));
-            adminRoleButton.setOutlineColor(sf::Color(170, 170, 170));
+            UIThemeHelper::styleNeutralButton(patientRoleButton);
+            UIThemeHelper::styleNeutralButton(doctorRoleButton);
+            UIThemeHelper::styleSelectedOptionButton(adminRoleButton);
             nameLabel->setString("Admin ID");
             setStatus("Selected role: Admin");
         }
@@ -750,12 +699,9 @@ void LoginScreen::setSignupMode(bool signupMode)
 
         // Reset Patient role as default
         selectedRole = ROLE_PATIENT;
-        patientRoleButton.setFillColor(sf::Color(200, 200, 200));
-        patientRoleButton.setOutlineColor(sf::Color(170, 170, 170));
-        doctorRoleButton.setFillColor(sf::Color(230, 235, 240));
-        doctorRoleButton.setOutlineColor(sf::Color(200, 205, 210));
-        adminRoleButton.setFillColor(sf::Color(230, 235, 240));
-        adminRoleButton.setOutlineColor(sf::Color(200, 205, 210));
+        UIThemeHelper::styleSelectedOptionButton(patientRoleButton);
+        UIThemeHelper::styleNeutralButton(doctorRoleButton);
+        UIThemeHelper::styleNeutralButton(adminRoleButton);
 
         // Reset login form labels and inputs
         nameLabel->setPosition(sf::Vector2f(innerX, startY + 190.f));
