@@ -61,9 +61,9 @@ int HospitalSystem::nextIDFromAppointments(Storage<Appointment> &storage)
     maxID = 0;
     for (i = 0; i < storage.size(); i++)
     {
-        if (storage.getAll()[i].getAppointmentID() > maxID)
+        if (storage.getAll()[i].getID() > maxID)
         {
-            maxID = storage.getAll()[i].getAppointmentID();
+            maxID = storage.getAll()[i].getID();
         }
     }
 
@@ -78,9 +78,9 @@ int HospitalSystem::nextIDFromBills(Storage<Bill> &storage)
     maxID = 0;
     for (i = 0; i < storage.size(); i++)
     {
-        if (storage.getAll()[i].getBillID() > maxID)
+        if (storage.getAll()[i].getID() > maxID)
         {
-            maxID = storage.getAll()[i].getBillID();
+            maxID = storage.getAll()[i].getID();
         }
     }
 
@@ -95,9 +95,9 @@ int HospitalSystem::nextIDFromPrescriptions(Storage<Prescription> &storage)
     maxID = 0;
     for (i = 0; i < storage.size(); i++)
     {
-        if (storage.getAll()[i].getPrescriptionID() > maxID)
+        if (storage.getAll()[i].getID() > maxID)
         {
-            maxID = storage.getAll()[i].getPrescriptionID();
+            maxID = storage.getAll()[i].getID();
         }
     }
 
@@ -371,7 +371,7 @@ void HospitalSystem::dischargePatient(int patientID)
         }
         if (appointments.getAll()[i].getPatientID() == patientID)
         {
-            appointmentIDs[appointmentCount] = appointments.getAll()[i].getAppointmentID();
+            appointmentIDs[appointmentCount] = appointments.getAll()[i].getID();
             appointmentCount++;
         }
     }
@@ -384,7 +384,7 @@ void HospitalSystem::dischargePatient(int patientID)
         }
         if (bills.getAll()[i].getPatientID() == patientID)
         {
-            billIDs[billCount] = bills.getAll()[i].getBillID();
+            billIDs[billCount] = bills.getAll()[i].getID();
             billCount++;
         }
     }
@@ -393,7 +393,7 @@ void HospitalSystem::dischargePatient(int patientID)
     {
         if (prescriptions.getAll()[i].getPatientID() == patientID)
         {
-            prescriptionIDs[prescriptionCount] = prescriptions.getAll()[i].getPrescriptionID();
+            prescriptionIDs[prescriptionCount] = prescriptions.getAll()[i].getID();
             prescriptionCount++;
         }
     }

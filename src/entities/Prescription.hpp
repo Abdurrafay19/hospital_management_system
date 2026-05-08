@@ -27,7 +27,6 @@ public:
 
     Prescription &operator=(const Prescription &other);
 
-    int getPrescriptionID() const;
     int getID() const;
     int getAppointmentID() const;
     int getPatientID() const;
@@ -36,7 +35,7 @@ public:
     const char *getMedicines() const;
     const char *getNotes() const;
 
-    void setPrescriptionID(int newPrescriptionID);
+    void setID(int newPrescriptionID);
     void setAppointmentID(int newAppointmentID);
     void setPatientID(int newPatientID);
     void setDoctorID(int newDoctorID);

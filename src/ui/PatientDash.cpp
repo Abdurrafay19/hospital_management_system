@@ -2117,7 +2117,7 @@ void PatientDash::updatePendingAppointmentList()
             row[0] = '\0';
             StringHelper::stringCopy(row, "Appointment ID: ", 400);
             rowLen = StringHelper::stringLength(row);
-            ConversionHelper::intToString(appointment->getAppointmentID(), row + rowLen);
+            ConversionHelper::intToString(appointment->getID(), row + rowLen);
 
             rowLen = StringHelper::stringLength(row);
             StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
@@ -2182,7 +2182,7 @@ void PatientDash::updatePendingAppointmentList()
             row[0] = '\0';
             StringHelper::stringCopy(row, "ID: ", 400);
             rowLen = StringHelper::stringLength(row);
-            ConversionHelper::intToString(appointment->getAppointmentID(), row + rowLen);
+            ConversionHelper::intToString(appointment->getID(), row + rowLen);
 
             rowLen = StringHelper::stringLength(row);
             StringHelper::stringCopy(row + rowLen, " | ", 400 - rowLen);
@@ -2323,7 +2323,7 @@ void PatientDash::updatePendingAppointmentList()
             row[0] = '\0';
             StringHelper::stringCopy(row, "Bill ID: ", 400);
             rowLen = StringHelper::stringLength(row);
-            ConversionHelper::intToString(bill->getBillID(), row + rowLen);
+            ConversionHelper::intToString(bill->getID(), row + rowLen);
 
             rowLen = StringHelper::stringLength(row);
             StringHelper::stringCopy(row + rowLen, " | Appt ID: ", 400 - rowLen);

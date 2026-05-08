@@ -272,6 +272,64 @@ void FileHandler::loadPrescriptions(Storage<Prescription> &storage)
     file.close();
 }
 
+int FileHandler::loadSecurityLogLines(char *lines, int maxItems, int lineLength)
+{
+    std::ifstream file;
+    char line[MAX_LINE_BUFFER];
+    int count;
+    int sourceIndex;
+    int destinationIndex;
+    char *destination;
+
+    if (lines == nullptr || maxItems <= 0 || lineLength <= 1)
+    {
+        return 0;
+    }
+
+    if (!FilePathHelper::openInputDataFile(file, "security_log.txt"))
+    {
+        return 0;
+    }
+
+    count = 0;
+    while (file.getline(line, MAX_LINE_BUFFER) && count < maxItems)
+    {
+        if (line[0] == '\0' || StringHelper::textEquals(line, "timestamp,role,entered_id,result"))
+        {
+            continue;
+        }
+
+        destination = lines + (count * lineLength);
+        sourceIndex = 0;
+        destinationIndex = 0;
+        while (line[sourceIndex] != '\0' && destinationIndex < lineLength - 1)
+        {
+            if (line[sourceIndex] == ',')
+            {
+                if (destinationIndex >= lineLength - 3)
+                {
+                    break;
+                }
+                destination[destinationIndex] = ' ';
+                destination[destinationIndex + 1] = '|';
+                destination[destinationIndex + 2] = ' ';
+                destinationIndex += 3;
+            }
+            else
+            {
+                destination[destinationIndex] = line[sourceIndex];
+                destinationIndex++;
+            }
+            sourceIndex++;
+        }
+        destination[destinationIndex] = '\0';
+        count++;
+    }
+
+    file.close();
+    return count;
+}
+
 void FileHandler::savePatient(const Patient &patient, bool append)
 {
     std::ofstream file;
@@ -387,7 +445,7 @@ void FileHandler::saveAppointment(const Appointment &appointment, bool append)
         return;
     }
 
-    file << appointment.getAppointmentID() << ","
+    file << appointment.getID() << ","
          << appointment.getPatientID() << ","
          << appointment.getDoctorID() << ","
          << appointment.getDate() << ","
@@ -418,7 +476,7 @@ void FileHandler::saveBill(const Bill &bill, bool append)
 
     ConversionHelper::doubleToString(bill.getAmount(), amountBuffer);
 
-    file << bill.getBillID() << ","
+    file << bill.getID() << ","
          << bill.getPatientID() << ","
          << bill.getAppointmentID() << ","
          << amountBuffer << ","
@@ -446,7 +504,7 @@ void FileHandler::savePrescription(const Prescription &prescription, bool append
         return;
     }
 
-    file << prescription.getPrescriptionID() << ","
+    file << prescription.getID() << ","
          << prescription.getAppointmentID() << ","
          << prescription.getPatientID() << ","
          << prescription.getDoctorID() << ","

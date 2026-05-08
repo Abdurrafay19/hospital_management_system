@@ -3,6 +3,7 @@
 class StringHelper
 {
 public:
+    static bool isNullOrEmpty(const char *str);
     static bool textEquals(const char *left, const char *right);
     static bool textEqualsIgnoreCase(const char *left, const char *right);
     static int stringLength(const char *str);

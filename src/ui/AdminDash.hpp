@@ -26,7 +26,8 @@ private:
         PAGED_LIST_PATIENTS,
         PAGED_LIST_DOCTORS,
         PAGED_LIST_APPOINTMENTS,
-        PAGED_LIST_UNPAID_BILLS
+        PAGED_LIST_UNPAID_BILLS,
+        PAGED_LIST_SECURITY_LOG
     };
 
     sf::Font regularFont;
@@ -71,6 +72,16 @@ private:
     UIButton confirmRemoveDoctorBtn;
     UIButton backFromRemoveDoctorBtn;
     bool removeDoctorSubmitRequested;
+
+    bool dischargePatientMode;
+    sf::RectangleShape dischargePatientPanel;
+    sf::Text *dischargePatientTitleText;
+    sf::Text *dischargePatientStatusText;
+    sf::Text *dischargePatientIdLabelText;
+    UITextBox dischargePatientIdInput;
+    UIButton confirmDischargePatientBtn;
+    UIButton backFromDischargePatientBtn;
+    bool dischargePatientSubmitRequested;
 
     char pagedListItems[PAGED_LIST_MAX_ITEMS][PAGED_LIST_MAX_LINE_LENGTH];
     int pagedListTotalItems;
@@ -136,10 +147,17 @@ public:
     void setPatientsForView(Storage<Patient> *patients, Storage<Bill> *bills);
     void setAppointmentsForView(Storage<Appointment> *appointments, Storage<Patient> *patients, Storage<Doctor> *doctors);
     void setUnpaidBillsForView(Storage<Bill> *bills, Storage<Patient> *patients);
+    void setSecurityLogForView();
     void startRemoveDoctorMode();
     void closeRemoveDoctorMode();
 
+    void startDischargePatientMode();
+    void closeDischargePatientMode();
+    void setDischargePatientStatus(const char *message);
+    bool consumeDischargePatientSubmitRequest();
+
     const char *getAddDoctorNameText() const;
+    const char *getDischargePatientIDText() const;
     const char *getAddDoctorSpecializationText() const;
     const char *getAddDoctorContactText() const;
     const char *getAddDoctorPasswordText() const;

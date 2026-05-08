@@ -25,7 +25,6 @@ public:
 
     Bill &operator=(const Bill &other);
 
-    int getBillID() const;
     int getID() const;
     int getPatientID() const;
     int getAppointmentID() const;
@@ -33,7 +32,7 @@ public:
     const char *getStatus() const;
     const char *getDate() const;
 
-    void setBillID(int newBillID);
+    void setID(int newBillID);
     void setPatientID(int newPatientID);
     void setAppointmentID(int newAppointmentID);
     void setAmount(double newAmount);

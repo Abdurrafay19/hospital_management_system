@@ -25,7 +25,6 @@ public:
 
     Appointment &operator=(const Appointment &other);
 
-    int getAppointmentID() const;
     int getID() const;
     int getPatientID() const;
     int getDoctorID() const;
@@ -33,7 +32,7 @@ public:
     const char *getTimeSlot() const;
     const char *getStatus() const;
 
-    void setAppointmentID(int newAppointmentID);
+    void setID(int newAppointmentID);
     void setPatientID(int newPatientID);
     void setDoctorID(int newDoctorID);
     void setDate(const char *newDate);

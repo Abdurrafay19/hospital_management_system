@@ -27,7 +27,7 @@ Appointment::Appointment(int newAppointmentID,
     timeSlot = nullptr;
     status = nullptr;
 
-    setAppointmentID(newAppointmentID);
+    setID(newAppointmentID);
     setPatientID(newPatientID);
     setDoctorID(newDoctorID);
     setDate(newDate);
@@ -78,11 +78,6 @@ Appointment &Appointment::operator=(const Appointment &other)
     return *this;
 }
 
-int Appointment::getAppointmentID() const
-{
-    return appointmentID;
-}
-
 int Appointment::getID() const
 {
     return appointmentID;
@@ -113,7 +108,7 @@ const char *Appointment::getStatus() const
     return status;
 }
 
-void Appointment::setAppointmentID(int newAppointmentID)
+void Appointment::setID(int newAppointmentID)
 {
     if (Validator::isValidID(newAppointmentID))
     {

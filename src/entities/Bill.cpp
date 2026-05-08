@@ -27,7 +27,7 @@ Bill::Bill(int newBillID,
     status = nullptr;
     date = nullptr;
 
-    setBillID(newBillID);
+    setID(newBillID);
     setPatientID(newPatientID);
     setAppointmentID(newAppointmentID);
     setAmount(newAmount);
@@ -76,11 +76,6 @@ Bill &Bill::operator=(const Bill &other)
     return *this;
 }
 
-int Bill::getBillID() const
-{
-    return billID;
-}
-
 int Bill::getID() const
 {
     return billID;
@@ -111,7 +106,7 @@ const char *Bill::getDate() const
     return date;
 }
 
-void Bill::setBillID(int newBillID)
+void Bill::setID(int newBillID)
 {
     if (Validator::isValidID(newBillID))
     {

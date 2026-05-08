@@ -30,7 +30,7 @@ Prescription::Prescription(int newPrescriptionID,
     medicines = nullptr;
     notes = nullptr;
 
-    setPrescriptionID(newPrescriptionID);
+    setID(newPrescriptionID);
     setAppointmentID(newAppointmentID);
     setPatientID(newPatientID);
     setDoctorID(newDoctorID);
@@ -85,11 +85,6 @@ Prescription &Prescription::operator=(const Prescription &other)
     return *this;
 }
 
-int Prescription::getPrescriptionID() const
-{
-    return prescriptionID;
-}
-
 int Prescription::getID() const
 {
     return prescriptionID;
@@ -125,7 +120,7 @@ const char *Prescription::getNotes() const
     return notes;
 }
 
-void Prescription::setPrescriptionID(int newPrescriptionID)
+void Prescription::setID(int newPrescriptionID)
 {
     if (Validator::isValidID(newPrescriptionID))
     {

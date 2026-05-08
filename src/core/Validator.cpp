@@ -2,6 +2,7 @@
 #include "../helpers/CharHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../helpers/DataHelper.hpp"
+#include "../helpers/StringHelper.hpp"
 
 bool Validator::isValidID(int id)
 {
@@ -123,7 +124,7 @@ bool Validator::isValidPassword(const char *password)
 
 bool Validator::isValidPositiveIntegerText(const char *text)
 {
-    if (text == nullptr || text[0] == '\0')
+    if (StringHelper::isNullOrEmpty(text))
     {
         return false;
     }
@@ -143,7 +144,7 @@ bool Validator::isValidPositiveIntegerText(const char *text)
 
 bool Validator::isValidPositiveNumberText(const char *text)
 {
-    if (text == nullptr || text[0] == '\0')
+    if (StringHelper::isNullOrEmpty(text))
     {
         return false;
     }

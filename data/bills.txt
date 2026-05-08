@@ -19,3 +19,5 @@ bill_id,patient_id,appointment_id,amount,status,date
 18,2,18,1800.00,unpaid,05-05-2026
 19,1,19,1500.00,cancelled,06-05-2026
 20,2,20,1800.00,cancelled,06-05-2026
+21,1,21,1500.00,unpaid,10-05-2026
+22,1,22,1500.00,unpaid,10-05-2026

@@ -23,6 +23,7 @@ public:
     static void loadAppointments(Storage<Appointment> &storage);
     static void loadBills(Storage<Bill> &storage);
     static void loadPrescriptions(Storage<Prescription> &storage);
+    static int loadSecurityLogLines(char *lines, int maxItems, int lineLength);
 
     // Save methods (append or overwrite)
     static void savePatient(const Patient &patient, bool append = true);

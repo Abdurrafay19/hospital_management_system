@@ -19,3 +19,5 @@ appointment_id,patient_id,doctor_id,date,time,status
 18,2,2,05-05-2026,15:00,pending
 19,1,1,06-05-2026,09:00,cancelled
 20,2,2,06-05-2026,11:00,no-show
+21,1,6,10-05-2026,09:00,pending
+22,1,1,10-05-2026,13:00,pending

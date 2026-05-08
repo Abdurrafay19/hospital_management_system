@@ -3,21 +3,23 @@
 #include "../helpers/ConversionHelper.hpp"
 #include "../helpers/TimeHelper.hpp"
 #include "../helpers/DataHelper.hpp"
+#include "../core/FileHandler.hpp"
 
 #include <ctime>
 
 AdminDash::AdminDash()
-        : titleText(nullptr), welcomeText(nullptr), statusText(nullptr),
-            addDoctorMode(false), addDoctorTitleText(nullptr), addDoctorStatusText(nullptr),
-            addDoctorNameLabelText(nullptr), addDoctorSpecializationLabelText(nullptr), addDoctorContactLabelText(nullptr),
-            addDoctorPasswordLabelText(nullptr), addDoctorFeeLabelText(nullptr), addDoctorSubmitRequested(false),
-            removeDoctorMode(false), pagedListViewType(PAGED_LIST_NONE), removeDoctorTitleText(nullptr), removeDoctorStatusText(nullptr),
-            removeDoctorLabelText(nullptr), removeDoctorIdLabelText(nullptr), removeDoctorCount(0),
-            removeDoctorPageInfoText(nullptr), removeDoctorSubmitRequested(false),
-            pagedListTotalItems(0), pagedListCurrentPage(0), pagedListPageSize(PAGED_LIST_MAX_VISIBLE_ROWS),
-      addDoctorClicked(false), removeDoctorClicked(false), viewAllPatientsClicked(false), viewAllDoctorsClicked(false),
-      viewAllAppointmentsClicked(false), viewUnpaidBillsClicked(false), dischargePatientClicked(false),
-      viewSecurityLogClicked(false), generateDailyReportClicked(false)
+      : titleText(nullptr), welcomeText(nullptr), statusText(nullptr),
+        addDoctorMode(false), addDoctorTitleText(nullptr), addDoctorStatusText(nullptr),
+        addDoctorNameLabelText(nullptr), addDoctorSpecializationLabelText(nullptr), addDoctorContactLabelText(nullptr),
+        addDoctorPasswordLabelText(nullptr), addDoctorFeeLabelText(nullptr), addDoctorSubmitRequested(false),
+        removeDoctorMode(false), pagedListViewType(PAGED_LIST_NONE), removeDoctorTitleText(nullptr), removeDoctorStatusText(nullptr),
+        removeDoctorLabelText(nullptr), removeDoctorIdLabelText(nullptr), removeDoctorCount(0),
+        removeDoctorPageInfoText(nullptr), removeDoctorSubmitRequested(false),
+        pagedListTotalItems(0), pagedListCurrentPage(0), pagedListPageSize(PAGED_LIST_MAX_VISIBLE_ROWS),
+        dischargePatientMode(false), dischargePatientTitleText(nullptr), dischargePatientStatusText(nullptr), dischargePatientIdLabelText(nullptr), dischargePatientSubmitRequested(false),
+    addDoctorClicked(false), removeDoctorClicked(false), viewAllPatientsClicked(false), viewAllDoctorsClicked(false),
+    viewAllAppointmentsClicked(false), viewUnpaidBillsClicked(false), dischargePatientClicked(false),
+    viewSecurityLogClicked(false), generateDailyReportClicked(false)
 {
     int i;
     for (i = 0; i < 30; i++)
@@ -48,6 +50,9 @@ AdminDash::~AdminDash()
     delete removeDoctorLabelText;
     delete removeDoctorIdLabelText;
     delete removeDoctorPageInfoText;
+    delete dischargePatientTitleText;
+    delete dischargePatientStatusText;
+    delete dischargePatientIdLabelText;
     titleText = nullptr;
     welcomeText = nullptr;
     statusText = nullptr;
@@ -63,6 +68,9 @@ AdminDash::~AdminDash()
     removeDoctorLabelText = nullptr;
     removeDoctorIdLabelText = nullptr;
     removeDoctorPageInfoText = nullptr;
+    dischargePatientTitleText = nullptr;
+    dischargePatientStatusText = nullptr;
+    dischargePatientIdLabelText = nullptr;
 
     int i;
     for (i = 0; i < 30; i++)
@@ -211,6 +219,38 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     removeDoctorNextBtn.setOutlineColor(sf::Color(52, 152, 219));
     removeDoctorNextBtn.setTextColor(sf::Color::White);
 
+    dischargePatientPanel.setSize(sf::Vector2f(880.f, 500.f));
+    dischargePatientPanel.setPosition(sf::Vector2f(200.f, 130.f));
+    dischargePatientPanel.setFillColor(sf::Color(250, 251, 252));
+    dischargePatientPanel.setOutlineColor(sf::Color(220, 225, 230));
+    dischargePatientPanel.setOutlineThickness(2.f);
+
+    dischargePatientTitleText = new sf::Text(boldFont, "Discharge Patient", 24);
+    dischargePatientStatusText = new sf::Text(regularFont, "", 14);
+    dischargePatientIdLabelText = new sf::Text(regularFont, "Enter Patient ID:", 16);
+
+    dischargePatientTitleText->setPosition(sf::Vector2f(230.f, 155.f));
+    dischargePatientTitleText->setFillColor(sf::Color(44, 62, 80));
+    dischargePatientStatusText->setPosition(sf::Vector2f(230.f, 588.f));
+    dischargePatientStatusText->setFillColor(sf::Color(192, 57, 43));
+    dischargePatientIdLabelText->setPosition(sf::Vector2f(230.f, 215.f));
+    dischargePatientIdLabelText->setFillColor(sf::Color(127, 140, 141));
+
+    dischargePatientIdInput = UITextBox(regularFont, sf::Vector2f(470.f, 208.f), sf::Vector2f(140.f, 36.f), 10);
+    dischargePatientIdInput.setFillColor(sf::Color(255, 255, 255));
+    dischargePatientIdInput.setOutlineColor(sf::Color(189, 195, 199));
+    dischargePatientIdInput.setTextColor(sf::Color(44, 62, 80));
+
+    confirmDischargePatientBtn = UIButton(regularFont, "Discharge", sf::Vector2f(850.f, 560.f), sf::Vector2f(200.f, 40.f));
+    confirmDischargePatientBtn.setFillColor(sf::Color(230, 80, 80));
+    confirmDischargePatientBtn.setOutlineColor(sf::Color(230, 80, 80));
+    confirmDischargePatientBtn.setTextColor(sf::Color::White);
+
+    backFromDischargePatientBtn = UIButton(regularFont, "Back", sf::Vector2f(740.f, 560.f), sf::Vector2f(90.f, 40.f));
+    backFromDischargePatientBtn.setFillColor(sf::Color(149, 165, 166));
+    backFromDischargePatientBtn.setOutlineColor(sf::Color(149, 165, 166));
+    backFromDischargePatientBtn.setTextColor(sf::Color::White);
+
     int removeIndex;
     for (removeIndex = 0; removeIndex < 30; removeIndex++)
     {
@@ -355,6 +395,47 @@ void AdminDash::draw(sf::RenderWindow &window) const
         return;
     }
 
+    if (dischargePatientMode)
+    {
+        window.draw(dischargePatientPanel);
+        if (dischargePatientTitleText != nullptr)
+        {
+            window.draw(*dischargePatientTitleText);
+        }
+        if (dischargePatientStatusText != nullptr)
+        {
+            window.draw(*dischargePatientStatusText);
+        }
+        if (dischargePatientIdLabelText != nullptr)
+        {
+            window.draw(*dischargePatientIdLabelText);
+        }
+        dischargePatientIdInput.draw(window);
+        confirmDischargePatientBtn.draw(window);
+        backFromDischargePatientBtn.draw(window);
+        // If a paged patients view is active, render its list inside this panel
+        if (pagedListViewType == PAGED_LIST_PATIENTS)
+        {
+            int i;
+            for (i = 0; i < removeDoctorCount; i++)
+            {
+                if (removeDoctorListText[i] != nullptr)
+                {
+                    window.draw(*removeDoctorListText[i]);
+                }
+            }
+
+            if (removeDoctorPageInfoText != nullptr)
+            {
+                window.draw(*removeDoctorPageInfoText);
+            }
+
+            removeDoctorPrevBtn.draw(window);
+            removeDoctorNextBtn.draw(window);
+        }
+        return;
+    }
+
     addDoctorBtn.draw(window);
     removeDoctorBtn.draw(window);
     viewAllPatientsBtn.draw(window);
@@ -486,6 +567,50 @@ void AdminDash::handleMouseClick(sf::RenderWindow &window)
         return;
     }
 
+    if (dischargePatientMode)
+    {
+        if (removeDoctorPrevBtn.getShape().getGlobalBounds().contains(mouseWorldPosition) && pagedListViewType == PAGED_LIST_PATIENTS)
+        {
+            if (pagedListCurrentPage > 0)
+            {
+                pagedListCurrentPage--;
+                updateRemoveDoctorVisiblePage();
+            }
+            return;
+        }
+
+        if (removeDoctorNextBtn.getShape().getGlobalBounds().contains(mouseWorldPosition) && pagedListViewType == PAGED_LIST_PATIENTS)
+        {
+            if (pagedListCurrentPage < getPagedListTotalPages() - 1)
+            {
+                pagedListCurrentPage++;
+                updateRemoveDoctorVisiblePage();
+            }
+            return;
+        }
+
+        if (dischargePatientIdInput.contains(mouseWorldPosition))
+        {
+            dischargePatientIdInput.setActive(true);
+            return;
+        }
+
+        if (confirmDischargePatientBtn.getShape().getGlobalBounds().contains(mouseWorldPosition))
+        {
+            dischargePatientSubmitRequested = true;
+            return;
+        }
+
+        if (backFromDischargePatientBtn.getShape().getGlobalBounds().contains(mouseWorldPosition))
+        {
+            closeDischargePatientMode();
+            return;
+        }
+
+        dischargePatientIdInput.setActive(false);
+        return;
+    }
+
     if (addDoctorBtn.isClicked(window))
     {
         addDoctorClicked = true;
@@ -555,6 +680,11 @@ void AdminDash::handleTextEntered(char32_t unicode)
     {
         removeDoctorIdInput.handleTextEntered(unicode);
     }
+
+    if (dischargePatientMode && dischargePatientIdInput.isActive())
+    {
+        dischargePatientIdInput.handleTextEntered(unicode);
+    }
 }
 
 void AdminDash::setWelcome(const char *name)
@@ -567,7 +697,7 @@ void AdminDash::setWelcome(const char *name)
         return;
     }
 
-    if (name == nullptr || name[0] == '\0')
+    if (StringHelper::isNullOrEmpty(name))
     {
         welcomeText->setString("");
         return;
@@ -668,6 +798,15 @@ bool AdminDash::consumeDischargePatientRequest()
     return false;
 }
 
+bool AdminDash::consumeDischargePatientSubmitRequest()
+{
+    bool value;
+
+    value = dischargePatientSubmitRequested;
+    dischargePatientSubmitRequested = false;
+    return value;
+}
+
 bool AdminDash::consumeViewSecurityLogRequest()
 {
     if (viewSecurityLogClicked)
@@ -716,6 +855,11 @@ void AdminDash::setStatus(const char *message)
     if (removeDoctorStatusText != nullptr && message != nullptr)
     {
         removeDoctorStatusText->setString(message);
+    }
+    
+    if (dischargePatientStatusText != nullptr && message != nullptr)
+    {
+        dischargePatientStatusText->setString(message);
     }
 }
 
@@ -778,6 +922,35 @@ const char *AdminDash::getAddDoctorPasswordText() const
 const char *AdminDash::getAddDoctorFeeText() const
 {
     return addDoctorFeeInput.getText();
+}
+
+const char *AdminDash::getDischargePatientIDText() const
+{
+    return dischargePatientIdInput.getText();
+}
+
+void AdminDash::startDischargePatientMode()
+{
+    dischargePatientMode = true;
+    dischargePatientSubmitRequested = false;
+    dischargePatientIdInput.clear();
+    dischargePatientIdInput.setActive(false);
+}
+
+void AdminDash::closeDischargePatientMode()
+{
+    dischargePatientMode = false;
+    dischargePatientSubmitRequested = false;
+    dischargePatientIdInput.clear();
+    dischargePatientIdInput.setActive(false);
+}
+
+void AdminDash::setDischargePatientStatus(const char *message)
+{
+    if (dischargePatientStatusText != nullptr && message != nullptr)
+    {
+        dischargePatientStatusText->setString(message);
+    }
 }
 
 void AdminDash::setDoctorsForRemoval(Storage<Doctor> *doctors)
@@ -849,21 +1022,35 @@ const char *AdminDash::getRemoveDoctorIDText() const
 
 void AdminDash::startPagedListMode(PagedListViewType viewType)
 {
-    removeDoctorMode = true;
     pagedListViewType = viewType;
     pagedListCurrentPage = 0;
     removeDoctorSubmitRequested = false;
     removeDoctorIdInput.clear();
     removeDoctorIdInput.setActive(false);
-    if (viewType != PAGED_LIST_REMOVE_DOCTOR)
+
+    // If we're opening the patients paged view inside discharge mode, do not switch to the
+    // standalone removeDoctorMode panel. This keeps the patients list embedded in the
+    // discharge patient panel when that mode is active.
+    if (viewType == PAGED_LIST_PATIENTS && dischargePatientMode)
     {
+        // clear any text-only id input used for remove-doctor flow
         removeDoctorIdInput.setText("");
     }
+    else
+    {
+        removeDoctorMode = true;
+        if (viewType != PAGED_LIST_REMOVE_DOCTOR)
+        {
+            removeDoctorIdInput.setText("");
+        }
+    }
+
     updateRemoveDoctorVisiblePage();
 }
 
 void AdminDash::closePagedListMode()
 {
+    // Close the paged-list view while preserving any active discharge panel state.
     removeDoctorMode = false;
     pagedListViewType = PAGED_LIST_NONE;
     removeDoctorSubmitRequested = false;
@@ -1008,7 +1195,7 @@ void AdminDash::setAppointmentsForView(Storage<Appointment> *appointments, Stora
         for (i = 0; i < sortedCount; i++)
         {
             line[0] = '\0';
-            ConversionHelper::intToString(sortedAppointments[i]->getAppointmentID(), idBuffer);
+            ConversionHelper::intToString(sortedAppointments[i]->getID(), idBuffer);
             StringHelper::copyPreviewText(namePreview, 64, DataHelper::findPatientName(patients, sortedAppointments[i]->getPatientID()), 18);
             StringHelper::copyPreviewText(doctorPreview, 64, DataHelper::findDoctorName(doctors, sortedAppointments[i]->getDoctorID()), 18);
 
@@ -1055,7 +1242,7 @@ void AdminDash::setUnpaidBillsForView(Storage<Bill> *bills, Storage<Patient> *pa
             }
 
             line[0] = '\0';
-            ConversionHelper::intToString(bills->getAll()[i].getBillID(), idBuffer);
+            ConversionHelper::intToString(bills->getAll()[i].getID(), idBuffer);
             ConversionHelper::doubleToString(bills->getAll()[i].getAmount(), amountBuffer);
             StringHelper::copyPreviewText(patientPreview, 64, DataHelper::findPatientName(patients, bills->getAll()[i].getPatientID()), 18);
 
@@ -1077,6 +1264,25 @@ void AdminDash::setUnpaidBillsForView(Storage<Bill> *bills, Storage<Patient> *pa
     }
 
     startPagedListMode(PAGED_LIST_UNPAID_BILLS);
+    setStatus("");
+}
+
+void AdminDash::setSecurityLogForView()
+{
+    int loadedCount;
+
+    clearPagedListItems();
+    setPagedListHeader("View Security Log", "Timestamp | Role | Entered ID | Result", "");
+
+    loadedCount = FileHandler::loadSecurityLogLines(&pagedListItems[0][0], PAGED_LIST_MAX_ITEMS, PAGED_LIST_MAX_LINE_LENGTH);
+    pagedListTotalItems = loadedCount;
+
+    if (pagedListTotalItems == 0)
+    {
+        appendPagedListItem("No security events logged.");
+    }
+
+    startPagedListMode(PAGED_LIST_SECURITY_LOG);
     setStatus("");
 }
 

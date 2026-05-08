@@ -1,6 +1,11 @@
 #include "StringHelper.hpp"
 #include "ConversionHelper.hpp"
 
+bool StringHelper::isNullOrEmpty(const char *str)
+{
+    return str == nullptr || str[0] == '\0';
+}
+
 bool StringHelper::textEquals(const char *left, const char *right)
 {
     int i;

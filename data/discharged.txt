@@ -1,1 +1,4 @@
 patient_id,name,age,gender,contact,password,balance
+17,Elena Petrova,37,F,03010010005,elenapw,0.00
+18,Farooq Khan,60,M,03010010006,farooq123,1000.00
+24,Layla Ahmed,45,F,03010010012,layla2020,0.00

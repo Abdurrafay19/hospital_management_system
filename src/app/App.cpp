@@ -373,9 +373,9 @@ static int getNextPrescriptionID(Storage<Prescription> &prescriptions)
     maxID = 0;
     for (i = 0; i < prescriptions.size(); i++)
     {
-        if (prescriptions.getAll()[i].getPrescriptionID() > maxID)
+        if (prescriptions.getAll()[i].getID() > maxID)
         {
-            maxID = prescriptions.getAll()[i].getPrescriptionID();
+            maxID = prescriptions.getAll()[i].getID();
         }
     }
 
@@ -1036,7 +1036,7 @@ void App::handleMouseClick()
                 doctor = reinterpret_cast<Doctor *>(currentUser);
                 inputText = doctorDash.getViewMedicalHistoryPatientIDText();
 
-                if (inputText == nullptr || inputText[0] == '\0')
+                if (StringHelper::isNullOrEmpty(inputText))
                 {
                     doctorDash.setStatus("Please enter a Patient ID.");
                 }
@@ -1108,7 +1108,7 @@ void App::handleMouseClick()
                 password = adminDash.getAddDoctorPasswordText();
                 feeText = adminDash.getAddDoctorFeeText();
 
-                if (name == nullptr || name[0] == '\0')
+                if (StringHelper::isNullOrEmpty(name))
                 {
                     adminDash.setStatus("Name is required.");
                 }
@@ -1116,7 +1116,7 @@ void App::handleMouseClick()
                 {
                     adminDash.setStatus("Name must be at most 50 characters.");
                 }
-                else if (specialization == nullptr || specialization[0] == '\0')
+                else if (StringHelper::isNullOrEmpty(specialization))
                 {
                     adminDash.setStatus("Specialization is required.");
                 }
@@ -1236,6 +1236,118 @@ void App::handleMouseClick()
                     }
                 }
             }
+            
+            if (adminDash.consumeDischargePatientSubmitRequest())
+            {
+                const char *patientIDText;
+                int patientID;
+                int i;
+                bool hasUnpaidBills;
+                bool hasPendingAppointments;
+                Patient *patient;
+
+                patientIDText = adminDash.getDischargePatientIDText();
+                if (!Validator::isValidPositiveIntegerText(patientIDText))
+                {
+                    adminDash.setDischargePatientStatus("Please enter a valid Patient ID.");
+                }
+                else
+                {
+                    patientID = ConversionHelper::toInt(patientIDText);
+                    patient = system.getPatients().findByID(patientID);
+
+                    if (patient == nullptr)
+                    {
+                        adminDash.setDischargePatientStatus("Patient not found.");
+                    }
+                    else
+                    {
+                        hasUnpaidBills = false;
+                        for (i = 0; i < system.getBills().size(); i++)
+                        {
+                            if (system.getBills().getAll()[i].getPatientID() == patientID &&
+                                StringHelper::textEquals(system.getBills().getAll()[i].getStatus(), "unpaid"))
+                            {
+                                hasUnpaidBills = true;
+                                break;
+                            }
+                        }
+
+                        if (hasUnpaidBills)
+                        {
+                            adminDash.closeDischargePatientMode();
+                            adminDash.setStatus("Cannot discharge patient with unpaid bills.");
+                        }
+                        else
+                        {
+                            hasPendingAppointments = false;
+                            for (i = 0; i < system.getAppointments().size(); i++)
+                            {
+                                if (system.getAppointments().getAll()[i].getPatientID() == patientID &&
+                                    StringHelper::textEquals(system.getAppointments().getAll()[i].getStatus(), "pending"))
+                                {
+                                    hasPendingAppointments = true;
+                                    break;
+                                }
+                            }
+
+                            if (hasPendingAppointments)
+                            {
+                                adminDash.closeDischargePatientMode();
+                                adminDash.setStatus("Cannot discharge patient with pending appointments.");
+                            }
+                            else
+                            {
+                                FileHandler::saveDischargedPatient(*patient, true);
+
+                                int billIDsToRemove[200];
+                                int billRemoveCount = 0;
+                                for (i = 0; i < system.getBills().size(); i++) {
+                                    if (system.getBills().getAll()[i].getPatientID() == patientID) {
+                                        billIDsToRemove[billRemoveCount++] = system.getBills().getAll()[i].getID();
+                                    }
+                                }
+                                for (i = 0; i < billRemoveCount; i++) {
+                                    system.getBills().removeByID(billIDsToRemove[i]);
+                                }
+
+                                int apptIDsToRemove[200];
+                                int apptRemoveCount = 0;
+                                for (i = 0; i < system.getAppointments().size(); i++) {
+                                    if (system.getAppointments().getAll()[i].getPatientID() == patientID) {
+                                        apptIDsToRemove[apptRemoveCount++] = system.getAppointments().getAll()[i].getID();
+                                    }
+                                }
+                                for (i = 0; i < apptRemoveCount; i++) {
+                                    system.getAppointments().removeByID(apptIDsToRemove[i]);
+                                }
+
+                                int presIDsToRemove[200];
+                                int presRemoveCount = 0;
+                                for (i = 0; i < system.getPrescriptions().size(); i++) {
+                                    if (system.getPrescriptions().getAll()[i].getPatientID() == patientID) {
+                                        presIDsToRemove[presRemoveCount++] = system.getPrescriptions().getAll()[i].getID();
+                                    }
+                                }
+                                for (i = 0; i < presRemoveCount; i++) {
+                                    system.getPrescriptions().removeByID(presIDsToRemove[i]);
+                                }
+
+                                system.getPatients().removeByID(patientID);
+
+                                FileHandler::saveAllPatients(system.getPatients());
+                                FileHandler::saveAllBills(system.getBills());
+                                FileHandler::saveAllAppointments(system.getAppointments());
+                                FileHandler::saveAllPrescriptions(system.getPrescriptions());
+
+                                adminDash.closeDischargePatientMode();
+                                adminDash.setStatus("Patient discharged and archived successfully.");
+                            }
+                        }
+                    }
+                }
+            }
+
             if (adminDash.consumeViewAllPatientsRequest())
             {
                 adminDash.setPatientsForView(&system.getPatients(), &system.getBills());
@@ -1254,11 +1366,13 @@ void App::handleMouseClick()
             }
             if (adminDash.consumeDischargePatientRequest())
             {
-                adminDash.setStatus("Discharge Patient clicked.");
+                adminDash.startDischargePatientMode();
+                adminDash.setPatientsForView(&system.getPatients(), &system.getBills());
+                adminDash.setStatus("");
             }
             if (adminDash.consumeViewSecurityLogRequest())
             {
-                adminDash.setStatus("View Security Log clicked.");
+                adminDash.setSecurityLogForView();
             }
             if (adminDash.consumeGenerateDailyReportRequest())
             {
