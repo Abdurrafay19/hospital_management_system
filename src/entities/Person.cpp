@@ -86,7 +86,6 @@ bool Person::setPassword(const char *personPassword)
     {
         return false;
     }
-
     StringHelper::copyTextDynamic(password, personPassword);
     return true;
 }

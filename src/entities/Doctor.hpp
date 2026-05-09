@@ -24,9 +24,6 @@ public:
 
     Doctor &operator=(const Doctor &other);
 
-    void displayDashboard();
-    void showProfile() const;
-
     const char *getSpecialization() const;
     const char *getContact() const;
     double getFee() const;

@@ -26,9 +26,6 @@ public:
 
     Patient &operator=(const Patient &other);
 
-    void displayDashboard();
-    void showProfile() const;
-
     int getAge() const;
     const char *getGender() const;
     const char *getContact() const;

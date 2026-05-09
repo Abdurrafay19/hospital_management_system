@@ -27,8 +27,8 @@ PatientDash::PatientDash()
 {
     payBillMode = false;
     payBillRequested = false;
-        payBillTitleText = nullptr;
-        payBillLabelText = nullptr;
+    payBillTitleText = nullptr;
+    payBillLabelText = nullptr;
     payBillIdLabelText = nullptr;
     topUpMode = false;
     topUpRequested = false;
@@ -380,8 +380,6 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     timeSlotDisplayText->setPosition(sf::Vector2f(220.f, 280.f));
     UIThemeHelper::styleBodyText(timeSlotDisplayText);
 
-
-
     payBillIdInput.setFont(regularFont);
     payBillIdInput.setCapacity(20);
     payBillIdInput.setPosition(sf::Vector2f(220.f, 515.f));
@@ -456,8 +454,6 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     backFromViewBillsBtn.setPosition(sf::Vector2f(890.f, 560.f));
     UIThemeHelper::setButtonSizeTertiary(backFromViewBillsBtn);
     UIThemeHelper::styleNeutralButton(backFromViewBillsBtn);
-
-
 
     // Step 1: Specialization input
     specializationInput.setFont(regularFont);
@@ -597,8 +593,6 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     UIThemeHelper::setButtonSizePrimary(topUpBalanceBtn);
     UIThemeHelper::stylePrimaryButton(topUpBalanceBtn);
 
-
-
     return true;
 }
 
@@ -693,17 +687,17 @@ void PatientDash::updateTimeSlotDisplay()
 
     // Update timeslot button colors based on availability
     const char *timeSlots[] = {"09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"};
-    
+
     for (i = 0; i < 8; i++)
     {
         bool isBooked = false;
-        
+
         if (allAppointments != nullptr)
         {
             int j;
             Appointment *appointmentsArray;
             appointmentsArray = allAppointments->getAll();
-            
+
             for (j = 0; j < allAppointments->size(); j++)
             {
                 if (StringHelper::textEquals(appointmentsArray[j].getDate(), selectedDate) &&
@@ -715,7 +709,7 @@ void PatientDash::updateTimeSlotDisplay()
                 }
             }
         }
-        
+
         if (isBooked)
         {
             timeSlotButtons[i].setFillColor(sf::Color(231, 76, 60));

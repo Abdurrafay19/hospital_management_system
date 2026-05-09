@@ -49,7 +49,8 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
         char c = input[i];
         if (c == '-')
         {
-            if (charIndex == 0) return false; // empty token
+            if (charIndex == 0)
+                return false; // empty token
             tokens[tokenIndex][charIndex] = '\0';
             tokenIndex++;
             charIndex = 0;
@@ -75,7 +76,8 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
         }
         i++;
     }
-    if (tokenIndex != 2) return false;
+    if (tokenIndex != 2)
+        return false;
     tokens[tokenIndex][charIndex] = '\0';
 
     // Determine which token is year (length==4) or position
@@ -108,15 +110,20 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
     int dlen = StringHelper::stringLength(dayTok);
     int mlen = StringHelper::stringLength(monthTok);
     int ylen = StringHelper::stringLength(yearTok);
-    if (ylen != 4) return false;
+    if (ylen != 4)
+        return false;
 
     if (dlen == 1)
     {
-        dayBuf[0] = '0'; dayBuf[1] = dayTok[0]; dayBuf[2] = '\0';
+        dayBuf[0] = '0';
+        dayBuf[1] = dayTok[0];
+        dayBuf[2] = '\0';
     }
     else if (dlen == 2)
     {
-        dayBuf[0] = dayTok[0]; dayBuf[1] = dayTok[1]; dayBuf[2] = '\0';
+        dayBuf[0] = dayTok[0];
+        dayBuf[1] = dayTok[1];
+        dayBuf[2] = '\0';
     }
     else
     {
@@ -125,11 +132,15 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
 
     if (mlen == 1)
     {
-        monthBuf[0] = '0'; monthBuf[1] = monthTok[0]; monthBuf[2] = '\0';
+        monthBuf[0] = '0';
+        monthBuf[1] = monthTok[0];
+        monthBuf[2] = '\0';
     }
     else if (mlen == 2)
     {
-        monthBuf[0] = monthTok[0]; monthBuf[1] = monthTok[1]; monthBuf[2] = '\0';
+        monthBuf[0] = monthTok[0];
+        monthBuf[1] = monthTok[1];
+        monthBuf[2] = '\0';
     }
     else
     {

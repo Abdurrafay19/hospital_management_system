@@ -22,7 +22,4 @@ public:
     void setID(int personID);
     void setName(const char *personName);
     bool setPassword(const char *personPassword);
-
-    virtual void displayDashboard() = 0;
-    virtual void showProfile() const = 0;
 };

@@ -24,6 +24,7 @@ public:
     static void loadBills(Storage<Bill> &storage);
     static void loadPrescriptions(Storage<Prescription> &storage);
     static int loadSecurityLogLines(char *lines, int maxItems, int lineLength);
+    static void saveSecurityLogEntry(const char *timestamp, const char *role, const char *enteredID, const char *result);
 
     // Save methods (append or overwrite)
     static void savePatient(const Patient &patient, bool append = true);

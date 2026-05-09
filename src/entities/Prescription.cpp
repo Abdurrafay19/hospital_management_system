@@ -22,18 +22,14 @@ Prescription::Prescription(int newPrescriptionID,
                            const char *newMedicines,
                            const char *newNotes)
 {
-    prescriptionID = 0;
-    appointmentID = 0;
-    patientID = 0;
-    doctorID = 0;
     date = nullptr;
     medicines = nullptr;
     notes = nullptr;
 
-    setID(newPrescriptionID);
-    setAppointmentID(newAppointmentID);
-    setPatientID(newPatientID);
-    setDoctorID(newDoctorID);
+    prescriptionID = newPrescriptionID;
+    appointmentID = newAppointmentID;
+    patientID = newPatientID;
+    doctorID = newDoctorID;
     setDate(newDate);
     setMedicines(newMedicines);
     setNotes(newNotes);
@@ -41,10 +37,6 @@ Prescription::Prescription(int newPrescriptionID,
 
 Prescription::Prescription(const Prescription &other)
 {
-    prescriptionID = 0;
-    appointmentID = 0;
-    patientID = 0;
-    doctorID = 0;
     date = nullptr;
     medicines = nullptr;
     notes = nullptr;
@@ -220,31 +212,4 @@ void Prescription::setNotes(const char *newNotes)
         i++;
     }
     notes[i] = '\0';
-}
-
-bool Prescription::operator==(const Prescription &other) const
-{
-    return prescriptionID == other.prescriptionID;
-}
-
-std::ostream &operator<<(std::ostream &out, const Prescription &prescription)
-{
-    const char *safeDate;
-    const char *safeMedicines;
-    const char *safeNotes;
-
-    safeDate = prescription.date != nullptr ? prescription.date : "";
-    safeMedicines = prescription.medicines != nullptr ? prescription.medicines : "";
-    safeNotes = prescription.notes != nullptr ? prescription.notes : "";
-
-    out << "Prescription[ID=" << prescription.prescriptionID
-        << ", AppointmentID=" << prescription.appointmentID
-        << ", PatientID=" << prescription.patientID
-        << ", DoctorID=" << prescription.doctorID
-        << ", Date=" << safeDate
-        << ", Medicines=" << safeMedicines
-        << ", Notes=" << safeNotes
-        << "]";
-
-    return out;
 }

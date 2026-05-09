@@ -9,18 +9,18 @@
 #include <ctime>
 
 AdminDash::AdminDash()
-      : titleText(nullptr), welcomeText(nullptr), statusText(nullptr),
-        addDoctorMode(false), addDoctorTitleText(nullptr), addDoctorStatusText(nullptr),
-        addDoctorNameLabelText(nullptr), addDoctorSpecializationLabelText(nullptr), addDoctorContactLabelText(nullptr),
-        addDoctorPasswordLabelText(nullptr), addDoctorFeeLabelText(nullptr), addDoctorSubmitRequested(false),
-        removeDoctorMode(false), pagedListViewType(PAGED_LIST_NONE), removeDoctorTitleText(nullptr), removeDoctorStatusText(nullptr),
-        removeDoctorLabelText(nullptr), removeDoctorIdLabelText(nullptr), removeDoctorCount(0),
-        removeDoctorPageInfoText(nullptr), removeDoctorSubmitRequested(false),
-        pagedListTotalItems(0), pagedListCurrentPage(0), pagedListPageSize(PAGED_LIST_MAX_VISIBLE_ROWS),
-        dischargePatientMode(false), dischargePatientTitleText(nullptr), dischargePatientStatusText(nullptr), dischargePatientIdLabelText(nullptr), dischargePatientSubmitRequested(false),
-    addDoctorClicked(false), removeDoctorClicked(false), viewAllPatientsClicked(false), viewAllDoctorsClicked(false),
-    viewAllAppointmentsClicked(false), viewUnpaidBillsClicked(false), dischargePatientClicked(false),
-    viewSecurityLogClicked(false), generateDailyReportClicked(false)
+    : titleText(nullptr), welcomeText(nullptr), statusText(nullptr),
+      addDoctorMode(false), addDoctorTitleText(nullptr), addDoctorStatusText(nullptr),
+      addDoctorNameLabelText(nullptr), addDoctorSpecializationLabelText(nullptr), addDoctorContactLabelText(nullptr),
+      addDoctorPasswordLabelText(nullptr), addDoctorFeeLabelText(nullptr), addDoctorSubmitRequested(false),
+      removeDoctorMode(false), pagedListViewType(PAGED_LIST_NONE), removeDoctorTitleText(nullptr), removeDoctorStatusText(nullptr),
+      removeDoctorLabelText(nullptr), removeDoctorIdLabelText(nullptr), removeDoctorCount(0),
+      removeDoctorPageInfoText(nullptr), removeDoctorSubmitRequested(false),
+      pagedListTotalItems(0), pagedListCurrentPage(0), pagedListPageSize(PAGED_LIST_MAX_VISIBLE_ROWS),
+      dischargePatientMode(false), dischargePatientTitleText(nullptr), dischargePatientStatusText(nullptr), dischargePatientIdLabelText(nullptr), dischargePatientSubmitRequested(false),
+      addDoctorClicked(false), removeDoctorClicked(false), viewAllPatientsClicked(false), viewAllDoctorsClicked(false),
+      viewAllAppointmentsClicked(false), viewUnpaidBillsClicked(false), dischargePatientClicked(false),
+      viewSecurityLogClicked(false), generateDailyReportClicked(false)
 {
     int i;
     for (i = 0; i < 30; i++)
@@ -90,7 +90,6 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     dashboardCard.setSize(sf::Vector2f(1100.f, 560.f));
     dashboardCard.setPosition(sf::Vector2f(90.f, 80.f));
     UIThemeHelper::styleDashboardCard(dashboardCard);
-
 
     // Header texts
     titleText = new sf::Text(boldFont, "Admin Dashboard", 32);
@@ -858,7 +857,7 @@ void AdminDash::setStatus(const char *message)
     {
         removeDoctorStatusText->setString(message);
     }
-    
+
     if (dischargePatientStatusText != nullptr && message != nullptr)
     {
         dischargePatientStatusText->setString(message);

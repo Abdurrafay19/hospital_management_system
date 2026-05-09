@@ -4,6 +4,7 @@
 #include "../helpers/ConversionHelper.hpp"
 
 #include <fstream>
+#include <ctime>
 
 void FileHandler::loadPatients(Storage<Patient> &storage)
 {
@@ -330,6 +331,24 @@ int FileHandler::loadSecurityLogLines(char *lines, int maxItems, int lineLength)
     return count;
 }
 
+void FileHandler::saveSecurityLogEntry(const char *timestamp, const char *role, const char *enteredID, const char *result)
+{
+    std::ofstream file;
+
+    if (timestamp == nullptr || role == nullptr || enteredID == nullptr || result == nullptr)
+    {
+        return;
+    }
+
+    if (!FilePathHelper::openOutputDataFile(file, "security_log.txt", std::ios::app))
+    {
+        return;
+    }
+
+    file << timestamp << "," << role << "," << enteredID << "," << result << "\n";
+    file.close();
+}
+
 void FileHandler::savePatient(const Patient &patient, bool append)
 {
     std::ofstream file;
@@ -393,10 +412,10 @@ void FileHandler::saveDoctor(const Doctor &doctor, bool append)
     safePassword = doctor.getPassword() != nullptr ? doctor.getPassword() : "";
 
     file << doctor.getID() << ","
-        << safeName << ","
-        << safeSpecialization << ","
-        << safeContact << ","
-        << safePassword << ","
+         << safeName << ","
+         << safeSpecialization << ","
+         << safeContact << ","
+         << safePassword << ","
          << feeBuffer << "\n";
 
     file.close();

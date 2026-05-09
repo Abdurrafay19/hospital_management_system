@@ -58,16 +58,6 @@ Doctor &Doctor::operator=(const Doctor &other)
     return *this;
 }
 
-void Doctor::displayDashboard()
-{
-    std::cout << "Doctor Dashboard - ID: " << id << "\n";
-}
-
-void Doctor::showProfile() const
-{
-    std::cout << *this << "\n";
-}
-
 const char *Doctor::getSpecialization() const
 {
     return specialization;

@@ -319,7 +319,6 @@ static bool prescriptionExistsForAppointment(Storage<Prescription> &prescription
     return false;
 }
 
-
 void App::setupUI()
 {
     logoutButton = UIButton(regularFont, "Logout", sf::Vector2f(1100.f, 30.f), sf::Vector2f(130.f, 40.f));
@@ -1157,7 +1156,7 @@ void App::handleMouseClick()
                     }
                 }
             }
-            
+
             if (adminDash.consumeDischargePatientSubmitRequest())
             {
                 const char *patientIDText;
@@ -1223,34 +1222,43 @@ void App::handleMouseClick()
 
                                 int billIDsToRemove[200];
                                 int billRemoveCount = 0;
-                                for (i = 0; i < system.getBills().size(); i++) {
-                                    if (system.getBills().getAll()[i].getPatientID() == patientID) {
+                                for (i = 0; i < system.getBills().size(); i++)
+                                {
+                                    if (system.getBills().getAll()[i].getPatientID() == patientID)
+                                    {
                                         billIDsToRemove[billRemoveCount++] = system.getBills().getAll()[i].getID();
                                     }
                                 }
-                                for (i = 0; i < billRemoveCount; i++) {
+                                for (i = 0; i < billRemoveCount; i++)
+                                {
                                     system.getBills().removeByID(billIDsToRemove[i]);
                                 }
 
                                 int apptIDsToRemove[200];
                                 int apptRemoveCount = 0;
-                                for (i = 0; i < system.getAppointments().size(); i++) {
-                                    if (system.getAppointments().getAll()[i].getPatientID() == patientID) {
+                                for (i = 0; i < system.getAppointments().size(); i++)
+                                {
+                                    if (system.getAppointments().getAll()[i].getPatientID() == patientID)
+                                    {
                                         apptIDsToRemove[apptRemoveCount++] = system.getAppointments().getAll()[i].getID();
                                     }
                                 }
-                                for (i = 0; i < apptRemoveCount; i++) {
+                                for (i = 0; i < apptRemoveCount; i++)
+                                {
                                     system.getAppointments().removeByID(apptIDsToRemove[i]);
                                 }
 
                                 int presIDsToRemove[200];
                                 int presRemoveCount = 0;
-                                for (i = 0; i < system.getPrescriptions().size(); i++) {
-                                    if (system.getPrescriptions().getAll()[i].getPatientID() == patientID) {
+                                for (i = 0; i < system.getPrescriptions().size(); i++)
+                                {
+                                    if (system.getPrescriptions().getAll()[i].getPatientID() == patientID)
+                                    {
                                         presIDsToRemove[presRemoveCount++] = system.getPrescriptions().getAll()[i].getID();
                                     }
                                 }
-                                for (i = 0; i < presRemoveCount; i++) {
+                                for (i = 0; i < presRemoveCount; i++)
+                                {
                                     system.getPrescriptions().removeByID(presIDsToRemove[i]);
                                 }
 
@@ -1344,7 +1352,14 @@ void App::attemptLogin()
 
     if (user == nullptr)
     {
-        loginScreen.setStatus("Login failed. Check ID or password.");
+        if (system.isSessionLocked())
+        {
+            loginScreen.setStatus("Account locked. Contact admin.");
+        }
+        else
+        {
+            loginScreen.setStatus("Login failed. Check ID or password.");
+        }
         return;
     }
 

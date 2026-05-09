@@ -162,22 +162,3 @@ bool Bill::operator==(const Bill &other) const
 {
     return billID == other.billID;
 }
-
-std::ostream &operator<<(std::ostream &out, const Bill &bill)
-{
-    const char *safeStatus;
-    const char *safeDate;
-
-    safeStatus = bill.status != nullptr ? bill.status : "";
-    safeDate = bill.date != nullptr ? bill.date : "";
-
-    out << "Bill[ID=" << bill.billID
-        << ", PatientID=" << bill.patientID
-        << ", AppointmentID=" << bill.appointmentID
-        << ", Amount=" << bill.amount
-        << ", Status=" << safeStatus
-        << ", Date=" << safeDate
-        << "]";
-
-    return out;
-}

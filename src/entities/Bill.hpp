@@ -41,6 +41,4 @@ public:
 
     bool isPaid() const;
     bool operator==(const Bill &other) const;
-
-    friend std::ostream &operator<<(std::ostream &out, const Bill &bill);
 };

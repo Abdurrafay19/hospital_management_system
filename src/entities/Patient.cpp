@@ -68,16 +68,6 @@ Patient &Patient::operator=(const Patient &other)
     return *this;
 }
 
-void Patient::displayDashboard()
-{
-    std::cout << "Patient Dashboard - ID: " << id << "\n";
-}
-
-void Patient::showProfile() const
-{
-    std::cout << *this << "\n";
-}
-
 int Patient::getAge() const
 {
     return age;

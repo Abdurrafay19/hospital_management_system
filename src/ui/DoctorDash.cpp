@@ -9,17 +9,17 @@ DoctorDash::DoctorDash()
     : doctor(nullptr), titleText(nullptr), welcomeText(nullptr), specializationText(nullptr), statusText(nullptr),
       todayAppointmentsMode(false), todayAppointmentsTitleText(nullptr), todayAppointmentsStatusText(nullptr),
       todayAppointmentsLabelText(nullptr), todayAppointmentCount(0), todayAppointments(nullptr),
-    todayAppointmentPatients(nullptr), markCompleteMode(false), markCompleteTitleText(nullptr),
-    markCompleteStatusText(nullptr), markCompleteLabelText(nullptr), markCompleteIdLabelText(nullptr),
-        markCompleteRequested(false), markNoShowMode(false), markNoShowTitleText(nullptr), markNoShowStatusText(nullptr),
-        markNoShowLabelText(nullptr), markNoShowIdLabelText(nullptr), markNoShowRequested(false), viewTodayClicked(false), markCompleteClicked(false), markNoShowClicked(false),
-        writePrescriptionMode(false), writePrescriptionTitleText(nullptr), writePrescriptionStatusText(nullptr),
-        writePrescriptionLabelText(nullptr), writePrescriptionAppointmentIdLabelText(nullptr),
-        writePrescriptionMedicinesLabelText(nullptr), writePrescriptionNotesLabelText(nullptr),
-        writePrescriptionRequested(false), writePrescriptionClicked(false), viewHistoryClicked(false),
-        viewMedicalHistoryMode(false), viewMedicalHistoryTitleText(nullptr), viewMedicalHistoryStatusText(nullptr),
-        viewMedicalHistoryLabelText(nullptr), viewMedicalHistoryRequested(false),
-                viewingPrescriptionHistory(false), medicalHistoryPatientCount(0), prescriptionHistoryCount(0)
+      todayAppointmentPatients(nullptr), markCompleteMode(false), markCompleteTitleText(nullptr),
+      markCompleteStatusText(nullptr), markCompleteLabelText(nullptr), markCompleteIdLabelText(nullptr),
+      markCompleteRequested(false), markNoShowMode(false), markNoShowTitleText(nullptr), markNoShowStatusText(nullptr),
+      markNoShowLabelText(nullptr), markNoShowIdLabelText(nullptr), markNoShowRequested(false), viewTodayClicked(false), markCompleteClicked(false), markNoShowClicked(false),
+      writePrescriptionMode(false), writePrescriptionTitleText(nullptr), writePrescriptionStatusText(nullptr),
+      writePrescriptionLabelText(nullptr), writePrescriptionAppointmentIdLabelText(nullptr),
+      writePrescriptionMedicinesLabelText(nullptr), writePrescriptionNotesLabelText(nullptr),
+      writePrescriptionRequested(false), writePrescriptionClicked(false), viewHistoryClicked(false),
+      viewMedicalHistoryMode(false), viewMedicalHistoryTitleText(nullptr), viewMedicalHistoryStatusText(nullptr),
+      viewMedicalHistoryLabelText(nullptr), viewMedicalHistoryRequested(false),
+      viewingPrescriptionHistory(false), medicalHistoryPatientCount(0), prescriptionHistoryCount(0)
 {
     int i;
 
@@ -313,40 +313,45 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
         UIThemeHelper::styleBodyText(todayAppointmentListText[i]);
     }
 
-    // Buttons list
-    int startX = 130;
-    int startY = 240;
-    int btnWidth = 420;
-    int btnHeight = 52;
-    int spacingY = 14;
+    // Buttons list (positioned in a 3-column grid like AdminDash)
+    sf::Vector2f btnSize(320.f, 48.f);
+    float startX = 120.f;
+    float startY = 240.f;
+    float hGap = 20.f;
+    float vGap = 24.f;
 
     viewTodayAppointmentsBtn.setFont(regularFont);
     viewTodayAppointmentsBtn.setText("View Today's Appointments");
     viewTodayAppointmentsBtn.setPosition(sf::Vector2f(startX, startY));
+    viewTodayAppointmentsBtn.setSize(btnSize);
     UIThemeHelper::setButtonSizePrimary(viewTodayAppointmentsBtn);
     UIThemeHelper::stylePrimaryButton(viewTodayAppointmentsBtn);
 
     markAppointmentCompleteBtn.setFont(regularFont);
     markAppointmentCompleteBtn.setText("Mark Appointment Complete");
-    markAppointmentCompleteBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 1));
+    markAppointmentCompleteBtn.setPosition(sf::Vector2f(startX + (btnSize.x + hGap), startY));
+    markAppointmentCompleteBtn.setSize(btnSize);
     UIThemeHelper::setButtonSizePrimary(markAppointmentCompleteBtn);
     UIThemeHelper::stylePrimaryButton(markAppointmentCompleteBtn);
 
     markAppointmentNoShowBtn.setFont(regularFont);
     markAppointmentNoShowBtn.setText("Mark Appointment No-Show");
-    markAppointmentNoShowBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 2));
+    markAppointmentNoShowBtn.setPosition(sf::Vector2f(startX + 2 * (btnSize.x + hGap), startY));
+    markAppointmentNoShowBtn.setSize(btnSize);
     UIThemeHelper::setButtonSizePrimary(markAppointmentNoShowBtn);
     UIThemeHelper::stylePrimaryButton(markAppointmentNoShowBtn);
 
     writePrescriptionBtn.setFont(regularFont);
     writePrescriptionBtn.setText("Write Prescription");
-    writePrescriptionBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 3));
+    writePrescriptionBtn.setPosition(sf::Vector2f(startX, startY + (btnSize.y + vGap)));
+    writePrescriptionBtn.setSize(btnSize);
     UIThemeHelper::setButtonSizePrimary(writePrescriptionBtn);
     UIThemeHelper::stylePrimaryButton(writePrescriptionBtn);
 
     viewPatientHistoryBtn.setFont(regularFont);
     viewPatientHistoryBtn.setText("View Patient Medical History");
-    viewPatientHistoryBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 4));
+    viewPatientHistoryBtn.setPosition(sf::Vector2f(startX + (btnSize.x + hGap), startY + (btnSize.y + vGap)));
+    viewPatientHistoryBtn.setSize(btnSize);
     UIThemeHelper::setButtonSizePrimary(viewPatientHistoryBtn);
     UIThemeHelper::stylePrimaryButton(viewPatientHistoryBtn);
 

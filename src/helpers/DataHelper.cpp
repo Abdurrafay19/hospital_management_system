@@ -7,8 +7,6 @@
 #include "TimeHelper.hpp"
 #include "StringHelper.hpp"
 
-#include <stddef.h>
-
 void DataHelper::splitByComma(const char *line, char **fields, int maxFields, int &fieldCount)
 {
     int currentField;

@@ -42,8 +42,4 @@ public:
     void setDate(const char *newDate);
     void setMedicines(const char *newMedicines);
     void setNotes(const char *newNotes);
-
-    bool operator==(const Prescription &other) const;
-
-    friend std::ostream &operator<<(std::ostream &out, const Prescription &prescription);
 };

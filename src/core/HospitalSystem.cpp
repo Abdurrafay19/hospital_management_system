@@ -2,6 +2,34 @@
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/TimeHelper.hpp"
 
+void HospitalSystem::logSecurityLockout(const char *id, Role role)
+{
+    char timestamp[32];
+    time_t now;
+    struct tm *timeInfo;
+
+    now = time(nullptr);
+    timeInfo = localtime(&now);
+    strftime(timestamp, sizeof(timestamp), "%d-%m-%Y %H:%M:%S", timeInfo);
+
+    FileHandler::saveSecurityLogEntry(timestamp, getRoleText(role), id, "LOCKED");
+}
+
+const char *HospitalSystem::getRoleText(Role role) const
+{
+    if (role == ROLE_PATIENT)
+    {
+        return "Patient";
+    }
+
+    if (role == ROLE_DOCTOR)
+    {
+        return "Doctor";
+    }
+
+    return "Admin";
+}
+
 HospitalSystem::HospitalSystem()
 {
     failedLoginAttempts = 0;
@@ -24,7 +52,6 @@ Person *HospitalSystem::login(const char *id, const char *password, const char *
 
     if (sessionLocked)
     {
-        std::cout << "Account locked. Contact admin.\n";
         return nullptr;
     }
 
@@ -66,10 +93,15 @@ Person *HospitalSystem::login(const char *id, const char *password, const char *
     if (failedLoginAttempts >= 3)
     {
         sessionLocked = true;
-        std::cout << "Account locked. Contact admin.\n";
+        logSecurityLockout(id, role);
     }
 
     return nullptr;
+}
+
+bool HospitalSystem::isSessionLocked() const
+{
+    return sessionLocked;
 }
 
 void HospitalSystem::bookAppointment(Patient *patient, int doctorID, const char *date, const char *timeSlot)

@@ -168,7 +168,7 @@ char StringHelper::toLowerASCII(char c)
 {
     if (c >= 'A' && c <= 'Z')
     {
-        return static_cast<char>(c + ('a' - 'A'));
+        return static_cast<char>(c + 32);
     }
 
     return c;
