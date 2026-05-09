@@ -276,7 +276,7 @@ void HospitalSystem::dischargePatient(int patientID)
 
     for (i = 0; i < bills.size(); i++)
     {
-        if (bills.getAll()[i].getPatientID() == patientID && !StringHelper::textEquals(bills.getAll()[i].getStatus(), "paid"))
+        if (bills.getAll()[i].getPatientID() == patientID && StringHelper::textEquals(bills.getAll()[i].getStatus(), "unpaid"))
         {
             throw InvalidInputException("Patient has unpaid bills.");
         }

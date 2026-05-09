@@ -8,7 +8,7 @@
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/StorageHelper.hpp"
 #include "../helpers/TimeHelper.hpp"
-#include "../ui/UIThemeHelper.hpp"
+#include "../helpers/UIThemeHelper.hpp"
 
 static bool pathExists(const char *path)
 {
@@ -319,16 +319,12 @@ static bool prescriptionExistsForAppointment(Storage<Prescription> &prescription
     return false;
 }
 
-static void truncateText(char *destination, const char *source, int maxLength)
-{
-    StringHelper::stringCopy(destination, source, maxLength);
-}
 
 void App::setupUI()
 {
     logoutButton = UIButton(regularFont, "Logout", sf::Vector2f(1100.f, 30.f), sf::Vector2f(130.f, 40.f));
 
-    UIThemeHelper::styleCriticalButton(logoutButton);
+    UIThemeHelper::styleDangerButton(logoutButton);
 
     loginScreen.initialize(regularFont, boldFont);
     patientDash.initialize(regularFont, boldFont);

@@ -1,5 +1,5 @@
 #include "LoginScreen.hpp"
-#include "UIThemeHelper.hpp"
+#include "../helpers/UIThemeHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 
@@ -229,31 +229,33 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
     patientRoleButton = UIButton(regularFont, "Patient", sf::Vector2f(innerX, row1Y), sf::Vector2f(173.f, 46.f));
     doctorRoleButton = UIButton(regularFont, "Doctor", sf::Vector2f(innerX + 193.f, row1Y), sf::Vector2f(173.f, 46.f));
     adminRoleButton = UIButton(regularFont, "Admin", sf::Vector2f(innerX + 386.f, row1Y), sf::Vector2f(174.f, 46.f));
+    UIThemeHelper::setButtonSizeSecondary(patientRoleButton);
+    UIThemeHelper::setButtonSizeSecondary(doctorRoleButton);
+    UIThemeHelper::setButtonSizeSecondary(adminRoleButton);
 
     float loginBtnY = startY + 360.f;
     loginButton = UIButton(boldFont, "Login", sf::Vector2f(innerX, loginBtnY), sf::Vector2f(560.f, 50.f));
+    UIThemeHelper::setButtonSizeWide(loginButton);
 
     // Toggle Mode / Back button (will be moved Top-Left inside card)
     toggleModeButton = UIButton(regularFont, "Sign Up", sf::Vector2f(innerX, startY + 430.f), sf::Vector2f(560.f, 50.f));
+    UIThemeHelper::setButtonSizeWide(toggleModeButton);
 
     // Patient is selected by default, so use darker gray
-    UIThemeHelper::styleSelectedOptionButton(patientRoleButton);
+    UIThemeHelper::styleSelectedButton(patientRoleButton);
     UIThemeHelper::styleNeutralButton(doctorRoleButton);
     UIThemeHelper::styleNeutralButton(adminRoleButton);
     UIThemeHelper::stylePrimaryButton(loginButton);
-    toggleModeButton.setFillColor(sf::Color(245, 247, 248)); // Subtle button style
-
-    toggleModeButton.setOutlineColor(sf::Color(200, 205, 210));
-    toggleModeButton.setTextColor(sf::Color(44, 62, 80));
+    UIThemeHelper::styleNeutralButton(toggleModeButton);
 
     // Login form: ID and Password (Contact field reused for signup)
     nameInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 210.f), sf::Vector2f(560.f, 40.f), 50);
     passwordInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(560.f, 40.f), 30);
     contactInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(270.f, 40.f), 11);
 
-    UIThemeHelper::styleSoftInput(nameInput);
-    UIThemeHelper::styleSoftInput(passwordInput);
-    UIThemeHelper::styleSoftInput(contactInput);
+    UIThemeHelper::styleInput(nameInput);
+    UIThemeHelper::styleInput(passwordInput);
+    UIThemeHelper::styleInput(contactInput);
 
     // Signup UI setup
     ageInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(120.f, 40.f), 3);
@@ -268,51 +270,61 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
 
     signupPasswordInput = UITextBox(regularFont, sf::Vector2f(innerX + 290.f, startY + 280.f), sf::Vector2f(270.f, 40.f), 30);
 
-    UIThemeHelper::styleSoftInput(ageInput);
-    UIThemeHelper::styleSoftInput(signupPasswordInput);
+    UIThemeHelper::styleInput(ageInput);
+    UIThemeHelper::styleInput(signupPasswordInput);
 
     signupButton = UIButton(boldFont, "Create Account", sf::Vector2f(innerX, startY + 360.f), sf::Vector2f(560.f, 50.f));
+    UIThemeHelper::setButtonSizeWide(signupButton);
     UIThemeHelper::styleSuccessButton(signupButton);
 
-    // Text labels setup
+    // Text labels setup (grouped: creation + position + style)
     titleText = new sf::Text(boldFont, "MediCore", 40);
-    roleText = new sf::Text(regularFont, "Role: Patient", 20);
-    nameLabel = new sf::Text(regularFont, "Patient ID", 16);
-    contactLabel = new sf::Text(regularFont, "Contact Number", 16);
-    passwordLabel = new sf::Text(regularFont, "Password", 16);
-    statusText = new sf::Text(regularFont, "", 16);
-    ageLabel = new sf::Text(regularFont, "Age", 14);
-    genderLabel = new sf::Text(regularFont, "Gender", 14);
-    signupPasswordLabel = new sf::Text(regularFont, "Password", 14);
-
-    // Login UI positions
+    UIThemeHelper::setTextSizeMainTitle(titleText);
     {
-        sf::FloatRect titleBounds;
-        float centeredTitleX;
-
-        titleBounds = titleText->getLocalBounds();
-        centeredTitleX = startX + (cardBackground.getSize().x * 0.5f) - (titleBounds.size.x * 0.5f) - titleBounds.position.x;
+        sf::FloatRect titleBounds = titleText->getLocalBounds();
+        float centeredTitleX = startX + (cardBackground.getSize().x * 0.5f) - (titleBounds.size.x * 0.5f) - titleBounds.position.x;
         titleText->setPosition(sf::Vector2f(centeredTitleX, startY + 30.f));
     }
-    roleText->setPosition(sf::Vector2f(startX + 40.f, startY + 90.f));
-    nameLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 190.f));
-    contactLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 260.f));
-    passwordLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 260.f));
-    statusText->setPosition(sf::Vector2f(startX + 40.f, startY + 500.f));
-
-    // Signup UI positions
-    ageLabel->setPosition(sf::Vector2f(innerX, startY + 260.f));
-    genderLabel->setPosition(sf::Vector2f(innerX + 140.f, startY + 260.f));
-
-    // Text colors
     UIThemeHelper::styleTitleText(titleText);
+
+    roleText = new sf::Text(regularFont, "Role: Patient", 20);
+    UIThemeHelper::setTextSizeBody(roleText);
+    roleText->setPosition(sf::Vector2f(startX + 40.f, startY + 90.f));
     UIThemeHelper::styleLabelText(roleText);
+
+    nameLabel = new sf::Text(regularFont, "Patient ID", 16);
+    UIThemeHelper::setTextSizeLabel(nameLabel);
+    nameLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 190.f));
     UIThemeHelper::styleLabelText(nameLabel);
+
+    contactLabel = new sf::Text(regularFont, "Contact Number", 16);
+    UIThemeHelper::setTextSizeLabel(contactLabel);
+    contactLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 260.f));
     UIThemeHelper::styleLabelText(contactLabel);
+
+    passwordLabel = new sf::Text(regularFont, "Password", 16);
+    UIThemeHelper::setTextSizeLabel(passwordLabel);
+    passwordLabel->setPosition(sf::Vector2f(startX + 40.f, startY + 260.f));
     UIThemeHelper::styleLabelText(passwordLabel);
-    statusText->setFillColor(sf::Color(231, 76, 60)); // Red for errors typically
+
+    statusText = new sf::Text(regularFont, "", 16);
+    UIThemeHelper::setTextSizeSmall(statusText);
+    statusText->setPosition(sf::Vector2f(startX + 40.f, startY + 500.f));
+    UIThemeHelper::styleStatusText(statusText);
+
+    // Signup UI labels
+    ageLabel = new sf::Text(regularFont, "Age", 14);
+    UIThemeHelper::setTextSizeBody(ageLabel);
+    ageLabel->setPosition(sf::Vector2f(innerX, startY + 260.f));
     UIThemeHelper::styleLabelText(ageLabel);
+
+    genderLabel = new sf::Text(regularFont, "Gender", 14);
+    UIThemeHelper::setTextSizeBody(genderLabel);
+    genderLabel->setPosition(sf::Vector2f(innerX + 140.f, startY + 260.f));
     UIThemeHelper::styleLabelText(genderLabel);
+
+    signupPasswordLabel = new sf::Text(regularFont, "Password", 14);
+    UIThemeHelper::setTextSizeBody(signupPasswordLabel);
     UIThemeHelper::styleLabelText(signupPasswordLabel);
 
     selectedRole = ROLE_PATIENT;
@@ -343,7 +355,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
         {
             selectedGender[0] = 'M';
             selectedGender[1] = '\0';
-            UIThemeHelper::styleSelectedOptionButton(genderMButton);
+            UIThemeHelper::styleSelectedButton(genderMButton);
             UIThemeHelper::styleNeutralButton(genderFButton);
             UIThemeHelper::styleNeutralButton(genderNAButton);
         }
@@ -352,7 +364,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
             selectedGender[0] = 'F';
             selectedGender[1] = '\0';
             UIThemeHelper::styleNeutralButton(genderMButton);
-            UIThemeHelper::styleSelectedOptionButton(genderFButton);
+            UIThemeHelper::styleSelectedButton(genderFButton);
             UIThemeHelper::styleNeutralButton(genderNAButton);
         }
         if (genderNAButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
@@ -363,7 +375,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
             selectedGender[3] = '\0';
             UIThemeHelper::styleNeutralButton(genderMButton);
             UIThemeHelper::styleNeutralButton(genderFButton);
-            UIThemeHelper::styleSelectedOptionButton(genderNAButton);
+            UIThemeHelper::styleSelectedButton(genderNAButton);
         }
 
         if (signupButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
@@ -391,15 +403,15 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
 
             // Reset role buttons
             patientRoleButton.setPosition(sf::Vector2f(innerX, startY + 120.f));
-            patientRoleButton.setSize(sf::Vector2f(160.f, 40.f));
-            doctorRoleButton.setPosition(sf::Vector2f(innerX + 180.f, startY + 120.f));
-            doctorRoleButton.setSize(sf::Vector2f(160.f, 40.f));
-            adminRoleButton.setPosition(sf::Vector2f(innerX + 360.f, startY + 120.f));
-            adminRoleButton.setSize(sf::Vector2f(160.f, 40.f));
+            UIThemeHelper::setButtonSizeSecondary(patientRoleButton);
+            doctorRoleButton.setPosition(sf::Vector2f(innerX + 190.f, startY + 120.f));
+            UIThemeHelper::setButtonSizeSecondary(doctorRoleButton);
+            adminRoleButton.setPosition(sf::Vector2f(innerX + 380.f, startY + 120.f));
+            UIThemeHelper::setButtonSizeSecondary(adminRoleButton);
 
             // Reset Patient role as default
             selectedRole = ROLE_PATIENT;
-            UIThemeHelper::styleSelectedOptionButton(patientRoleButton);
+            UIThemeHelper::styleSelectedButton(patientRoleButton);
             UIThemeHelper::styleNeutralButton(doctorRoleButton);
             UIThemeHelper::styleNeutralButton(adminRoleButton);
 
@@ -415,7 +427,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
 
             toggleModeButton.setText("Sign Up");
             toggleModeButton.setPosition(sf::Vector2f(innerX, startY + 430.f));
-            toggleModeButton.setSize(sf::Vector2f(560.f, 50.f));
+            UIThemeHelper::setButtonSizeWide(toggleModeButton);
         }
     }
     else
@@ -427,7 +439,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
         if (patientRoleButton.getShape().getGlobalBounds().contains(mouseWorldPosition))
         {
             selectedRole = ROLE_PATIENT;
-            UIThemeHelper::styleSelectedOptionButton(patientRoleButton);
+            UIThemeHelper::styleSelectedButton(patientRoleButton);
             UIThemeHelper::styleNeutralButton(doctorRoleButton);
             UIThemeHelper::styleNeutralButton(adminRoleButton);
             nameLabel->setString("Patient ID");
@@ -437,7 +449,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
         {
             selectedRole = ROLE_DOCTOR;
             UIThemeHelper::styleNeutralButton(patientRoleButton);
-            UIThemeHelper::styleSelectedOptionButton(doctorRoleButton);
+            UIThemeHelper::styleSelectedButton(doctorRoleButton);
             UIThemeHelper::styleNeutralButton(adminRoleButton);
             nameLabel->setString("Doctor ID");
             setStatus("Selected role: Doctor");
@@ -447,7 +459,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
             selectedRole = ROLE_ADMIN;
             UIThemeHelper::styleNeutralButton(patientRoleButton);
             UIThemeHelper::styleNeutralButton(doctorRoleButton);
-            UIThemeHelper::styleSelectedOptionButton(adminRoleButton);
+            UIThemeHelper::styleSelectedButton(adminRoleButton);
             nameLabel->setString("Admin ID");
             setStatus("Selected role: Admin");
         }
@@ -489,7 +501,7 @@ void LoginScreen::handleMouseClick(sf::RenderWindow &window)
 
             toggleModeButton.setText("Back");
             toggleModeButton.setPosition(sf::Vector2f(innerX, startY + 30.f));
-            toggleModeButton.setSize(sf::Vector2f(80.f, 40.f));
+            UIThemeHelper::setButtonSizeTertiary(toggleModeButton);
         }
     }
 }
@@ -691,15 +703,15 @@ void LoginScreen::setSignupMode(bool signupMode)
 
         // Reset role buttons
         patientRoleButton.setPosition(sf::Vector2f(innerX, startY + 120.f));
-        patientRoleButton.setSize(sf::Vector2f(160.f, 40.f));
-        doctorRoleButton.setPosition(sf::Vector2f(innerX + 180.f, startY + 120.f));
-        doctorRoleButton.setSize(sf::Vector2f(160.f, 40.f));
-        adminRoleButton.setPosition(sf::Vector2f(innerX + 360.f, startY + 120.f));
-        adminRoleButton.setSize(sf::Vector2f(160.f, 40.f));
+        UIThemeHelper::setButtonSizeSecondary(patientRoleButton);
+        doctorRoleButton.setPosition(sf::Vector2f(innerX + 190.f, startY + 120.f));
+        UIThemeHelper::setButtonSizeSecondary(doctorRoleButton);
+        adminRoleButton.setPosition(sf::Vector2f(innerX + 380.f, startY + 120.f));
+        UIThemeHelper::setButtonSizeSecondary(adminRoleButton);
 
         // Reset Patient role as default
         selectedRole = ROLE_PATIENT;
-        UIThemeHelper::styleSelectedOptionButton(patientRoleButton);
+        UIThemeHelper::styleSelectedButton(patientRoleButton);
         UIThemeHelper::styleNeutralButton(doctorRoleButton);
         UIThemeHelper::styleNeutralButton(adminRoleButton);
 
@@ -715,7 +727,7 @@ void LoginScreen::setSignupMode(bool signupMode)
 
         toggleModeButton.setText("Sign Up");
         toggleModeButton.setPosition(sf::Vector2f(innerX, startY + 430.f));
-        toggleModeButton.setSize(sf::Vector2f(560.f, 50.f));
+        UIThemeHelper::setButtonSizeWide(toggleModeButton);
     }
 }
 

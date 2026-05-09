@@ -1,5 +1,5 @@
 #include "DoctorDash.hpp"
-#include "UIThemeHelper.hpp"
+#include "../helpers/UIThemeHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../entities/Prescription.hpp"
@@ -96,6 +96,11 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     specializationText = new sf::Text(regularFont, "", 18);
     statusText = new sf::Text(regularFont, "", 16);
 
+    UIThemeHelper::setTextSizeMainTitle(titleText);
+    UIThemeHelper::setTextSizeBody(welcomeText);
+    UIThemeHelper::setTextSizeBody(specializationText);
+    UIThemeHelper::setTextSizeSmall(statusText);
+
     titleText->setPosition(sf::Vector2f(110.f, 100.f));
     UIThemeHelper::styleTitleText(titleText);
 
@@ -112,84 +117,126 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     todayAppointmentsPanel.setPosition(sf::Vector2f(200.f, 150.f));
     UIThemeHelper::stylePanel(todayAppointmentsPanel);
 
+    // Today's appointments texts
     todayAppointmentsTitleText = new sf::Text(boldFont, "Today's Appointments", 24);
-    todayAppointmentsStatusText = new sf::Text(regularFont, "", 13);
-    todayAppointmentsLabelText = new sf::Text(regularFont, "Appointment ID | Patient Name | Time Slot | Status", 16);
-    markCompleteTitleText = new sf::Text(boldFont, "Mark Appointment Complete", 24);
-    markCompleteStatusText = new sf::Text(regularFont, "", 13);
-    markCompleteLabelText = new sf::Text(regularFont, "Appointment ID | Patient Name | Time Slot | Status", 16);
-    markCompleteIdLabelText = new sf::Text(regularFont, "Enter Appointment ID:", 16);
-    markNoShowTitleText = new sf::Text(boldFont, "Mark Appointment No-Show", 24);
-    markNoShowStatusText = new sf::Text(regularFont, "", 13);
-    markNoShowLabelText = new sf::Text(regularFont, "Appointment ID | Patient Name | Time Slot | Status", 16);
-    markNoShowIdLabelText = new sf::Text(regularFont, "Enter Appointment ID:", 16);
-    writePrescriptionTitleText = new sf::Text(boldFont, "Write Prescription", 24);
-    writePrescriptionStatusText = new sf::Text(regularFont, "", 13);
-    writePrescriptionLabelText = new sf::Text(regularFont, "Fill in the prescription details below.", 16);
-    writePrescriptionAppointmentIdLabelText = new sf::Text(regularFont, "Enter Appointment ID:", 16);
-    writePrescriptionMedicinesLabelText = new sf::Text(regularFont, "Enter medicines:", 16);
-    writePrescriptionNotesLabelText = new sf::Text(regularFont, "Enter notes:", 16);
-
-    viewMedicalHistoryTitleText = new sf::Text(boldFont, "Patient Medical History", 24);
-    viewMedicalHistoryStatusText = new sf::Text(regularFont, "", 13);
-    viewMedicalHistoryLabelText = new sf::Text(regularFont, "Enter the Patient ID to view their medical history:", 16);
-
+    UIThemeHelper::setTextSizeTitle(todayAppointmentsTitleText);
     todayAppointmentsTitleText->setPosition(sf::Vector2f(220.f, 170.f));
     UIThemeHelper::styleTitleText(todayAppointmentsTitleText);
 
+    todayAppointmentsStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(todayAppointmentsStatusText);
     todayAppointmentsStatusText->setPosition(sf::Vector2f(220.f, 600.f));
     UIThemeHelper::styleStatusText(todayAppointmentsStatusText);
 
+    todayAppointmentsLabelText = new sf::Text(regularFont, "Appointment ID | Patient Name | Time Slot | Status", 16);
+    UIThemeHelper::setTextSizeLabel(todayAppointmentsLabelText);
     todayAppointmentsLabelText->setPosition(sf::Vector2f(220.f, 220.f));
     UIThemeHelper::styleLabelText(todayAppointmentsLabelText);
 
+    // Mark Complete panel and texts
     markCompletePanel.setSize(sf::Vector2f(900.f, 500.f));
     markCompletePanel.setPosition(sf::Vector2f(200.f, 150.f));
     UIThemeHelper::stylePanel(markCompletePanel);
 
+    markCompleteTitleText = new sf::Text(boldFont, "Mark Appointment Complete", 24);
+    UIThemeHelper::setTextSizeTitle(markCompleteTitleText);
     markCompleteTitleText->setPosition(sf::Vector2f(220.f, 170.f));
     UIThemeHelper::styleTitleText(markCompleteTitleText);
 
+    markCompleteStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(markCompleteStatusText);
     markCompleteStatusText->setPosition(sf::Vector2f(220.f, 600.f));
     UIThemeHelper::styleStatusText(markCompleteStatusText);
 
+    markCompleteLabelText = new sf::Text(regularFont, "Appointment ID | Patient Name | Time Slot | Status", 16);
+    UIThemeHelper::setTextSizeLabel(markCompleteLabelText);
     markCompleteLabelText->setPosition(sf::Vector2f(220.f, 220.f));
     UIThemeHelper::styleLabelText(markCompleteLabelText);
 
+    markCompleteIdLabelText = new sf::Text(regularFont, "Enter Appointment ID:", 16);
+    UIThemeHelper::setTextSizeLabel(markCompleteIdLabelText);
     markCompleteIdLabelText->setPosition(sf::Vector2f(220.f, 525.f));
     UIThemeHelper::styleLabelText(markCompleteIdLabelText);
 
+    // Mark No-Show panel and texts
     markNoShowPanel.setSize(sf::Vector2f(900.f, 500.f));
     markNoShowPanel.setPosition(sf::Vector2f(200.f, 150.f));
     UIThemeHelper::stylePanel(markNoShowPanel);
 
+    markNoShowTitleText = new sf::Text(boldFont, "Mark Appointment No-Show", 24);
+    UIThemeHelper::setTextSizeTitle(markNoShowTitleText);
     markNoShowTitleText->setPosition(sf::Vector2f(220.f, 170.f));
     UIThemeHelper::styleTitleText(markNoShowTitleText);
 
+    markNoShowStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(markNoShowStatusText);
     markNoShowStatusText->setPosition(sf::Vector2f(220.f, 600.f));
     UIThemeHelper::styleStatusText(markNoShowStatusText);
 
+    markNoShowLabelText = new sf::Text(regularFont, "Appointment ID | Patient Name | Time Slot | Status", 16);
+    UIThemeHelper::setTextSizeLabel(markNoShowLabelText);
     markNoShowLabelText->setPosition(sf::Vector2f(220.f, 220.f));
     UIThemeHelper::styleLabelText(markNoShowLabelText);
 
+    markNoShowIdLabelText = new sf::Text(regularFont, "Enter Appointment ID:", 16);
+    UIThemeHelper::setTextSizeLabel(markNoShowIdLabelText);
     markNoShowIdLabelText->setPosition(sf::Vector2f(220.f, 525.f));
     UIThemeHelper::styleLabelText(markNoShowIdLabelText);
 
+    // Write Prescription panel and texts
     writePrescriptionPanel.setSize(sf::Vector2f(900.f, 500.f));
     writePrescriptionPanel.setPosition(sf::Vector2f(200.f, 150.f));
     UIThemeHelper::stylePanel(writePrescriptionPanel);
 
+    writePrescriptionTitleText = new sf::Text(boldFont, "Write Prescription", 24);
+    UIThemeHelper::setTextSizeTitle(writePrescriptionTitleText);
     writePrescriptionTitleText->setPosition(sf::Vector2f(220.f, 170.f));
     UIThemeHelper::styleTitleText(writePrescriptionTitleText);
 
+    writePrescriptionStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(writePrescriptionStatusText);
     writePrescriptionStatusText->setPosition(sf::Vector2f(220.f, 600.f));
     UIThemeHelper::styleStatusText(writePrescriptionStatusText);
 
+    writePrescriptionLabelText = new sf::Text(regularFont, "Fill in the prescription details below.", 16);
+    UIThemeHelper::setTextSizeLabel(writePrescriptionLabelText);
     writePrescriptionLabelText->setPosition(sf::Vector2f(220.f, 220.f));
     UIThemeHelper::styleLabelText(writePrescriptionLabelText);
 
+    writePrescriptionAppointmentIdLabelText = new sf::Text(regularFont, "Enter Appointment ID:", 16);
+    UIThemeHelper::setTextSizeLabel(writePrescriptionAppointmentIdLabelText);
     writePrescriptionAppointmentIdLabelText->setPosition(sf::Vector2f(220.f, 255.f));
     UIThemeHelper::styleLabelText(writePrescriptionAppointmentIdLabelText);
+
+    writePrescriptionMedicinesLabelText = new sf::Text(regularFont, "Enter medicines:", 16);
+    UIThemeHelper::setTextSizeLabel(writePrescriptionMedicinesLabelText);
+    writePrescriptionMedicinesLabelText->setPosition(sf::Vector2f(220.f, 325.f));
+    UIThemeHelper::styleLabelText(writePrescriptionMedicinesLabelText);
+
+    writePrescriptionNotesLabelText = new sf::Text(regularFont, "Enter notes:", 16);
+    UIThemeHelper::setTextSizeLabel(writePrescriptionNotesLabelText);
+    writePrescriptionNotesLabelText->setPosition(sf::Vector2f(220.f, 395.f));
+    UIThemeHelper::styleLabelText(writePrescriptionNotesLabelText);
+
+    // View Medical History panel and texts
+    viewMedicalHistoryPanel.setSize(sf::Vector2f(900.f, 500.f));
+    viewMedicalHistoryPanel.setPosition(sf::Vector2f(200.f, 150.f));
+    UIThemeHelper::stylePanel(viewMedicalHistoryPanel);
+
+    viewMedicalHistoryTitleText = new sf::Text(boldFont, "Patient Medical History", 24);
+    UIThemeHelper::setTextSizeTitle(viewMedicalHistoryTitleText);
+    viewMedicalHistoryTitleText->setPosition(sf::Vector2f(220.f, 170.f));
+    UIThemeHelper::styleTitleText(viewMedicalHistoryTitleText);
+
+    viewMedicalHistoryStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(viewMedicalHistoryStatusText);
+    viewMedicalHistoryStatusText->setPosition(sf::Vector2f(220.f, 600.f));
+    UIThemeHelper::styleStatusText(viewMedicalHistoryStatusText);
+
+    viewMedicalHistoryLabelText = new sf::Text(regularFont, "Enter the Patient ID to view their medical history:", 16);
+    UIThemeHelper::setTextSizeLabel(viewMedicalHistoryLabelText);
+    viewMedicalHistoryLabelText->setPosition(sf::Vector2f(220.f, 450.f));
+    UIThemeHelper::styleLabelText(viewMedicalHistoryLabelText);
 
     writePrescriptionAppointmentIdInput.setFont(regularFont);
     writePrescriptionAppointmentIdInput.setCapacity(20);
@@ -197,17 +244,11 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     writePrescriptionAppointmentIdInput.setSize(sf::Vector2f(320.f, 36.f));
     UIThemeHelper::styleInput(writePrescriptionAppointmentIdInput);
 
-    writePrescriptionMedicinesLabelText->setPosition(sf::Vector2f(220.f, 325.f));
-    UIThemeHelper::styleLabelText(writePrescriptionMedicinesLabelText);
-
     writePrescriptionMedicinesInput.setFont(regularFont);
     writePrescriptionMedicinesInput.setCapacity(499);
     writePrescriptionMedicinesInput.setPosition(sf::Vector2f(220.f, 350.f));
     writePrescriptionMedicinesInput.setSize(sf::Vector2f(720.f, 36.f));
     UIThemeHelper::styleInput(writePrescriptionMedicinesInput);
-
-    writePrescriptionNotesLabelText->setPosition(sf::Vector2f(220.f, 395.f));
-    UIThemeHelper::styleLabelText(writePrescriptionNotesLabelText);
 
     writePrescriptionNotesInput.setFont(regularFont);
     writePrescriptionNotesInput.setCapacity(299);
@@ -218,14 +259,14 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     confirmWritePrescriptionBtn.setFont(regularFont);
     confirmWritePrescriptionBtn.setText("Save Prescription");
     confirmWritePrescriptionBtn.setPosition(sf::Vector2f(650.f, 550.f));
-    confirmWritePrescriptionBtn.setSize(sf::Vector2f(180.f, 36.f));
+    UIThemeHelper::setButtonSizeSecondary(confirmWritePrescriptionBtn);
     UIThemeHelper::styleSuccessButton(confirmWritePrescriptionBtn);
 
     backFromWritePrescriptionBtn.setFont(regularFont);
     backFromWritePrescriptionBtn.setText("Back");
     backFromWritePrescriptionBtn.setPosition(sf::Vector2f(840.f, 550.f));
-    backFromWritePrescriptionBtn.setSize(sf::Vector2f(90.f, 36.f));
-    UIThemeHelper::styleSecondaryButton(backFromWritePrescriptionBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromWritePrescriptionBtn);
+    UIThemeHelper::styleNeutralButton(backFromWritePrescriptionBtn);
 
     markNoShowIdInput.setFont(regularFont);
     markNoShowIdInput.setCapacity(20);
@@ -235,15 +276,15 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
 
     confirmMarkNoShowBtn.setFont(regularFont);
     confirmMarkNoShowBtn.setText("Mark No-Show");
-    confirmMarkNoShowBtn.setPosition(sf::Vector2f(680.f, 550.f));
-    confirmMarkNoShowBtn.setSize(sf::Vector2f(160.f, 36.f));
+    confirmMarkNoShowBtn.setPosition(sf::Vector2f(670.f, 550.f));
+    UIThemeHelper::setButtonSizeSecondary(confirmMarkNoShowBtn);
     UIThemeHelper::styleDangerButton(confirmMarkNoShowBtn);
 
     backFromMarkNoShowBtn.setFont(regularFont);
     backFromMarkNoShowBtn.setText("Back");
-    backFromMarkNoShowBtn.setPosition(sf::Vector2f(850.f, 550.f));
-    backFromMarkNoShowBtn.setSize(sf::Vector2f(90.f, 36.f));
-    UIThemeHelper::styleSecondaryButton(backFromMarkNoShowBtn);
+    backFromMarkNoShowBtn.setPosition(sf::Vector2f(860.f, 550.f));
+    UIThemeHelper::setButtonSizeTertiary(backFromMarkNoShowBtn);
+    UIThemeHelper::styleNeutralButton(backFromMarkNoShowBtn);
 
     markCompleteIdInput.setFont(regularFont);
     markCompleteIdInput.setCapacity(20);
@@ -253,20 +294,21 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
 
     confirmMarkCompleteBtn.setFont(regularFont);
     confirmMarkCompleteBtn.setText("Mark Completed");
-    confirmMarkCompleteBtn.setPosition(sf::Vector2f(680.f, 550.f));
-    confirmMarkCompleteBtn.setSize(sf::Vector2f(160.f, 36.f));
+    confirmMarkCompleteBtn.setPosition(sf::Vector2f(670.f, 550.f));
+    UIThemeHelper::setButtonSizeSecondary(confirmMarkCompleteBtn);
     UIThemeHelper::styleSuccessButton(confirmMarkCompleteBtn);
 
     backFromMarkCompleteBtn.setFont(regularFont);
     backFromMarkCompleteBtn.setText("Back");
-    backFromMarkCompleteBtn.setPosition(sf::Vector2f(850.f, 550.f));
-    backFromMarkCompleteBtn.setSize(sf::Vector2f(90.f, 36.f));
-    UIThemeHelper::styleSecondaryButton(backFromMarkCompleteBtn);
+    backFromMarkCompleteBtn.setPosition(sf::Vector2f(860.f, 550.f));
+    UIThemeHelper::setButtonSizeTertiary(backFromMarkCompleteBtn);
+    UIThemeHelper::styleNeutralButton(backFromMarkCompleteBtn);
 
     int i;
     for (i = 0; i < 20; i++)
     {
         todayAppointmentListText[i] = new sf::Text(regularFont, "", 14);
+        UIThemeHelper::setTextSizeBody(todayAppointmentListText[i]);
         todayAppointmentListText[i]->setPosition(sf::Vector2f(220.f, 255.f + i * 18.f));
         UIThemeHelper::styleBodyText(todayAppointmentListText[i]);
     }
@@ -281,31 +323,31 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     viewTodayAppointmentsBtn.setFont(regularFont);
     viewTodayAppointmentsBtn.setText("View Today's Appointments");
     viewTodayAppointmentsBtn.setPosition(sf::Vector2f(startX, startY));
-    viewTodayAppointmentsBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(viewTodayAppointmentsBtn);
     UIThemeHelper::stylePrimaryButton(viewTodayAppointmentsBtn);
 
     markAppointmentCompleteBtn.setFont(regularFont);
     markAppointmentCompleteBtn.setText("Mark Appointment Complete");
     markAppointmentCompleteBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 1));
-    markAppointmentCompleteBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(markAppointmentCompleteBtn);
     UIThemeHelper::stylePrimaryButton(markAppointmentCompleteBtn);
 
     markAppointmentNoShowBtn.setFont(regularFont);
     markAppointmentNoShowBtn.setText("Mark Appointment No-Show");
     markAppointmentNoShowBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 2));
-    markAppointmentNoShowBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(markAppointmentNoShowBtn);
     UIThemeHelper::stylePrimaryButton(markAppointmentNoShowBtn);
 
     writePrescriptionBtn.setFont(regularFont);
     writePrescriptionBtn.setText("Write Prescription");
     writePrescriptionBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 3));
-    writePrescriptionBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(writePrescriptionBtn);
     UIThemeHelper::stylePrimaryButton(writePrescriptionBtn);
 
     viewPatientHistoryBtn.setFont(regularFont);
     viewPatientHistoryBtn.setText("View Patient Medical History");
     viewPatientHistoryBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 4));
-    viewPatientHistoryBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(viewPatientHistoryBtn);
     UIThemeHelper::stylePrimaryButton(viewPatientHistoryBtn);
 
     viewMedicalHistoryPanel.setSize(sf::Vector2f(900.f, 500.f));
@@ -330,26 +372,26 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
     confirmViewMedicalHistoryBtn.setFont(regularFont);
     confirmViewMedicalHistoryBtn.setText("View History");
     confirmViewMedicalHistoryBtn.setPosition(sf::Vector2f(650.f, 550.f));
-    confirmViewMedicalHistoryBtn.setSize(sf::Vector2f(180.f, 36.f));
+    UIThemeHelper::setButtonSizeSecondary(confirmViewMedicalHistoryBtn);
     UIThemeHelper::styleSuccessButton(confirmViewMedicalHistoryBtn);
 
     backFromViewMedicalHistoryBtn.setFont(regularFont);
     backFromViewMedicalHistoryBtn.setText("Back");
     backFromViewMedicalHistoryBtn.setPosition(sf::Vector2f(840.f, 550.f));
-    backFromViewMedicalHistoryBtn.setSize(sf::Vector2f(90.f, 36.f));
-    UIThemeHelper::styleSecondaryButton(backFromViewMedicalHistoryBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromViewMedicalHistoryBtn);
+    UIThemeHelper::styleNeutralButton(backFromViewMedicalHistoryBtn);
 
     backFromPrescriptionsBtn.setFont(regularFont);
     backFromPrescriptionsBtn.setText("Back to Patients");
     backFromPrescriptionsBtn.setPosition(sf::Vector2f(650.f, 550.f));
-    backFromPrescriptionsBtn.setSize(sf::Vector2f(180.f, 36.f));
-    UIThemeHelper::styleSecondaryButton(backFromPrescriptionsBtn);
+    UIThemeHelper::setButtonSizeSecondary(backFromPrescriptionsBtn);
+    UIThemeHelper::styleNeutralButton(backFromPrescriptionsBtn);
 
     backFromTodayAppointmentsBtn.setFont(regularFont);
     backFromTodayAppointmentsBtn.setText("Back");
     backFromTodayAppointmentsBtn.setPosition(sf::Vector2f(850.f, 550.f));
-    backFromTodayAppointmentsBtn.setSize(sf::Vector2f(90.f, 36.f));
-    UIThemeHelper::styleSecondaryButton(backFromTodayAppointmentsBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromTodayAppointmentsBtn);
+    UIThemeHelper::styleNeutralButton(backFromTodayAppointmentsBtn);
 
     return true;
 }

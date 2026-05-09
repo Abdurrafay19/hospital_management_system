@@ -1,5 +1,5 @@
 #include "PatientDash.hpp"
-#include "UIThemeHelper.hpp"
+#include "../helpers/UIThemeHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../core/Validator.hpp"
@@ -188,138 +188,199 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     dashboardCard.setPosition(sf::Vector2f(90.f, 80.f));
     UIThemeHelper::styleDashboardCard(dashboardCard);
 
+    // Header texts (creation + position + style)
     titleText = new sf::Text(boldFont, "Patient Dashboard", 32);
-    patientNameText = new sf::Text(regularFont, "", 18);
-    balanceText = new sf::Text(regularFont, "", 18);
-    statusText = new sf::Text(regularFont, "", 16);
-    bookingTitleText = new sf::Text(boldFont, "Book Appointment", 24);
-    specializationLabelText = new sf::Text(regularFont, "Specialization:", 16);
-    doctorListLabelText = new sf::Text(regularFont, "Available Doctors:", 16);
-    dateInputLabelText = new sf::Text(regularFont, "Date (DD-MM-YYYY):", 16);
-    timeSlotsLabelText = new sf::Text(regularFont, "Available Time Slots:", 16);
-    timeSlotDisplayText = new sf::Text(regularFont, "", 14);
-    bookingStepIndicatorText = new sf::Text(regularFont, "Step 1 of 5", 14);
-    bookingDialogStatusText = new sf::Text(regularFont, "", 13);
-    cancelTitleText = new sf::Text(boldFont, "Cancel Appointment", 24);
-    cancelDialogStatusText = new sf::Text(regularFont, "", 13);
-    cancelAppointmentsLabelText = new sf::Text(regularFont, "Pending Appointments:", 16);
-    cancelAppointmentIdLabelText = new sf::Text(regularFont, "Enter Appointment ID to cancel:", 16);
-
+    UIThemeHelper::setTextSizeMainTitle(titleText);
     titleText->setPosition(sf::Vector2f(110.f, 100.f));
     UIThemeHelper::styleTitleText(titleText);
 
+    patientNameText = new sf::Text(regularFont, "", 18);
+    UIThemeHelper::setTextSizeBody(patientNameText);
     patientNameText->setPosition(sf::Vector2f(110.f, 150.f));
     UIThemeHelper::styleLabelText(patientNameText);
 
+    balanceText = new sf::Text(regularFont, "", 18);
+    UIThemeHelper::setTextSizeBody(balanceText);
     balanceText->setPosition(sf::Vector2f(110.f, 180.f));
     UIThemeHelper::styleLabelText(balanceText);
 
+    statusText = new sf::Text(regularFont, "", 16);
+    UIThemeHelper::setTextSizeSmall(statusText);
     statusText->setPosition(sf::Vector2f(110.f, 600.f));
     statusText->setFillColor(sf::Color(231, 76, 60));
 
-    // Expand booking panel to 900x550 for multi-step booking
+    // Booking panel and texts
     bookingPanel.setSize(sf::Vector2f(900.f, 550.f));
     bookingPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(bookingPanel);
 
+    bookingTitleText = new sf::Text(boldFont, "Book Appointment", 24);
+    UIThemeHelper::setTextSizeTitle(bookingTitleText);
     bookingTitleText->setPosition(sf::Vector2f(220.f, 150.f));
     UIThemeHelper::styleTitleText(bookingTitleText);
 
+    bookingStepIndicatorText = new sf::Text(regularFont, "Step 1 of 5", 14);
+    UIThemeHelper::setTextSizeBody(bookingStepIndicatorText);
     bookingStepIndicatorText->setPosition(sf::Vector2f(820.f, 153.f));
     bookingStepIndicatorText->setFillColor(sf::Color(149, 165, 166));
 
+    bookingDialogStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(bookingDialogStatusText);
     bookingDialogStatusText->setPosition(sf::Vector2f(220.f, 467.f));
     UIThemeHelper::styleStatusText(bookingDialogStatusText);
 
-    int i;
-
+    // Cancel panel and texts
     cancelPanel.setSize(sf::Vector2f(900.f, 550.f));
     cancelPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(cancelPanel);
 
+    cancelTitleText = new sf::Text(boldFont, "Cancel Appointment", 24);
+    UIThemeHelper::setTextSizeTitle(cancelTitleText);
     cancelTitleText->setPosition(sf::Vector2f(220.f, 150.f));
     UIThemeHelper::styleTitleText(cancelTitleText);
 
+    cancelDialogStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(cancelDialogStatusText);
     cancelDialogStatusText->setPosition(sf::Vector2f(220.f, 605.f));
     UIThemeHelper::styleStatusText(cancelDialogStatusText);
 
+    cancelAppointmentsLabelText = new sf::Text(regularFont, "Pending Appointments:", 16);
+    UIThemeHelper::setTextSizeLabel(cancelAppointmentsLabelText);
     cancelAppointmentsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
     UIThemeHelper::styleLabelText(cancelAppointmentsLabelText);
 
+    cancelAppointmentIdLabelText = new sf::Text(regularFont, "Enter Appointment ID to cancel:", 16);
+    UIThemeHelper::setTextSizeLabel(cancelAppointmentIdLabelText);
     cancelAppointmentIdLabelText->setPosition(sf::Vector2f(220.f, 490.f));
     UIThemeHelper::styleLabelText(cancelAppointmentIdLabelText);
 
+    // View Appointments panel and texts
     viewAppointmentsPanel.setSize(sf::Vector2f(900.f, 550.f));
     viewAppointmentsPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(viewAppointmentsPanel);
 
     viewAppointmentsTitleText = new sf::Text(boldFont, "My Appointments", 24);
-    viewAppointmentsStatusText = new sf::Text(regularFont, "", 13);
-    viewAppointmentsLabelText = new sf::Text(regularFont, "Appointments:", 16);
-
+    UIThemeHelper::setTextSizeTitle(viewAppointmentsTitleText);
     viewAppointmentsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
     UIThemeHelper::styleTitleText(viewAppointmentsTitleText);
 
+    viewAppointmentsStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(viewAppointmentsStatusText);
     viewAppointmentsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
     UIThemeHelper::styleStatusText(viewAppointmentsStatusText);
 
+    viewAppointmentsLabelText = new sf::Text(regularFont, "Appointments:", 16);
+    UIThemeHelper::setTextSizeLabel(viewAppointmentsLabelText);
     viewAppointmentsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
     UIThemeHelper::styleLabelText(viewAppointmentsLabelText);
 
+    // View Medical Records panel and texts
     viewMedicalRecordsPanel.setSize(sf::Vector2f(900.f, 550.f));
     viewMedicalRecordsPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(viewMedicalRecordsPanel);
 
     viewMedicalRecordsTitleText = new sf::Text(boldFont, "My Medical Records", 24);
-    viewMedicalRecordsStatusText = new sf::Text(regularFont, "", 13);
-    viewMedicalRecordsLabelText = new sf::Text(regularFont, "Records:", 16);
-
+    UIThemeHelper::setTextSizeTitle(viewMedicalRecordsTitleText);
     viewMedicalRecordsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
     UIThemeHelper::styleTitleText(viewMedicalRecordsTitleText);
 
+    viewMedicalRecordsStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(viewMedicalRecordsStatusText);
     viewMedicalRecordsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
     UIThemeHelper::styleStatusText(viewMedicalRecordsStatusText);
 
+    viewMedicalRecordsLabelText = new sf::Text(regularFont, "Records:", 16);
+    UIThemeHelper::setTextSizeLabel(viewMedicalRecordsLabelText);
     viewMedicalRecordsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
     UIThemeHelper::styleLabelText(viewMedicalRecordsLabelText);
 
+    // View Bills panel and texts
     viewBillsPanel.setSize(sf::Vector2f(900.f, 550.f));
     viewBillsPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(viewBillsPanel);
 
+    viewBillsTitleText = new sf::Text(boldFont, "My Bills", 24);
+    UIThemeHelper::setTextSizeTitle(viewBillsTitleText);
+    viewBillsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
+    UIThemeHelper::styleTitleText(viewBillsTitleText);
+
+    viewBillsStatusText = new sf::Text(regularFont, "", 13);
+    UIThemeHelper::setTextSizeSmall(viewBillsStatusText);
+    viewBillsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
+    UIThemeHelper::styleStatusText(viewBillsStatusText);
+
+    viewBillsLabelText = new sf::Text(regularFont, "Bills:", 16);
+    UIThemeHelper::setTextSizeLabel(viewBillsLabelText);
+    viewBillsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
+    UIThemeHelper::styleLabelText(viewBillsLabelText);
+
+    viewBillsTotalText = new sf::Text(regularFont, "", 15);
+    UIThemeHelper::setTextSizeBody(viewBillsTotalText);
+    viewBillsTotalText->setPosition(sf::Vector2f(220.f, 560.f));
+    UIThemeHelper::styleBodyText(viewBillsTotalText);
+
+    // Pay Bill panel and texts
     payBillPanel.setSize(sf::Vector2f(900.f, 550.f));
     payBillPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(payBillPanel);
 
-    viewBillsTitleText = new sf::Text(boldFont, "My Bills", 24);
-    viewBillsStatusText = new sf::Text(regularFont, "", 13);
-    viewBillsLabelText = new sf::Text(regularFont, "Bills:", 16);
-    viewBillsTotalText = new sf::Text(regularFont, "", 15);
-
     payBillTitleText = new sf::Text(boldFont, "Pay Bill", 24);
-    payBillLabelText = new sf::Text(regularFont, "Unpaid Bills:", 16);
-
-    viewBillsTitleText->setPosition(sf::Vector2f(220.f, 150.f));
-    UIThemeHelper::styleTitleText(viewBillsTitleText);
-
+    UIThemeHelper::setTextSizeTitle(payBillTitleText);
     payBillTitleText->setPosition(sf::Vector2f(220.f, 150.f));
     UIThemeHelper::styleTitleText(payBillTitleText);
 
-    viewBillsStatusText->setPosition(sf::Vector2f(220.f, 605.f));
-    UIThemeHelper::styleStatusText(viewBillsStatusText);
-
-    viewBillsLabelText->setPosition(sf::Vector2f(220.f, 200.f));
-    UIThemeHelper::styleLabelText(viewBillsLabelText);
-
+    payBillLabelText = new sf::Text(regularFont, "Unpaid Bills:", 16);
+    UIThemeHelper::setTextSizeLabel(payBillLabelText);
     payBillLabelText->setPosition(sf::Vector2f(220.f, 200.f));
     UIThemeHelper::styleLabelText(payBillLabelText);
 
-    viewBillsTotalText->setPosition(sf::Vector2f(220.f, 560.f));
-    UIThemeHelper::styleBodyText(viewBillsTotalText);
-
     payBillIdLabelText = new sf::Text(regularFont, "Enter Bill ID to pay:", 16);
+    UIThemeHelper::setTextSizeLabel(payBillIdLabelText);
     payBillIdLabelText->setPosition(sf::Vector2f(220.f, 490.f));
     UIThemeHelper::styleLabelText(payBillIdLabelText);
+
+    // Top Up panel and texts
+    topUpPanel.setSize(sf::Vector2f(650.f, 260.f));
+    topUpPanel.setPosition(sf::Vector2f(320.f, 220.f));
+    UIThemeHelper::stylePanel(topUpPanel);
+
+    topUpTitleText = new sf::Text(boldFont, "Top Up Balance", 24);
+    UIThemeHelper::setTextSizeTitle(topUpTitleText);
+    topUpTitleText->setPosition(sf::Vector2f(340.f, 240.f));
+    UIThemeHelper::styleTitleText(topUpTitleText);
+
+    topUpLabelText = new sf::Text(regularFont, "Enter amount to add (PKR):", 16);
+    UIThemeHelper::setTextSizeLabel(topUpLabelText);
+    topUpLabelText->setPosition(sf::Vector2f(340.f, 295.f));
+    UIThemeHelper::styleLabelText(topUpLabelText);
+
+    // Booking step labels
+    specializationLabelText = new sf::Text(regularFont, "Specialization:", 16);
+    UIThemeHelper::setTextSizeLabel(specializationLabelText);
+    specializationLabelText->setPosition(sf::Vector2f(220.f, 210.f));
+    UIThemeHelper::styleLabelText(specializationLabelText);
+
+    doctorListLabelText = new sf::Text(regularFont, "Available Doctors:", 16);
+    UIThemeHelper::setTextSizeLabel(doctorListLabelText);
+    doctorListLabelText->setPosition(sf::Vector2f(220.f, 280.f));
+    UIThemeHelper::styleLabelText(doctorListLabelText);
+
+    dateInputLabelText = new sf::Text(regularFont, "Date (DD-MM-YYYY):", 16);
+    UIThemeHelper::setTextSizeLabel(dateInputLabelText);
+    dateInputLabelText->setPosition(sf::Vector2f(220.f, 280.f));
+    UIThemeHelper::styleLabelText(dateInputLabelText);
+
+    timeSlotsLabelText = new sf::Text(regularFont, "Available Time Slots:", 16);
+    UIThemeHelper::setTextSizeLabel(timeSlotsLabelText);
+    timeSlotsLabelText->setPosition(sf::Vector2f(220.f, 255.f));
+    UIThemeHelper::styleLabelText(timeSlotsLabelText);
+
+    timeSlotDisplayText = new sf::Text(regularFont, "", 14);
+    UIThemeHelper::setTextSizeBody(timeSlotDisplayText);
+    timeSlotDisplayText->setPosition(sf::Vector2f(220.f, 280.f));
+    UIThemeHelper::styleBodyText(timeSlotDisplayText);
+
+
 
     payBillIdInput.setFont(regularFont);
     payBillIdInput.setCapacity(20);
@@ -329,28 +390,17 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
 
     confirmPayBillBtn.setFont(regularFont);
     confirmPayBillBtn.setText("Pay Bill");
-    confirmPayBillBtn.setPosition(sf::Vector2f(720.f, 560.f));
-    confirmPayBillBtn.setSize(sf::Vector2f(160.f, 38.f));
+    confirmPayBillBtn.setPosition(sf::Vector2f(700.f, 560.f));
+    UIThemeHelper::setButtonSizeSecondary(confirmPayBillBtn);
     UIThemeHelper::styleSuccessButton(confirmPayBillBtn);
 
     backFromPayBillBtn.setFont(regularFont);
     backFromPayBillBtn.setText("Back");
     backFromPayBillBtn.setPosition(sf::Vector2f(890.f, 560.f));
-    backFromPayBillBtn.setSize(sf::Vector2f(90.f, 38.f));
-    UIThemeHelper::styleSecondaryButton(backFromPayBillBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromPayBillBtn);
+    UIThemeHelper::styleNeutralButton(backFromPayBillBtn);
 
-    topUpPanel.setSize(sf::Vector2f(650.f, 260.f));
-    topUpPanel.setPosition(sf::Vector2f(320.f, 220.f));
-    UIThemeHelper::stylePanel(topUpPanel);
-
-    topUpTitleText = new sf::Text(boldFont, "Top Up Balance", 24);
-    topUpTitleText->setPosition(sf::Vector2f(340.f, 240.f));
-    UIThemeHelper::styleTitleText(topUpTitleText);
-
-    topUpLabelText = new sf::Text(regularFont, "Enter amount to add (PKR):", 16);
-    topUpLabelText->setPosition(sf::Vector2f(340.f, 295.f));
-    UIThemeHelper::styleLabelText(topUpLabelText);
-
+    // Top Up inputs and buttons
     topUpAmountInput.setFont(regularFont);
     topUpAmountInput.setCapacity(20);
     topUpAmountInput.setPosition(sf::Vector2f(340.f, 320.f));
@@ -359,63 +409,57 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
 
     confirmTopUpBtn.setFont(regularFont);
     confirmTopUpBtn.setText("Top Up");
-    confirmTopUpBtn.setPosition(sf::Vector2f(560.f, 380.f));
-    confirmTopUpBtn.setSize(sf::Vector2f(160.f, 38.f));
+    confirmTopUpBtn.setPosition(sf::Vector2f(540.f, 380.f));
+    UIThemeHelper::setButtonSizeSecondary(confirmTopUpBtn);
     UIThemeHelper::styleSuccessButton(confirmTopUpBtn);
 
     backFromTopUpBtn.setFont(regularFont);
     backFromTopUpBtn.setText("Back");
     backFromTopUpBtn.setPosition(sf::Vector2f(730.f, 380.f));
-    backFromTopUpBtn.setSize(sf::Vector2f(90.f, 38.f));
-    UIThemeHelper::styleSecondaryButton(backFromTopUpBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromTopUpBtn);
+    UIThemeHelper::styleNeutralButton(backFromTopUpBtn);
 
+    // Cancel Appointment inputs and buttons
     cancelAppointmentIdInput.setFont(regularFont);
     cancelAppointmentIdInput.setCapacity(20);
     cancelAppointmentIdInput.setPosition(sf::Vector2f(220.f, 515.f));
     cancelAppointmentIdInput.setSize(sf::Vector2f(360.f, 36.f));
     UIThemeHelper::styleInput(cancelAppointmentIdInput);
 
-    for (i = 0; i < 20; i++)
-    {
-        pendingAppointmentListText[i] = new sf::Text(regularFont, "", 12);
-        pendingAppointmentListText[i]->setPosition(sf::Vector2f(220.f, 225.f + i * 14.f));
-        UIThemeHelper::styleBodyText(pendingAppointmentListText[i]);
-    }
-
     confirmCancelAppointmentBtn.setFont(regularFont);
     confirmCancelAppointmentBtn.setText("Cancel Appointment");
-    confirmCancelAppointmentBtn.setPosition(sf::Vector2f(700.f, 560.f));
-    confirmCancelAppointmentBtn.setSize(sf::Vector2f(180.f, 38.f));
+    confirmCancelAppointmentBtn.setPosition(sf::Vector2f(690.f, 560.f));
+    UIThemeHelper::setButtonSizeMedium(confirmCancelAppointmentBtn);
     UIThemeHelper::styleDangerButton(confirmCancelAppointmentBtn);
 
     backFromCancelAppointmentBtn.setFont(regularFont);
     backFromCancelAppointmentBtn.setText("Back");
     backFromCancelAppointmentBtn.setPosition(sf::Vector2f(890.f, 560.f));
-    backFromCancelAppointmentBtn.setSize(sf::Vector2f(90.f, 38.f));
-    UIThemeHelper::styleSecondaryButton(backFromCancelAppointmentBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromCancelAppointmentBtn);
+    UIThemeHelper::styleNeutralButton(backFromCancelAppointmentBtn);
 
+    // Back buttons for view panels
     backFromViewAppointmentsBtn.setFont(regularFont);
     backFromViewAppointmentsBtn.setText("Back");
     backFromViewAppointmentsBtn.setPosition(sf::Vector2f(890.f, 560.f));
-    backFromViewAppointmentsBtn.setSize(sf::Vector2f(90.f, 38.f));
-    UIThemeHelper::styleSecondaryButton(backFromViewAppointmentsBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromViewAppointmentsBtn);
+    UIThemeHelper::styleNeutralButton(backFromViewAppointmentsBtn);
 
     backFromViewMedicalRecordsBtn.setFont(regularFont);
     backFromViewMedicalRecordsBtn.setText("Back");
     backFromViewMedicalRecordsBtn.setPosition(sf::Vector2f(890.f, 560.f));
-    backFromViewMedicalRecordsBtn.setSize(sf::Vector2f(90.f, 38.f));
-    UIThemeHelper::styleSecondaryButton(backFromViewMedicalRecordsBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromViewMedicalRecordsBtn);
+    UIThemeHelper::styleNeutralButton(backFromViewMedicalRecordsBtn);
 
     backFromViewBillsBtn.setFont(regularFont);
     backFromViewBillsBtn.setText("Back");
     backFromViewBillsBtn.setPosition(sf::Vector2f(890.f, 560.f));
-    backFromViewBillsBtn.setSize(sf::Vector2f(90.f, 38.f));
-    UIThemeHelper::styleSecondaryButton(backFromViewBillsBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromViewBillsBtn);
+    UIThemeHelper::styleNeutralButton(backFromViewBillsBtn);
 
-    // Step 1: Specialization
-    specializationLabelText->setPosition(sf::Vector2f(220.f, 210.f));
-    UIThemeHelper::styleLabelText(specializationLabelText);
 
+
+    // Step 1: Specialization input
     specializationInput.setFont(regularFont);
     specializationInput.setCapacity(50);
     specializationInput.setPosition(sf::Vector2f(220.f, 235.f));
@@ -425,14 +469,11 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     searchDoctorsBtn.setFont(regularFont);
     searchDoctorsBtn.setText("Search");
     searchDoctorsBtn.setPosition(sf::Vector2f(640.f, 235.f));
-    searchDoctorsBtn.setSize(sf::Vector2f(120.f, 36.f));
+    UIThemeHelper::setButtonSizeSmall(searchDoctorsBtn);
     UIThemeHelper::stylePrimaryButton(searchDoctorsBtn);
 
-    // Step 2: Doctor Selection
-    doctorListLabelText->setPosition(sf::Vector2f(220.f, 280.f));
-    UIThemeHelper::styleLabelText(doctorListLabelText);
-
-    for (i = 0; i < 20; i++)
+    // Step 2: Doctor Selection - create doctor list texts and select button
+    for (int i = 0; i < 20; i++)
     {
         doctorListText[i] = new sf::Text(regularFont, "", 14);
         doctorListText[i]->setPosition(sf::Vector2f(220.f, 305.f + i * 22.f));
@@ -442,13 +483,10 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     selectDoctorBtn.setFont(regularFont);
     selectDoctorBtn.setText("Select Doctor");
     selectDoctorBtn.setPosition(sf::Vector2f(220.f, 300.f));
-    selectDoctorBtn.setSize(sf::Vector2f(150.f, 36.f));
+    UIThemeHelper::setButtonSizeSmall(selectDoctorBtn);
     UIThemeHelper::stylePrimaryButton(selectDoctorBtn);
 
     // Step 3: Date Input
-    dateInputLabelText->setPosition(sf::Vector2f(220.f, 280.f));
-    UIThemeHelper::styleLabelText(dateInputLabelText);
-
     dateInput.setFont(regularFont);
     dateInput.setCapacity(20);
     dateInput.setPosition(sf::Vector2f(220.f, 305.f));
@@ -457,105 +495,109 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
 
     confirmDateBtn.setFont(regularFont);
     confirmDateBtn.setText("Confirm Date");
-    confirmDateBtn.setPosition(sf::Vector2f(540.f, 305.f));
-    confirmDateBtn.setSize(sf::Vector2f(120.f, 36.f));
+    confirmDateBtn.setPosition(sf::Vector2f(550.f, 305.f));
+    UIThemeHelper::setButtonSizeSmall(confirmDateBtn);
     UIThemeHelper::stylePrimaryButton(confirmDateBtn);
 
     // Step 4: Time Slots
-    timeSlotsLabelText->setPosition(sf::Vector2f(220.f, 255.f));
-    UIThemeHelper::styleLabelText(timeSlotsLabelText);
-
-    timeSlotDisplayText->setPosition(sf::Vector2f(220.f, 280.f));
-    UIThemeHelper::styleBodyText(timeSlotDisplayText);
-
-    const char *timeSlots[] = {"09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"};
-    int j;
-    for (i = 0; i < 8; i++)
+    for (int i = 0; i < 8; i++)
     {
         timeSlotButtons[i].setFont(regularFont);
+        const char *timeSlots[] = {"09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00"};
         timeSlotButtons[i].setText(timeSlots[i]);
-        j = i % 4;
+        int j = i % 4;
         int row = i / 4;
         timeSlotButtons[i].setPosition(sf::Vector2f(220.f + j * 150.f, 305.f + row * 50.f));
-        timeSlotButtons[i].setSize(sf::Vector2f(130.f, 40.f));
-        UIThemeHelper::styleMutedTimeSlotButton(timeSlotButtons[i]);
+        UIThemeHelper::setButtonSizeSmall(timeSlotButtons[i]);
+        UIThemeHelper::styleNeutralButton(timeSlotButtons[i]);
     }
 
-    // Step 5: Confirm
+    // Step 5: Confirm Booking
     confirmBookingBtn.setFont(regularFont);
     confirmBookingBtn.setText("Confirm Booking");
-    confirmBookingBtn.setPosition(sf::Vector2f(720.f, 510.f));
-    confirmBookingBtn.setSize(sf::Vector2f(160.f, 38.f));
+    confirmBookingBtn.setPosition(sf::Vector2f(700.f, 510.f));
+    UIThemeHelper::setButtonSizeSecondary(confirmBookingBtn);
     UIThemeHelper::styleSuccessButton(confirmBookingBtn);
 
     cancelBookingBtn.setFont(regularFont);
     cancelBookingBtn.setText("Cancel");
     cancelBookingBtn.setPosition(sf::Vector2f(890.f, 510.f));
-    cancelBookingBtn.setSize(sf::Vector2f(90.f, 38.f));
+    UIThemeHelper::setButtonSizeTertiary(cancelBookingBtn);
     UIThemeHelper::styleDangerButton(cancelBookingBtn);
 
-    // Previous/Next buttons
+    // Previous/Next step buttons
     previousStepBtn.setFont(regularFont);
     previousStepBtn.setText("< Previous");
     previousStepBtn.setPosition(sf::Vector2f(220.f, 510.f));
-    previousStepBtn.setSize(sf::Vector2f(90.f, 38.f));
-    UIThemeHelper::styleSecondaryButton(previousStepBtn);
+    UIThemeHelper::setButtonSizeTertiary(previousStepBtn);
+    UIThemeHelper::styleNeutralButton(previousStepBtn);
 
     nextStepBtn.setFont(regularFont);
     nextStepBtn.setText("Next >");
-    nextStepBtn.setPosition(sf::Vector2f(320.f, 510.f));
-    nextStepBtn.setSize(sf::Vector2f(90.f, 38.f));
-    UIThemeHelper::styleSecondaryButton(nextStepBtn);
+    nextStepBtn.setPosition(sf::Vector2f(340.f, 510.f));
+    UIThemeHelper::setButtonSizeTertiary(nextStepBtn);
+    UIThemeHelper::styleNeutralButton(nextStepBtn);
+
+    // Pending appointment list for cancel dialog
+    int i;
+    for (i = 0; i < 20; i++)
+    {
+        pendingAppointmentListText[i] = new sf::Text(regularFont, "", 12);
+        pendingAppointmentListText[i]->setPosition(sf::Vector2f(220.f, 225.f + i * 14.f));
+        UIThemeHelper::styleBodyText(pendingAppointmentListText[i]);
+    }
 
     // Dashboard buttons
     int startX = 130;
     int startY = 230;
-    int btnWidth = 300;
+    int btnWidth = 310;
     int btnHeight = 45;
-    int spacingX = 20;
+    int spacingX = 30;
     int spacingY = 15;
 
     bookAppointmentBtn.setFont(regularFont);
     bookAppointmentBtn.setText("Book Appointment");
     bookAppointmentBtn.setPosition(sf::Vector2f(startX, startY));
-    bookAppointmentBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(bookAppointmentBtn);
     UIThemeHelper::stylePrimaryButton(bookAppointmentBtn);
 
     cancelAppointmentBtn.setFont(regularFont);
     cancelAppointmentBtn.setText("Cancel Appointment");
     cancelAppointmentBtn.setPosition(sf::Vector2f(startX + btnWidth + spacingX, startY));
-    cancelAppointmentBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(cancelAppointmentBtn);
     UIThemeHelper::stylePrimaryButton(cancelAppointmentBtn);
 
     viewAppointmentsBtn.setFont(regularFont);
     viewAppointmentsBtn.setText("View Appointments");
     viewAppointmentsBtn.setPosition(sf::Vector2f(startX + (btnWidth + spacingX) * 2, startY));
-    viewAppointmentsBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(viewAppointmentsBtn);
     UIThemeHelper::stylePrimaryButton(viewAppointmentsBtn);
 
     viewMedicalRecordsBtn.setFont(regularFont);
     viewMedicalRecordsBtn.setText("Medical Records");
     viewMedicalRecordsBtn.setPosition(sf::Vector2f(startX, startY + btnHeight + spacingY));
-    viewMedicalRecordsBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(viewMedicalRecordsBtn);
     UIThemeHelper::stylePrimaryButton(viewMedicalRecordsBtn);
 
     viewBillsBtn.setFont(regularFont);
     viewBillsBtn.setText("View Bills");
     viewBillsBtn.setPosition(sf::Vector2f(startX + btnWidth + spacingX, startY + btnHeight + spacingY));
-    viewBillsBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(viewBillsBtn);
     UIThemeHelper::stylePrimaryButton(viewBillsBtn);
 
     payBillBtn.setFont(regularFont);
     payBillBtn.setText("Pay Bill");
     payBillBtn.setPosition(sf::Vector2f(startX + (btnWidth + spacingX) * 2, startY + btnHeight + spacingY));
-    payBillBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(payBillBtn);
     UIThemeHelper::stylePrimaryButton(payBillBtn);
 
     topUpBalanceBtn.setFont(regularFont);
     topUpBalanceBtn.setText("Top Up Balance");
     topUpBalanceBtn.setPosition(sf::Vector2f(startX, startY + (btnHeight + spacingY) * 2));
-    topUpBalanceBtn.setSize(sf::Vector2f(btnWidth, btnHeight));
+    UIThemeHelper::setButtonSizePrimary(topUpBalanceBtn);
     UIThemeHelper::stylePrimaryButton(topUpBalanceBtn);
+
+
 
     return true;
 }

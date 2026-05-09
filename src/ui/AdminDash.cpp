@@ -1,5 +1,5 @@
 #include "AdminDash.hpp"
-#include "UIThemeHelper.hpp"
+#include "../helpers/UIThemeHelper.hpp"
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 #include "../helpers/TimeHelper.hpp"
@@ -91,87 +91,115 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     dashboardCard.setPosition(sf::Vector2f(90.f, 80.f));
     UIThemeHelper::styleDashboardCard(dashboardCard);
 
-    titleText = new sf::Text(boldFont, "Admin Dashboard", 32);
-    welcomeText = new sf::Text(regularFont, "", 18);
-    statusText = new sf::Text(regularFont, "", 16);
 
+    // Header texts
+    titleText = new sf::Text(boldFont, "Admin Dashboard", 32);
+    UIThemeHelper::setTextSizeMainTitle(titleText);
     titleText->setPosition(sf::Vector2f(110.f, 100.f));
     UIThemeHelper::styleTitleText(titleText);
 
-    // Welcome text just below title
+    welcomeText = new sf::Text(regularFont, "", 18);
+    UIThemeHelper::setTextSizeBody(welcomeText);
     welcomeText->setPosition(sf::Vector2f(110.f, 140.f));
     UIThemeHelper::styleLabelText(welcomeText);
 
+    statusText = new sf::Text(regularFont, "", 16);
+    UIThemeHelper::setTextSizeSmall(statusText);
     statusText->setPosition(sf::Vector2f(110.f, 600.f));
     UIThemeHelper::styleStatusText(statusText);
 
+    // Add Doctor panel and its elements
     addDoctorPanel.setSize(sf::Vector2f(880.f, 500.f));
     addDoctorPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(addDoctorPanel);
 
     addDoctorTitleText = new sf::Text(boldFont, "Add Doctor", 24);
-    addDoctorStatusText = new sf::Text(regularFont, "", 14);
-    addDoctorNameLabelText = new sf::Text(regularFont, "Name (max 50):", 16);
-    addDoctorSpecializationLabelText = new sf::Text(regularFont, "Specialization (max 50):", 16);
-    addDoctorContactLabelText = new sf::Text(regularFont, "Contact (11 digits):", 16);
-    addDoctorPasswordLabelText = new sf::Text(regularFont, "Password (min 6):", 16);
-    addDoctorFeeLabelText = new sf::Text(regularFont, "Consultation Fee:", 16);
-
+    UIThemeHelper::setTextSizeTitle(addDoctorTitleText);
     addDoctorTitleText->setPosition(sf::Vector2f(230.f, 155.f));
     UIThemeHelper::styleTitleText(addDoctorTitleText);
+
+    addDoctorStatusText = new sf::Text(regularFont, "", 14);
+    UIThemeHelper::setTextSizeSmall(addDoctorStatusText);
     addDoctorStatusText->setPosition(sf::Vector2f(230.f, 588.f));
     UIThemeHelper::styleStatusText(addDoctorStatusText);
 
+    addDoctorNameLabelText = new sf::Text(regularFont, "Name (max 50):", 16);
+    UIThemeHelper::setTextSizeLabel(addDoctorNameLabelText);
     addDoctorNameLabelText->setPosition(sf::Vector2f(230.f, 205.f));
-    addDoctorSpecializationLabelText->setPosition(sf::Vector2f(230.f, 275.f));
-    addDoctorContactLabelText->setPosition(sf::Vector2f(230.f, 345.f));
-    addDoctorPasswordLabelText->setPosition(sf::Vector2f(230.f, 415.f));
-    addDoctorFeeLabelText->setPosition(sf::Vector2f(230.f, 485.f));
-
     UIThemeHelper::styleLabelText(addDoctorNameLabelText);
+
+    addDoctorSpecializationLabelText = new sf::Text(regularFont, "Specialization (max 50):", 16);
+    UIThemeHelper::setTextSizeLabel(addDoctorSpecializationLabelText);
+    addDoctorSpecializationLabelText->setPosition(sf::Vector2f(230.f, 275.f));
     UIThemeHelper::styleLabelText(addDoctorSpecializationLabelText);
+
+    addDoctorContactLabelText = new sf::Text(regularFont, "Contact (11 digits):", 16);
+    UIThemeHelper::setTextSizeLabel(addDoctorContactLabelText);
+    addDoctorContactLabelText->setPosition(sf::Vector2f(230.f, 345.f));
     UIThemeHelper::styleLabelText(addDoctorContactLabelText);
+
+    addDoctorPasswordLabelText = new sf::Text(regularFont, "Password (min 6):", 16);
+    UIThemeHelper::setTextSizeLabel(addDoctorPasswordLabelText);
+    addDoctorPasswordLabelText->setPosition(sf::Vector2f(230.f, 415.f));
     UIThemeHelper::styleLabelText(addDoctorPasswordLabelText);
+
+    addDoctorFeeLabelText = new sf::Text(regularFont, "Consultation Fee:", 16);
+    UIThemeHelper::setTextSizeLabel(addDoctorFeeLabelText);
+    addDoctorFeeLabelText->setPosition(sf::Vector2f(230.f, 485.f));
     UIThemeHelper::styleLabelText(addDoctorFeeLabelText);
 
     addDoctorNameInput = UITextBox(regularFont, sf::Vector2f(230.f, 230.f), sf::Vector2f(820.f, 38.f), 50);
-    addDoctorSpecializationInput = UITextBox(regularFont, sf::Vector2f(230.f, 300.f), sf::Vector2f(820.f, 38.f), 50);
-    addDoctorContactInput = UITextBox(regularFont, sf::Vector2f(230.f, 370.f), sf::Vector2f(820.f, 38.f), 11);
-    addDoctorPasswordInput = UITextBox(regularFont, sf::Vector2f(230.f, 440.f), sf::Vector2f(820.f, 38.f), 50);
-    addDoctorFeeInput = UITextBox(regularFont, sf::Vector2f(230.f, 510.f), sf::Vector2f(820.f, 38.f), 20);
-
     UIThemeHelper::styleInput(addDoctorNameInput);
+
+    addDoctorSpecializationInput = UITextBox(regularFont, sf::Vector2f(230.f, 300.f), sf::Vector2f(820.f, 38.f), 50);
     UIThemeHelper::styleInput(addDoctorSpecializationInput);
+
+    addDoctorContactInput = UITextBox(regularFont, sf::Vector2f(230.f, 370.f), sf::Vector2f(820.f, 38.f), 11);
     UIThemeHelper::styleInput(addDoctorContactInput);
+
+    addDoctorPasswordInput = UITextBox(regularFont, sf::Vector2f(230.f, 440.f), sf::Vector2f(820.f, 38.f), 50);
     UIThemeHelper::styleInput(addDoctorPasswordInput);
+
+    addDoctorFeeInput = UITextBox(regularFont, sf::Vector2f(230.f, 510.f), sf::Vector2f(820.f, 38.f), 20);
     UIThemeHelper::styleInput(addDoctorFeeInput);
 
     confirmAddDoctorBtn = UIButton(regularFont, "Add Doctor", sf::Vector2f(850.f, 560.f), sf::Vector2f(200.f, 40.f));
+    UIThemeHelper::setButtonSizeSecondary(confirmAddDoctorBtn);
     confirmAddDoctorBtn.setFillColor(sf::Color(39, 174, 96));
     confirmAddDoctorBtn.setOutlineColor(sf::Color(39, 174, 96));
     confirmAddDoctorBtn.setTextColor(sf::Color::White);
 
     backFromAddDoctorBtn = UIButton(regularFont, "Back", sf::Vector2f(740.f, 560.f), sf::Vector2f(90.f, 40.f));
-    UIThemeHelper::styleSecondaryButton(backFromAddDoctorBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromAddDoctorBtn);
+    UIThemeHelper::styleNeutralButton(backFromAddDoctorBtn);
 
+    // Remove Doctor panel and elements
     removeDoctorPanel.setSize(sf::Vector2f(880.f, 500.f));
     removeDoctorPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(removeDoctorPanel);
 
     removeDoctorTitleText = new sf::Text(boldFont, "Remove Doctor", 24);
-    removeDoctorStatusText = new sf::Text(regularFont, "", 14);
-    removeDoctorLabelText = new sf::Text(regularFont, "ID | Name | Specialization | Fee", 15);
-    removeDoctorIdLabelText = new sf::Text(regularFont, "Enter Doctor ID to remove:", 16);
-    removeDoctorPageInfoText = new sf::Text(regularFont, "", 14);
-
+    UIThemeHelper::setTextSizeTitle(removeDoctorTitleText);
     removeDoctorTitleText->setPosition(sf::Vector2f(230.f, 155.f));
     UIThemeHelper::styleTitleText(removeDoctorTitleText);
-    removeDoctorStatusText->setPosition(sf::Vector2f(230.f, 588.f));
+
+    removeDoctorStatusText = new sf::Text(regularFont, "", 14);
+    UIThemeHelper::setTextSizeSmall(removeDoctorStatusText);
+    removeDoctorStatusText->setPosition(sf::Vector2f(730.f, 518.f));
     UIThemeHelper::styleStatusText(removeDoctorStatusText);
+
+    removeDoctorLabelText = new sf::Text(regularFont, "ID | Name | Specialization | Fee", 15);
+    UIThemeHelper::setTextSizeBody(removeDoctorLabelText);
     removeDoctorLabelText->setPosition(sf::Vector2f(230.f, 215.f));
     UIThemeHelper::styleLabelText(removeDoctorLabelText);
+
+    removeDoctorIdLabelText = new sf::Text(regularFont, "Enter Doctor ID to remove:", 16);
+    UIThemeHelper::setTextSizeLabel(removeDoctorIdLabelText);
     removeDoctorIdLabelText->setPosition(sf::Vector2f(230.f, 520.f));
     UIThemeHelper::styleLabelText(removeDoctorIdLabelText);
+
+    removeDoctorPageInfoText = new sf::Text(regularFont, "", 14);
+    UIThemeHelper::setTextSizeSmall(removeDoctorPageInfoText);
     removeDoctorPageInfoText->setPosition(sf::Vector2f(470.f, 570.f));
     UIThemeHelper::styleLabelText(removeDoctorPageInfoText);
 
@@ -179,45 +207,57 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     UIThemeHelper::styleInput(removeDoctorIdInput);
 
     confirmRemoveDoctorBtn = UIButton(regularFont, "Remove", sf::Vector2f(850.f, 560.f), sf::Vector2f(200.f, 40.f));
-    UIThemeHelper::styleCriticalButton(confirmRemoveDoctorBtn);
+    UIThemeHelper::setButtonSizeSecondary(confirmRemoveDoctorBtn);
+    UIThemeHelper::styleDangerButton(confirmRemoveDoctorBtn);
 
     backFromRemoveDoctorBtn = UIButton(regularFont, "Back", sf::Vector2f(740.f, 560.f), sf::Vector2f(90.f, 40.f));
-    UIThemeHelper::styleSecondaryButton(backFromRemoveDoctorBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromRemoveDoctorBtn);
+    UIThemeHelper::styleNeutralButton(backFromRemoveDoctorBtn);
 
     removeDoctorPrevBtn = UIButton(regularFont, "Prev", sf::Vector2f(230.f, 560.f), sf::Vector2f(100.f, 40.f));
+    UIThemeHelper::setButtonSizeTertiary(removeDoctorPrevBtn);
     UIThemeHelper::stylePrimaryButton(removeDoctorPrevBtn);
 
     removeDoctorNextBtn = UIButton(regularFont, "Next", sf::Vector2f(345.f, 560.f), sf::Vector2f(100.f, 40.f));
+    UIThemeHelper::setButtonSizeTertiary(removeDoctorNextBtn);
     UIThemeHelper::stylePrimaryButton(removeDoctorNextBtn);
 
+    // Discharge Patient panel and elements
     dischargePatientPanel.setSize(sf::Vector2f(880.f, 500.f));
     dischargePatientPanel.setPosition(sf::Vector2f(200.f, 130.f));
     UIThemeHelper::stylePanel(dischargePatientPanel);
 
     dischargePatientTitleText = new sf::Text(boldFont, "Discharge Patient", 24);
-    dischargePatientStatusText = new sf::Text(regularFont, "", 14);
-    dischargePatientIdLabelText = new sf::Text(regularFont, "Enter Patient ID:", 16);
-
+    UIThemeHelper::setTextSizeTitle(dischargePatientTitleText);
     dischargePatientTitleText->setPosition(sf::Vector2f(230.f, 155.f));
     UIThemeHelper::styleTitleText(dischargePatientTitleText);
-    dischargePatientStatusText->setPosition(sf::Vector2f(230.f, 588.f));
+
+    dischargePatientStatusText = new sf::Text(regularFont, "", 14);
+    UIThemeHelper::setTextSizeSmall(dischargePatientStatusText);
+    dischargePatientStatusText->setPosition(sf::Vector2f(730.f, 518.f));
     UIThemeHelper::styleStatusText(dischargePatientStatusText);
-    dischargePatientIdLabelText->setPosition(sf::Vector2f(230.f, 215.f));
+
+    dischargePatientIdLabelText = new sf::Text(regularFont, "Enter Patient ID:", 16);
+    UIThemeHelper::setTextSizeLabel(dischargePatientIdLabelText);
+    dischargePatientIdLabelText->setPosition(sf::Vector2f(230.f, 515.f));
     UIThemeHelper::styleLabelText(dischargePatientIdLabelText);
 
-    dischargePatientIdInput = UITextBox(regularFont, sf::Vector2f(470.f, 208.f), sf::Vector2f(140.f, 36.f), 10);
+    dischargePatientIdInput = UITextBox(regularFont, sf::Vector2f(470.f, 508.f), sf::Vector2f(140.f, 36.f), 10);
     UIThemeHelper::styleInput(dischargePatientIdInput);
 
     confirmDischargePatientBtn = UIButton(regularFont, "Discharge", sf::Vector2f(850.f, 560.f), sf::Vector2f(200.f, 40.f));
-    UIThemeHelper::styleCriticalButton(confirmDischargePatientBtn);
+    UIThemeHelper::setButtonSizeSecondary(confirmDischargePatientBtn);
+    UIThemeHelper::styleDangerButton(confirmDischargePatientBtn);
 
     backFromDischargePatientBtn = UIButton(regularFont, "Back", sf::Vector2f(740.f, 560.f), sf::Vector2f(90.f, 40.f));
-    UIThemeHelper::styleSecondaryButton(backFromDischargePatientBtn);
+    UIThemeHelper::setButtonSizeTertiary(backFromDischargePatientBtn);
+    UIThemeHelper::styleNeutralButton(backFromDischargePatientBtn);
 
     int removeIndex;
     for (removeIndex = 0; removeIndex < 30; removeIndex++)
     {
         removeDoctorListText[removeIndex] = new sf::Text(regularFont, "", 14);
+        UIThemeHelper::setTextSizeBody(removeDoctorListText[removeIndex]);
         removeDoctorListText[removeIndex]->setPosition(sf::Vector2f(230.f, 240.f + (removeIndex * 18.f)));
         UIThemeHelper::styleBodyText(removeDoctorListText[removeIndex]);
     }
@@ -246,6 +286,7 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     for (int i = 0; i < 9; i++)
     {
         btns[i]->setFont(regularFont);
+        UIThemeHelper::setButtonSizePrimary(*btns[i]);
         UIThemeHelper::stylePrimaryButton(*btns[i]);
     }
 

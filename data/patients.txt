@@ -20,3 +20,4 @@ patient_id,name,age,gender,contact,password,balance
 21,Ibrahim Noor,18,M,03010010009,ibrahim,0.00
 22,Jenna Fox,27,F,03010010010,jenna!23,80.00
 23,Khalid Malik,55,M,03010010011,khalidpass,250.00
+24,New Test,20,F,12345678907,pass123,0.00

@@ -53,13 +53,6 @@ void UIThemeHelper::styleInput(UITextBox &input)
     input.setTextColor(sf::Color(44, 62, 80));
 }
 
-void UIThemeHelper::styleSoftInput(UITextBox &input)
-{
-    input.setFillColor(sf::Color(250, 251, 252));
-    input.setOutlineColor(sf::Color(200, 205, 210));
-    input.setTextColor(sf::Color(44, 62, 80));
-}
-
 void UIThemeHelper::stylePrimaryButton(UIButton &button)
 {
     button.setFillColor(sf::Color(52, 152, 219));
@@ -81,20 +74,6 @@ void UIThemeHelper::styleDangerButton(UIButton &button)
     button.setTextColor(sf::Color::White);
 }
 
-void UIThemeHelper::styleCriticalButton(UIButton &button)
-{
-    button.setFillColor(sf::Color(230, 80, 80));
-    button.setOutlineColor(sf::Color(230, 80, 80));
-    button.setTextColor(sf::Color::White);
-}
-
-void UIThemeHelper::styleSecondaryButton(UIButton &button)
-{
-    button.setFillColor(sf::Color(149, 165, 166));
-    button.setOutlineColor(sf::Color(149, 165, 166));
-    button.setTextColor(sf::Color::White);
-}
-
 void UIThemeHelper::styleNeutralButton(UIButton &button)
 {
     button.setFillColor(sf::Color(230, 235, 240));
@@ -102,16 +81,79 @@ void UIThemeHelper::styleNeutralButton(UIButton &button)
     button.setTextColor(sf::Color(44, 62, 80));
 }
 
-void UIThemeHelper::styleSelectedOptionButton(UIButton &button)
+void UIThemeHelper::styleSelectedButton(UIButton &button)
 {
     button.setFillColor(sf::Color(200, 200, 200));
     button.setOutlineColor(sf::Color(170, 170, 170));
     button.setTextColor(sf::Color(44, 62, 80));
 }
 
-void UIThemeHelper::styleMutedTimeSlotButton(UIButton &button)
+void UIThemeHelper::setButtonSizePrimary(UIButton &button)
 {
-    button.setFillColor(sf::Color(189, 195, 199));
-    button.setOutlineColor(sf::Color(189, 195, 199));
-    button.setTextColor(sf::Color::White);
+    button.setSize(sf::Vector2f(300.f, 45.f));
+}
+
+void UIThemeHelper::setButtonSizeSecondary(UIButton &button)
+{
+    button.setSize(sf::Vector2f(180.f, 38.f));
+}
+
+void UIThemeHelper::setButtonSizeTertiary(UIButton &button)
+{
+    button.setSize(sf::Vector2f(90.f, 38.f));
+}
+
+void UIThemeHelper::setButtonSizeSmall(UIButton &button)
+{
+    button.setSize(sf::Vector2f(120.f, 36.f));
+}
+
+void UIThemeHelper::setButtonSizeMedium(UIButton &button)
+{
+    button.setSize(sf::Vector2f(180.f, 38.f));
+}
+
+void UIThemeHelper::setButtonSizeWide(UIButton &button)
+{
+    button.setSize(sf::Vector2f(560.f, 50.f));
+}
+
+void UIThemeHelper::setTextSizeMainTitle(sf::Text *text)
+{
+    if (text != nullptr)
+    {
+        text->setCharacterSize(28);
+    }
+}
+
+void UIThemeHelper::setTextSizeTitle(sf::Text *text)
+{
+    if (text != nullptr)
+    {
+        text->setCharacterSize(24);
+    }
+}
+
+void UIThemeHelper::setTextSizeLabel(sf::Text *text)
+{
+    if (text != nullptr)
+    {
+        text->setCharacterSize(16);
+    }
+}
+
+void UIThemeHelper::setTextSizeBody(sf::Text *text)
+{
+    if (text != nullptr)
+    {
+        text->setCharacterSize(14);
+    }
+}
+
+void UIThemeHelper::setTextSizeSmall(sf::Text *text)
+{
+    if (text != nullptr)
+    {
+        text->setCharacterSize(12);
+    }
 }
