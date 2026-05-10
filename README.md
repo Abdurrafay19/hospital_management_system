@@ -1,4 +1,4 @@
-# MediCore — Comprehensive Hospital Management System
+# [MediCore — Comprehensive Hospital Management System](https://github.com/Abdurrafay19/hospital_management_system)
 
 ![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![C++ Standard: C++17](https://img.shields.io/badge/C%2B%2B-17-blue) ![License: Educational](https://img.shields.io/badge/License-Educational-yellow)
 
@@ -32,7 +32,7 @@
 - **Doctors:** Manage daily appointments, write prescriptions, access patient medical history
 - **Administrators:** Oversee system-wide operations, discharge patients, generate reports, monitor security logs
 
-The system enforces strict object-oriented design principles: zero `std::string` usage, zero STL containers, manual memory management, dynamic allocation for all data structures, and custom container implementation (`Storage<T>`). All data persists immediately to CSV files, ensuring system reliability across restarts.
+The system enforces strict object-oriented design principles: manual memory management, dynamic allocation for all data structures, and custom container implementation (`Storage<T>`). All data persists immediately to CSV files, ensuring system reliability across restarts.
 
 ---
 
@@ -168,12 +168,10 @@ cd bin/Debug
 SFML-OOP-Project/
 ├── CMakeLists.txt
 ├── README.md
-├── PROJECT_SPECS.md
-├── IMPLEMENTATION_PLAN.md
-├── UI_IMPLEMENTATION_PLAN.md
 ├── assets/
 │   └── fonts/
-│       └── Roboto-Regular.ttf
+│       ├── font.ttf
+│       └── font-bold.ttf
 ├── data/
 │   ├── patients.txt
 │   ├── doctors.txt
@@ -382,63 +380,31 @@ std::exception
 **patients.txt**
 ```csv
 patient_id,name,age,gender,contact,password,balance
-1,Ahmed Ali,28,M,03001234567,pass123,500400.00
 ```
 
 **doctors.txt**
 ```csv
 doctor_id,name,specialization,contact,password,fee
-1,Sara Khan,Cardiology,03111234567,doc456,1500.00
 ```
 
 **appointments.txt**
 ```csv
 appointment_id,patient_id,doctor_id,date,time,status
-1,1,1,09-05-2026,09:00,pending
 ```
 
 **bills.txt**
 ```csv
 bill_id,patient_id,appointment_id,amount,status,date
-1,1,1,1500.00,paid,01-05-2026
 ```
 
 **prescriptions.txt**
 ```csv
 prescription_id,appointment_id,patient_id,doctor_id,date,medicines,notes
-1,1,1,1,01-05-2026,Paracetamol 500mg;Omeprazole 20mg,Take after breakfast
 ```
 
 **security_log.txt**
 ```csv
 timestamp,role,entered_id,result
-01-05-2026 08:15:22,Patient,1,SUCCESS
-02-05-2026 07:47:15,Patient,5,LOCKED
-```
-
----
-
-## 🔄 User Workflows
-
-### Patient: Book Appointment
-```
-Select "Patient" → Login → Dashboard
-→ "Book Appointment" → Enter specialization → Select doctor
-→ Select date & time → Confirm (balance debited, appointment & bill created)
-```
-
-### Doctor: Complete Appointment
-```
-Select "Doctor" → Login → View Today's Appointments
-→ Select appointment → "Mark Complete" → "Write Prescription"
-→ Enter medicines & notes → Submit
-```
-
-### Admin: Discharge Patient
-```
-Select "Admin" → Login → "Discharge Patient"
-→ Select patient (no unpaid bills/pending appts) → Confirm
-→ Patient archived, removed from active system
 ```
 
 ---
