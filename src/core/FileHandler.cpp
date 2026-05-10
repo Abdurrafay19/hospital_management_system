@@ -153,7 +153,6 @@ void FileHandler::loadAppointments(Storage<Appointment> &storage)
     {
         fields[i] = new char[MAX_FIELD_BUFFER];
     }
-    // skip header line
     file.getline(line, MAX_LINE_BUFFER);
 
     while (file.getline(line, MAX_LINE_BUFFER))
@@ -198,7 +197,6 @@ void FileHandler::loadBills(Storage<Bill> &storage)
     {
         fields[i] = new char[MAX_FIELD_BUFFER];
     }
-    // skip header line
     file.getline(line, MAX_LINE_BUFFER);
 
     while (file.getline(line, MAX_LINE_BUFFER))
@@ -571,7 +569,6 @@ void FileHandler::saveAllPatients(Storage<Patient> &storage)
     std::ofstream file;
     int i;
 
-    // Truncate and write header
     if (FilePathHelper::openOutputDataFile(file, "patients.txt", std::ios::out))
     {
         file << "patient_id,name,age,gender,contact,password,balance\n";
@@ -621,7 +618,6 @@ void FileHandler::saveAllAdmins(Storage<Admin> &storage)
     std::ofstream file;
     int i;
 
-    // Truncate and write header
     if (FilePathHelper::openOutputDataFile(file, "admin.txt", std::ios::out))
     {
         file << "admin_id,name,password\n";
@@ -639,7 +635,6 @@ void FileHandler::saveAllAppointments(Storage<Appointment> &storage)
     std::ofstream file;
     int i;
 
-    // Truncate and write header
     if (FilePathHelper::openOutputDataFile(file, "appointments.txt", std::ios::out))
     {
         file << "appointment_id,patient_id,doctor_id,date,time,status\n";
@@ -657,7 +652,6 @@ void FileHandler::saveAllBills(Storage<Bill> &storage)
     std::ofstream file;
     int i;
 
-    // Truncate and write header
     if (FilePathHelper::openOutputDataFile(file, "bills.txt", std::ios::out))
     {
         file << "bill_id,patient_id,appointment_id,amount,status,date\n";
@@ -675,7 +669,6 @@ void FileHandler::saveAllPrescriptions(Storage<Prescription> &storage)
     std::ofstream file;
     int i;
 
-    // Truncate and write header
     if (FilePathHelper::openOutputDataFile(file, "prescriptions.txt", std::ios::out))
     {
         file << "prescription_id,appointment_id,patient_id,doctor_id,date,medicines,notes\n";

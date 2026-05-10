@@ -50,8 +50,6 @@ private:
     bool signupRequested;
 
     char statusMessage[200];
-
-    void updateRoleLabel();
     bool validateSignupInputs(char *errorMessage);
 
 public:

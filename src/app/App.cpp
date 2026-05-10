@@ -1389,7 +1389,6 @@ void App::attemptLogin()
         adminDash.closeAddDoctorMode();
         adminDash.closeRemoveDoctorMode();
         adminDash.setStatus("");
-        // Show welcome message with admin name
         if (user != nullptr)
         {
             adminDash.setWelcome(user->getName());
@@ -1416,7 +1415,6 @@ void App::attemptSignup()
     contact = loginScreen.getEnteredContact();
     password = loginScreen.getEnteredSignupPassword();
 
-    // Validate inputs
     if (StringHelper::stringLength(name) < 2)
     {
         loginScreen.setStatus("Name must be at least 2 characters");
@@ -1443,19 +1441,14 @@ void App::attemptSignup()
         return;
     }
 
-    // Generate new patient ID
     newID = system.getNextPatientID();
 
-    // Create new patient with initial balance of 0
     newPatient = Patient(newID, name, password, age, gender, contact, 0.0);
 
-    // Save to file
     FileHandler::savePatient(newPatient, true);
 
-    // Add to system's patient storage
     system.getPatients().add(newPatient);
 
-    // Show success message with new patient ID
     successMsg[0] = '\0';
     StringHelper::stringCopy(successMsg, "New account created with ID: ", 200);
     i = StringHelper::stringLength(successMsg);

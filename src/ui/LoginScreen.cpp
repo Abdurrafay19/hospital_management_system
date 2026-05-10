@@ -3,10 +3,6 @@
 #include "../helpers/StringHelper.hpp"
 #include "../helpers/ConversionHelper.hpp"
 
-void LoginScreen::updateRoleLabel()
-{
-    // Deprecated - role label is now shown via nameLabel as ID field
-}
 
 bool LoginScreen::validateSignupInputs(char *errorMessage)
 {
@@ -211,8 +207,7 @@ LoginScreen &LoginScreen::operator=(const LoginScreen &other)
 bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFont)
 {
     // Card background setup
-    // Center card: say 640x540. Center it at 1280/2 = 640, 720/2 = 360.
-    // Top-left of card = (640-320, 360-270) = (320, 90)
+    // Top-left of card
     float startX = 320.f;
     float startY = 90.f;
 
@@ -221,8 +216,7 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
     UIThemeHelper::styleDashboardCard(cardBackground);
 
     // Login UI setup
-    // Base layout coordinates derived from the card's startX and startY.
-    // Inner padding of 40px left/right
+    // Inner padding
     float innerX = startX + 40.f;
     float row1Y = startY + 120.f;
 
@@ -237,18 +231,18 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
     loginButton = UIButton(boldFont, "Login", sf::Vector2f(innerX, loginBtnY), sf::Vector2f(560.f, 50.f));
     UIThemeHelper::setButtonSizeWide(loginButton);
 
-    // Toggle Mode / Back button (will be moved Top-Left inside card)
+    // Toggle Mode / Back button
     toggleModeButton = UIButton(regularFont, "Sign Up", sf::Vector2f(innerX, startY + 430.f), sf::Vector2f(560.f, 50.f));
     UIThemeHelper::setButtonSizeWide(toggleModeButton);
 
-    // Patient is selected by default, so use darker gray
+    // Patient is selected by default
     UIThemeHelper::styleSelectedButton(patientRoleButton);
     UIThemeHelper::styleNeutralButton(doctorRoleButton);
     UIThemeHelper::styleNeutralButton(adminRoleButton);
     UIThemeHelper::stylePrimaryButton(loginButton);
     UIThemeHelper::styleNeutralButton(toggleModeButton);
 
-    // Login form: ID and Password (Contact field reused for signup)
+    // Login form: ID and Password
     nameInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 210.f), sf::Vector2f(560.f, 40.f), 50);
     passwordInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(560.f, 40.f), 30);
     contactInput = UITextBox(regularFont, sf::Vector2f(innerX, startY + 280.f), sf::Vector2f(270.f, 40.f), 11);
@@ -277,7 +271,7 @@ bool LoginScreen::initialize(const sf::Font &regularFont, const sf::Font &boldFo
     UIThemeHelper::setButtonSizeWide(signupButton);
     UIThemeHelper::styleSuccessButton(signupButton);
 
-    // Text labels setup (grouped: creation + position + style)
+    // Text labels setup
     titleText = new sf::Text(boldFont, "MediCore", 40);
     UIThemeHelper::setTextSizeMainTitle(titleText);
     {
@@ -693,8 +687,6 @@ void LoginScreen::setSignupMode(bool signupMode)
     }
     else
     {
-        // Transitioning back to login mode - reset all UI positions and states
-        // Don't clear status here - let the caller set the appropriate message
         selectedGender[0] = '\0';
 
         float startX = 320.f;

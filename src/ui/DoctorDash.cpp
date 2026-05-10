@@ -313,7 +313,7 @@ bool DoctorDash::initialize(const sf::Font &regularFontParam, const sf::Font &bo
         UIThemeHelper::styleBodyText(todayAppointmentListText[i]);
     }
 
-    // Buttons list (positioned in a 3-column grid like AdminDash)
+    // Buttons list
     sf::Vector2f btnSize(320.f, 48.f);
     float startX = 120.f;
     float startY = 240.f;

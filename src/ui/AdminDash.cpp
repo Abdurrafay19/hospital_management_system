@@ -86,7 +86,6 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     regularFont = regularFontParam;
     boldFont = boldFontParam;
 
-    // Fit within 1280x720 window (leave some margin at bottom)
     dashboardCard.setSize(sf::Vector2f(1100.f, 560.f));
     dashboardCard.setPosition(sf::Vector2f(90.f, 80.f));
     UIThemeHelper::styleDashboardCard(dashboardCard);
@@ -267,7 +266,6 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     float hGap = 20.f;
     float vGap = 24.f;
 
-    // Create and style buttons (positioned in a 3-column grid)
     addDoctorBtn = UIButton(regularFont, "Add Doctor", sf::Vector2f(startX, startY), btnSize);
     removeDoctorBtn = UIButton(regularFont, "Remove Doctor", sf::Vector2f(startX + (btnSize.x + hGap), startY), btnSize);
     viewAllPatientsBtn = UIButton(regularFont, "View All Patients", sf::Vector2f(startX + 2 * (btnSize.x + hGap), startY), btnSize);
@@ -280,7 +278,6 @@ bool AdminDash::initialize(const sf::Font &regularFontParam, const sf::Font &bol
     viewSecurityLogBtn = UIButton(regularFont, "View Security Log", sf::Vector2f(startX + (btnSize.x + hGap), startY + 2 * (btnSize.y + vGap)), btnSize);
     generateDailyReportBtn = UIButton(regularFont, "Generate Daily Report", sf::Vector2f(startX + 2 * (btnSize.x + hGap), startY + 2 * (btnSize.y + vGap)), btnSize);
 
-    // Style buttons to match DoctorDash appearance
     UIButton *btns[9] = {&addDoctorBtn, &removeDoctorBtn, &viewAllPatientsBtn, &viewAllDoctorsBtn, &viewAllAppointmentsBtn, &viewUnpaidBillsBtn, &dischargePatientBtn, &viewSecurityLogBtn, &generateDailyReportBtn};
     for (int i = 0; i < 9; i++)
     {
@@ -414,7 +411,7 @@ void AdminDash::draw(sf::RenderWindow &window) const
         dischargePatientIdInput.draw(window);
         confirmDischargePatientBtn.draw(window);
         backFromDischargePatientBtn.draw(window);
-        // If a paged patients view is active, render its list inside this panel
+
         if (pagedListViewType == PAGED_LIST_PATIENTS)
         {
             int i;
@@ -1029,12 +1026,8 @@ void AdminDash::startPagedListMode(PagedListViewType viewType)
     removeDoctorIdInput.clear();
     removeDoctorIdInput.setActive(false);
 
-    // If we're opening the patients paged view inside discharge mode, do not switch to the
-    // standalone removeDoctorMode panel. This keeps the patients list embedded in the
-    // discharge patient panel when that mode is active.
     if (viewType == PAGED_LIST_PATIENTS && dischargePatientMode)
     {
-        // clear any text-only id input used for remove-doctor flow
         removeDoctorIdInput.setText("");
     }
     else
@@ -1051,7 +1044,6 @@ void AdminDash::startPagedListMode(PagedListViewType viewType)
 
 void AdminDash::closePagedListMode()
 {
-    // Close the paged-list view while preserving any active discharge panel state.
     removeDoctorMode = false;
     pagedListViewType = PAGED_LIST_NONE;
     removeDoctorSubmitRequested = false;
@@ -1074,8 +1066,6 @@ void AdminDash::setPagedListHeader(const char *title, const char *header, const 
         removeDoctorIdLabelText->setString(prompt != nullptr ? prompt : "");
     }
 }
-
-// Helper implementations moved to src/helpers/* (StringHelper, DataHelper, TimeHelper)
 
 void AdminDash::setDoctorsForView(Storage<Doctor> *doctors)
 {

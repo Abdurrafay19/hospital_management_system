@@ -16,7 +16,6 @@
 class FileHandler
 {
 public:
-    // Load methods
     static void loadPatients(Storage<Patient> &storage);
     static void loadDoctors(Storage<Doctor> &storage);
     static void loadAdmin(Storage<Admin> &storage);
@@ -26,7 +25,6 @@ public:
     static int loadSecurityLogLines(char *lines, int maxItems, int lineLength);
     static void saveSecurityLogEntry(const char *timestamp, const char *role, const char *enteredID, const char *result);
 
-    // Save methods (append or overwrite)
     static void savePatient(const Patient &patient, bool append = true);
     static void saveDoctor(const Doctor &doctor, bool append = true);
     static void saveAdmin(const Admin &admin, bool append = true);

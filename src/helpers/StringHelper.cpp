@@ -50,6 +50,45 @@ bool StringHelper::textEqualsIgnoreCase(const char *left, const char *right)
     return left[i] == '\0' && right[i] == '\0';
 }
 
+bool StringHelper::textContainsIgnoreCase(const char *text, const char *search)
+{
+    int textIndex;
+    int searchIndex;
+
+    if (text == nullptr || search == nullptr)
+    {
+        return false;
+    }
+
+    if (search[0] == '\0')
+    {
+        return true;
+    }
+
+    textIndex = 0;
+    while (text[textIndex] != '\0')
+    {
+        searchIndex = 0;
+        while (text[textIndex + searchIndex] != '\0' && search[searchIndex] != '\0')
+        {
+            if (toLowerASCII(text[textIndex + searchIndex]) != toLowerASCII(search[searchIndex]))
+            {
+                break;
+            }
+            searchIndex++;
+        }
+
+        if (search[searchIndex] == '\0')
+        {
+            return true;
+        }
+
+        textIndex++;
+    }
+
+    return false;
+}
+
 int StringHelper::compareText(const char *left, const char *right)
 {
     int index;
@@ -218,20 +257,4 @@ void StringHelper::appendTextField(char *destination, int destinationSize, const
 
     len = StringHelper::stringLength(destination);
     StringHelper::stringCopy(destination + len, text, destinationSize - len);
-}
-
-void StringHelper::appendIntField(char *destination, int destinationSize, int value)
-{
-    char buffer[32];
-
-    ConversionHelper::intToString(value, buffer);
-    appendTextField(destination, destinationSize, buffer);
-}
-
-void StringHelper::appendDoubleField(char *destination, int destinationSize, double value)
-{
-    char buffer[32];
-
-    ConversionHelper::doubleToString(value, buffer);
-    appendTextField(destination, destinationSize, buffer);
 }

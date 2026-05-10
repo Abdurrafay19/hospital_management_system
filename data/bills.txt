@@ -23,3 +23,5 @@ bill_id,patient_id,appointment_id,amount,status,date
 22,1,22,1500.00,unpaid,10-05-2026
 23,1,23,2000.00,unpaid,10-05-2026
 24,2,24,1500.00,unpaid,10-05-2026
+25,1,25,1500.00,unpaid,11-05-2026
+26,2,26,1500.00,unpaid,11-05-2026

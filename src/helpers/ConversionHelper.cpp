@@ -176,8 +176,6 @@ void ConversionHelper::doubleToString(double value, char *buffer)
 
     intPart = static_cast<int>(value);
     decPart = value - intPart;
-
-    // Write integer part manually to avoid intToString inconsistencies
     int idx = i;
     if (intPart == 0)
     {
@@ -193,7 +191,6 @@ void ConversionHelper::doubleToString(double value, char *buffer)
             rev[revLen++] = static_cast<char>('0' + (tempInt % 10));
             tempInt = tempInt / 10;
         }
-        // reverse
         int k;
         for (k = revLen - 1; k >= 0; k--)
         {

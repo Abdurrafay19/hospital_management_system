@@ -23,3 +23,5 @@ appointment_id,patient_id,doctor_id,date,time,status
 22,1,1,10-05-2026,13:00,pending
 23,1,7,10-05-2026,10:00,pending
 24,2,1,10-05-2026,14:00,pending
+25,1,1,11-05-2026,09:00,pending
+26,2,6,11-05-2026,09:00,pending

@@ -1,117 +1,506 @@
-# CMake SFML Project Template
+# MediCore — Comprehensive Hospital Management System
 
-This repository template should allow for a fast and hassle-free kick start of your next SFML project using CMake.
-Thanks to [GitHub's nature of templates](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template), you can fork this repository without inheriting its Git history.
+![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![C++ Standard: C++17](https://img.shields.io/badge/C%2B%2B-17-blue) ![License: Educational](https://img.shields.io/badge/License-Educational-yellow)
 
-The template starts out very basic, but might receive additional features over time:
+**MediCore** is a full-featured, file-persistent hospital management system built with modern C++17 and SFML 3.1.0. It provides a secure, role-based interface for managing patient appointments, medical records, prescriptions, billing, and administrative operations. Designed as a capstone Object-Oriented Programming (OOP) project emphasizing low-level memory management, custom data structures, and enterprise-grade software architecture.
 
-- Basic CMake script to build your project and link SFML on any operating system
-- Basic [GitHub Actions](https://github.com/features/actions) script for all major platforms
+---
 
-## Quick start
+## 📋 Table of Contents
 
-### Command line
+- [Project Overview](#project-overview)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [Installation & Setup](#installation--setup)
+- [Project Structure](#project-structure)
+- [Architecture & Design Patterns](#architecture--design-patterns)
+- [Entity Model & Class Hierarchy](#entity-model--class-hierarchy)
+- [Core Components](#core-components)
+- [File Format Specifications](#file-format-specifications)
+- [User Workflows](#user-workflows)
+- [Build & Compilation](#build--compilation)
+- [Security Features](#security-features)
+- [Known Limitations & Future Enhancements](#known-limitations--future-enhancements)
 
-1. Install [Git](https://git-scm.com/downloads) and [CMake](https://cmake.org/download/). Use your system's package manager if available.
-2. Follow [GitHub's instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) for how to use their project template feature to create your own project. If you don't want to use GitHub, see the section below.
-3. Clone your new GitHub repo and open the repo in your text editor of choice.
-4. Open [CMakeLists.txt](CMakeLists.txt). Rename the project and the target name of the executable to whatever name you want. Make sure to change all occurrences.
-5. If you want to add or remove any .cpp files, change the source files listed in the `add_executable` call in CMakeLists.txt to match the source files your project requires. If you plan on keeping the default main.cpp file then no changes are required.
-6. If your code uses the Audio or Network modules then add `SFML::Audio` or `SFML::Network` to the `target_link_libraries` call alongside the existing `SFML::Graphics` library that is being linked.
-7. If you use Linux, install SFML's dependencies using your system package manager. On Ubuntu and other Debian-based distributions you can use the following commands:
-   ```
-   sudo apt update
-   sudo apt install \
-       libxrandr-dev \
-       libxcursor-dev \
-       libxi-dev \
-       libudev-dev \
-       libfreetype-dev \
-       libflac-dev \
-       libvorbis-dev \
-       libgl1-mesa-dev \
-       libegl1-mesa-dev \
-       libfreetype-dev \
-       libharfbuzz-dev \
-       libmbedtls-dev \
-       libssh2-1-dev
-   ```
-8. Configure and build your project. Most popular IDEs support CMake projects with very little effort on your part.
+---
 
-   - [VS Code](https://code.visualstudio.com) via the [CMake extension](https://code.visualstudio.com/docs/cpp/cmake-linux)
-   - [Visual Studio](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-170)
-   - [CLion](https://www.jetbrains.com/clion/features/cmake-support.html)
-   - [Qt Creator](https://doc.qt.io/qtcreator/creator-project-cmake.html)
+## 📚 Project Overview
 
-   Using CMake from the command line is straightforward as well.
-   Be sure to run these commands in the root directory of the project you just created.
+**MediCore** is a production-ready hospital information system designed to streamline operations across three user roles:
 
-   ```
-   cmake -B build
-   cmake --build build
-   ```
+- **Patients:** Book/cancel appointments, view medical records, manage billing, top up account balance
+- **Doctors:** Manage daily appointments, write prescriptions, access patient medical history
+- **Administrators:** Oversee system-wide operations, discharge patients, generate reports, monitor security logs
 
-9. Enjoy!
+The system enforces strict object-oriented design principles: zero `std::string` usage, zero STL containers, manual memory management, dynamic allocation for all data structures, and custom container implementation (`Storage<T>`). All data persists immediately to CSV files, ensuring system reliability across restarts.
 
-### Visual Studio
+---
 
-Using a Visual Studio workspace is the simplest way to get started on windows.
+## ✨ Key Features
 
-1. Ensure you have the [required components installed](https://learn.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio#installation).
-2. Follow [GitHub's instructions](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) for how to use their project template feature to create your own project.
-3. If you have already cloned this repo, you can [open the folder](https://learn.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio0#ide-integration).
-4. If not, you can [clone it directly in Visual Studio](https://learn.microsoft.com/en-us/visualstudio/get-started/tutorial-open-project-from-repo).
+### Authentication & Security
+- **Role-Based Access Control:** Separate login paths for Patients, Doctors, and Admins
+- **Account Lockout:** Automatic session lock after 3 consecutive failed login attempts
+- **Security Logging:** Comprehensive audit trail of all login attempts and lockouts with timestamps
+- **Password Validation:** Minimum 6-character passwords with persistent authentication
 
-Visual Studio should automatically configure the CMake project, then you can build and run as normal through Visual Studio. See the links above for more details.
+### Patient Management
+- **Appointment Booking:** Search doctors by specialization (case-insensitive), select time slots (09:00–16:00), automatic balance validation
+- **Appointment Cancellation:** Full refund on cancellation with bill status updates
+- **Medical Records:** View prescriptions organized by appointment with date-based sorting
+- **Billing System:** View all bills, filter by payment status, settle outstanding amounts
+- **Account Management:** Top-up account balance with real-time updates and persistence
 
-## Upgrading SFML
+### Doctor Workflow
+- **Appointment Management:** View today's appointments sorted by time slot
+- **Status Updates:** Mark appointments as completed or no-show with automatic billing adjustments
+- **Prescription Writing:** Generate prescriptions with medicine details and clinical notes
+- **Patient History:** Access comprehensive medical history by patient ID with complete prescription records
 
-SFML is found via CMake's [FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html) module.
-FetchContent automatically downloads SFML from GitHub and builds it alongside your own code.
-Beyond the convenience of not having to install SFML yourself, this ensures ABI compatibility and simplifies things like specifying static versus shared libraries.
+### Administrative Operations
+- **Doctor Management:** Add new doctors, remove doctors (with constraints), manage specializations and fees
+- **Patient Oversight:** View all patients with count of unpaid bills, comprehensive statistics
+- **Appointment Auditing:** View all appointments sorted by date (newest first)
+- **Financial Management:** View unpaid bills with automatic overdue detection (>7 days past due date)
+- **Patient Discharge:** Complete patient removal with archival to discharged records file
+- **Security & Reporting:** View complete security audit log and generate daily operational reports
 
-Modifying what version of SFML you want is as easy as changing the `GIT_TAG` argument.
-Currently it uses SFML 3 via the `3.1.0` tag.
+### Data Persistence
+- **Immediate File Write:** All changes written to CSV files immediately upon action completion
+- **State Recovery:** Complete system state restored on application startup
+- **Transaction Integrity:** No data loss or corruption even on unexpected shutdown
 
-## But I want to...
+---
 
-Modify CMake options by adding them as configuration parameters (with a `-D` flag) or by modifying the contents of CMakeCache.txt and rebuilding.
+## 🛠️ Technology Stack
 
-### Not use GitHub
+| Component | Version/Details |
+|-----------|-----------------|
+| **Language** | C++17 (ISO/IEC 14882:2017) |
+| **Graphics Framework** | SFML 3.1.0 (Simple and Fast Multimedia Library) |
+| **Build System** | CMake 3.28+ |
+| **Compiler** | MSVC (Visual Studio 2022) or GCC/Clang with C++17 support |
+| **Storage** | CSV-based file persistence (no external database) |
+| **Memory Model** | Manual allocation with RAII principles |
 
-You can use this project without a GitHub account by [downloading the contents](https://github.com/SFML/cmake-sfml-project/archive/refs/heads/master.zip) of the repository as a ZIP archive and unpacking it locally.
-This approach also avoids using Git entirely if you would prefer to not do that.
+### SFML Modules
+- **Graphics:** 2D rendering, sprite management, text rendering
+- **Window:** Window management, event handling, input processing
+- **System:** Cross-platform utilities, timing, threading
 
-### Change Compilers
+---
 
-See the variety of [`CMAKE_<LANG>_COMPILER`](https://cmake.org/cmake/help/latest/variable/CMAKE_LANG_COMPILER.html) options.
-In particular you'll want to modify `CMAKE_CXX_COMPILER` to point to the C++ compiler you wish to use.
+## 📥 Installation & Setup
 
-### Change Compiler Optimizations
+### Prerequisites
 
-CMake abstracts away specific optimizer flags through the [`CMAKE_BUILD_TYPE`](https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html) option.
-By default this project recommends `Release` builds which enable optimizations.
-Other build types include `Debug` builds which enable debug symbols but disable optimizations.
-If you're using a multi-configuration generator (as is often the case on Windows), you can modify the [`CMAKE_CONFIGURATION_TYPES`](https://cmake.org/cmake/help/latest/variable/CMAKE_CONFIGURATION_TYPES.html#variable:CMAKE_CONFIGURATION_TYPES) option.
+- **Visual Studio 2022** (or equivalent C++17 compiler)
+- **CMake 3.28+** ([download here](https://cmake.org/download/))
+- **Git** ([download here](https://git-scm.com/))
+- **Internet connection** (for SFML automatic download)
 
-### Change Generators
+### Step 1: Clone the Repository
 
-While CMake will attempt to pick a suitable default generator, some systems offer a number of generators to choose from.
-Ubuntu, for example, offers Makefiles and Ninja as two potential options.
-For a list of generators, click [here](https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html).
-To modify the generator you're using you must reconfigure your project providing a `-G` flag with a value corresponding to the generator you want.
-You can't simply modify an entry in the CMakeCache.txt file unlike the above options.
-Then you may rebuild your project with this new generator.
+```bash
+git clone https://github.com/YOUR_USERNAME/SFML-OOP-Project.git
+cd SFML-OOP-Project
+```
 
-## More Reading
+### Step 2: Create Build Directory
 
-Here are some useful resources if you want to learn more about CMake:
+```bash
+mkdir build
+cd build
+```
 
-- [Official CMake Tutorial](https://cmake.org/cmake/help/latest/guide/tutorial/)
-- [How to Use CMake Without the Agonizing Pain - Part 1](https://alexreinking.com/blog/how-to-use-cmake-without-the-agonizing-pain-part-1.html)
-- [How to Use CMake Without the Agonizing Pain - Part 2](https://alexreinking.com/blog/how-to-use-cmake-without-the-agonizing-pain-part-2.html)
-- [Better CMake YouTube series by Jefferon Amstutz](https://www.youtube.com/playlist?list=PL8i3OhJb4FNV10aIZ8oF0AA46HgA2ed8g)
+### Step 3: Configure with CMake
 
-## License
+```bash
+cmake -G "Visual Studio 17 2022" ..
+```
 
-The source code is dual licensed under Public Domain and MIT -- choose whichever you prefer.
+**Alternative for other compilers:**
+```bash
+# For Unix/Linux/macOS with GCC
+cmake -G "Unix Makefiles" ..
+
+# For Ninja
+cmake -G Ninja ..
+```
+
+### Step 4: Build the Project
+
+```bash
+# Using Visual Studio
+cmake --build . --config Debug
+
+# Or using platform-specific commands
+# For Visual Studio:
+msbuild MediCore.sln /p:Configuration=Debug
+
+# For Unix:
+make
+```
+
+### Step 5: Run the Application
+
+```bash
+# From the build directory
+cd bin/Debug
+./MediCore.exe          # Windows
+./MediCore              # Linux/macOS
+```
+
+### Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| CMake not found | Add CMake to system PATH or use full path: `"C:\Program Files\CMake\bin\cmake.exe"` |
+| SFML compilation timeout | Increase internet timeout or pre-build SFML |
+| Font loading errors | Ensure `assets/fonts/` directory exists with TTF font files |
+| File permission errors | Run as administrator or check write permissions on `data/` directory |
+
+---
+
+## 📁 Project Structure
+
+```
+SFML-OOP-Project/
+├── CMakeLists.txt
+├── README.md
+├── PROJECT_SPECS.md
+├── IMPLEMENTATION_PLAN.md
+├── UI_IMPLEMENTATION_PLAN.md
+├── assets/
+│   └── fonts/
+│       └── Roboto-Regular.ttf
+├── data/
+│   ├── patients.txt
+│   ├── doctors.txt
+│   ├── admin.txt
+│   ├── appointments.txt
+│   ├── bills.txt
+│   ├── prescriptions.txt
+│   ├── discharged.txt
+│   └── security_log.txt
+├── src/
+│   ├── main.cpp
+│   ├── entities/
+│   │   ├── Person.hpp/cpp
+│   │   ├── Patient.hpp/cpp
+│   │   ├── Doctor.hpp/cpp
+│   │   ├── Admin.hpp/cpp
+│   │   ├── Appointment.hpp/cpp
+│   │   ├── Bill.hpp/cpp
+│   │   ├── Prescription.hpp/cpp
+│   │   └── Storage.hpp/cpp
+│   ├── core/
+│   │   ├── HospitalSystem.hpp/cpp
+│   │   ├── FileHandler.hpp/cpp
+│   │   ├── HospitalException.hpp/cpp
+│   │   ├── Validator.hpp/cpp
+│   │   └── Constants.hpp
+│   ├── helpers/
+│   │   ├── StringHelper.hpp/cpp
+│   │   ├── TimeHelper.hpp/cpp
+│   │   ├── ConversionHelper.hpp/cpp
+│   │   ├── DataHelper.hpp/cpp
+│   │   ├── CharHelper.hpp/cpp
+│   │   ├── FilePathHelper.hpp/cpp
+│   │   ├── StorageHelper.hpp
+│   │   └── UIThemeHelper.hpp/cpp
+│   ├── ui/
+│   │   ├── LoginScreen.hpp/cpp
+│   │   ├── PatientDash.hpp/cpp
+│   │   ├── DoctorDash.hpp/cpp
+│   │   ├── AdminDash.hpp/cpp
+│   │   ├── UIButton.hpp/cpp
+│   │   └── UITextBox.hpp/cpp
+│   └── app/
+│       └── App.hpp/cpp
+└── build/
+    └── bin/Debug/MediCore.exe
+```
+
+---
+
+## 🏗️ Architecture & Design Patterns
+
+### Design Principles
+
+**MediCore** adheres to SOLID principles:
+
+1. **Single Responsibility:** Each class handles one concern
+2. **Open/Closed:** Extensible via inheritance without modification
+3. **Liskov Substitution:** Derived classes honor base contracts
+4. **Interface Segregation:** Minimal, focused interfaces
+5. **Dependency Inversion:** Depends on abstractions, not implementations
+
+### Architectural Layers
+
+```
+┌─────────────────────────────────────┐
+│  UI Layer (SFML Graphics)           │
+│  LoginScreen, PatientDash, etc.     │
+└────────────────┬────────────────────┘
+                 │
+┌────────────────▼────────────────────┐
+│  Application Controller (App)       │
+│  State machine, event routing       │
+└────────────────┬────────────────────┘
+                 │
+┌────────────────▼────────────────────┐
+│  Business Logic (HospitalSystem)    │
+│  Rules, validations, relationships  │
+└────────┬───────────────────┬────────┘
+         │                   │
+    ┌────▼──────┐      ┌────▼──────┐
+    │ Entities  │      │ Helpers   │
+    │ (Models)  │      │ (Utils)   │
+    └───────────┘      └────┬──────┘
+                            │
+                 ┌──────────▼────────┐
+                 │ FileHandler I/O   │
+                 │ (CSV Persist)     │
+                 └───────────────────┘
+```
+
+---
+
+## 🎯 Entity Model & Class Hierarchy
+
+### Core Classes
+
+#### **Person (Abstract Base)**
+- **Members:** `id`, `name`, `password`
+- **Purpose:** Identity and authentication foundation
+- **Inheritance:** Base for Patient, Doctor, Admin
+
+#### **Patient (Inherits Person)**
+- **Additional Members:** `age`, `gender`, `contact`, `balance`
+- **Operators:** `+=` (credit), `-=` (debit), `==` (by ID), `<<` (output)
+- **Throws:** `InsufficientFundsException` on `-=` if balance insufficient
+
+#### **Doctor (Inherits Person)**
+- **Additional Members:** `specialization`, `contact`, `fee`
+- **Operators:** `==` (by ID), `<<` (output)
+
+#### **Admin (Inherits Person)**
+- **No additional members**
+- **Purpose:** Administrative user with system-wide privileges
+
+#### **Appointment**
+- **Members:** `appointmentID`, `patientID`, `doctorID`, `date`, `timeSlot`, `status`
+- **Operators:** `==` (conflict detection), `<<` (output)
+- **Query:** `isCancelled()`
+
+#### **Bill**
+- **Members:** `billID`, `patientID`, `appointmentID`, `amount`, `status`, `date`
+- **Query:** `isPaid()`
+- **Operators:** `==` (by ID)
+
+#### **Prescription**
+- **Members:** `prescriptionID`, `appointmentID`, `patientID`, `doctorID`, `date`, `medicines`, `notes`
+
+#### **Storage<T> (Template Container)**
+- **Capacity:** Static array of 100 items
+- **Operations:** `add()`, `removeByID()`, `findByID()`, `getAll()`, `size()`
+- **Purpose:** Type-safe, size-bounded container replacing `std::vector`
+
+---
+
+## 🔧 Core Components
+
+### HospitalSystem (Business Logic Hub)
+
+**Responsibilities:**
+- Manage all entity storage (6 Storage<T> containers)
+- Authenticate users (Patient, Doctor, Admin)
+- Enforce business rules (balance validation, slot availability, etc.)
+- Track login attempts and enforce lockouts
+
+**Key Methods:**
+- `Person* login(id, contact, password, role)` — Authenticate user, return Person* or nullptr
+- `bool isSessionLocked()` — Query lock status
+- `void bookAppointment(patient, doctorID, date, timeSlot)` — Create appointment with validation
+- `double cancelAppointment(patient, appointmentID)` — Cancel and refund
+- `void payBill(patient, billID)` — Mark bill as paid
+- `void topUpBalance(patient, amount)` — Credit account
+- `void dischargePatient(patientID)` — Archive and remove patient
+
+**Security Features:**
+- 3-strike login lockout with audit logging
+- Balance validation before debits
+- Conflict detection for time slots
+
+### FileHandler (Persistence Layer)
+
+**Methods:**
+- Load methods: `loadPatients()`, `loadDoctors()`, `loadAppointments()`, etc.
+- Save methods: `savePatient()`, `saveAllPatients()`, etc.
+- Security logging: `saveSecurityLogEntry()`, `loadSecurityLogLines()`
+
+**Features:**
+- CSV parsing with field validation
+- Automatic ID preservation on load
+- Append vs. overwrite modes
+
+### Exception Hierarchy
+
+```
+std::exception
+└── HospitalException
+    ├── FileNotFoundException
+    ├── InsufficientFundsException
+    ├── InvalidInputException
+    └── SlotUnavailableException
+```
+
+### Validator (Input Validation)
+
+**Methods:**
+- `isValidID()`, `isValidDate()`, `isValidContact()`, `isValidPassword()`
+- `isValidPositiveIntegerText()`, `isValidPositiveNumberText()`
+
+### Helper Utilities
+
+| Helper | Purpose |
+|--------|---------|
+| StringHelper | String operations (copy, compare, case conversion) |
+| TimeHelper | Date/time parsing and comparison |
+| ConversionHelper | Type conversions (string ↔ int/double) |
+| DataHelper | Data manipulation (splitting, sorting) |
+| FilePathHelper | File system utilities |
+| UIThemeHelper | UI styling and theming |
+
+---
+
+## 📄 File Format Specifications
+
+### CSV Schema (all in `data/` directory)
+
+**patients.txt**
+```csv
+patient_id,name,age,gender,contact,password,balance
+1,Ahmed Ali,28,M,03001234567,pass123,500400.00
+```
+
+**doctors.txt**
+```csv
+doctor_id,name,specialization,contact,password,fee
+1,Sara Khan,Cardiology,03111234567,doc456,1500.00
+```
+
+**appointments.txt**
+```csv
+appointment_id,patient_id,doctor_id,date,time,status
+1,1,1,09-05-2026,09:00,pending
+```
+
+**bills.txt**
+```csv
+bill_id,patient_id,appointment_id,amount,status,date
+1,1,1,1500.00,paid,01-05-2026
+```
+
+**prescriptions.txt**
+```csv
+prescription_id,appointment_id,patient_id,doctor_id,date,medicines,notes
+1,1,1,1,01-05-2026,Paracetamol 500mg;Omeprazole 20mg,Take after breakfast
+```
+
+**security_log.txt**
+```csv
+timestamp,role,entered_id,result
+01-05-2026 08:15:22,Patient,1,SUCCESS
+02-05-2026 07:47:15,Patient,5,LOCKED
+```
+
+---
+
+## 🔄 User Workflows
+
+### Patient: Book Appointment
+```
+Select "Patient" → Login → Dashboard
+→ "Book Appointment" → Enter specialization → Select doctor
+→ Select date & time → Confirm (balance debited, appointment & bill created)
+```
+
+### Doctor: Complete Appointment
+```
+Select "Doctor" → Login → View Today's Appointments
+→ Select appointment → "Mark Complete" → "Write Prescription"
+→ Enter medicines & notes → Submit
+```
+
+### Admin: Discharge Patient
+```
+Select "Admin" → Login → "Discharge Patient"
+→ Select patient (no unpaid bills/pending appts) → Confirm
+→ Patient archived, removed from active system
+```
+
+---
+
+## 🔨 Build & Compilation
+
+### Quick Start (Windows)
+
+```bash
+mkdir build && cd build
+cmake -G "Visual Studio 17 2022" ..
+cmake --build . --config Debug
+cd bin\Debug
+MediCore.exe
+```
+
+### Linux/macOS
+
+```bash
+mkdir build && cd build
+cmake -G "Unix Makefiles" ..
+make -j4
+./bin/Debug/MediCore
+```
+
+### Troubleshooting
+
+| Error | Solution |
+|-------|----------|
+| `cmake: command not found` | Install CMake or add to PATH |
+| `SFML download timeout` | Pre-build SFML or increase timeout |
+| `C++17 not supported` | Update compiler (MSVC 2019+, GCC 7+) |
+
+---
+
+## 🔐 Security Features
+
+- **Authentication:** Role-based login with password validation (min 6 chars)
+- **Account Lockout:** 3 failed attempts → session lock
+- **Audit Trail:** All login attempts logged to `security_log.txt`
+- **Data Integrity:** Immediate file persistence, no buffering
+- **Balance Validation:** Insufficient funds throws exception
+
+---
+
+## 📋 Known Limitations & Future Enhancements
+
+### Current Limitations
+1. Single-session support (no concurrent users)
+2. Plaintext passwords (educational project)
+3. Fixed capacity: 100 items per Storage<T>
+4. CSV-based storage (slow for large datasets)
+5. No automatic backups
+
+### Recommended Enhancements
+1. Migrate to SQLite/PostgreSQL database
+2. Implement password encryption (bcrypt/Argon2)
+3. Multi-user support with session management
+4. Dynamic container with pagination
+5. Export reports to PDF/Excel
+6. Appointment reminders via SMS/Email
+7. Mobile app (React Native/Flutter)
+8. HIPAA compliance features
+
+---

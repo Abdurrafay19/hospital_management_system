@@ -362,7 +362,7 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
 
     doctorListLabelText = new sf::Text(regularFont, "Available Doctors:", 16);
     UIThemeHelper::setTextSizeLabel(doctorListLabelText);
-    doctorListLabelText->setPosition(sf::Vector2f(220.f, 280.f));
+    doctorListLabelText->setPosition(sf::Vector2f(220.f, 190.f));
     UIThemeHelper::styleLabelText(doctorListLabelText);
 
     dateInputLabelText = new sf::Text(regularFont, "Date (DD-MM-YYYY):", 16);
@@ -472,7 +472,7 @@ bool PatientDash::initialize(const sf::Font &regularFontParam, const sf::Font &b
     for (int i = 0; i < 20; i++)
     {
         doctorListText[i] = new sf::Text(regularFont, "", 14);
-        doctorListText[i]->setPosition(sf::Vector2f(220.f, 305.f + i * 22.f));
+        doctorListText[i]->setPosition(sf::Vector2f(220.f, 215.f + i * 22.f));
         UIThemeHelper::styleBodyText(doctorListText[i]);
     }
 
@@ -604,6 +604,7 @@ void PatientDash::updateDoctorList()
     char docStr[100];
     int docIdx;
     int charIdx;
+    const char *specialization;
 
     if (filteredDoctors == nullptr)
     {
@@ -640,6 +641,25 @@ void PatientDash::updateDoctorList()
             docIdx++;
         }
         StringHelper::stringCopy(docStr + docIdx, doctors[i].getName(), 100 - docIdx);
+        docIdx = 0;
+        while (docStr[docIdx] != '\0')
+        {
+            docIdx++;
+        }
+
+        specialization = doctors[i].getSpecialization();
+        if (specialization == nullptr)
+        {
+            specialization = "";
+        }
+
+        StringHelper::stringCopy(docStr + docIdx, " | Spec: ", 100 - docIdx);
+        docIdx = 0;
+        while (docStr[docIdx] != '\0')
+        {
+            docIdx++;
+        }
+        StringHelper::stringCopy(docStr + docIdx, specialization, 100 - docIdx);
         docIdx = 0;
         while (docStr[docIdx] != '\0')
         {
@@ -702,6 +722,7 @@ void PatientDash::updateTimeSlotDisplay()
             {
                 if (StringHelper::textEquals(appointmentsArray[j].getDate(), selectedDate) &&
                     StringHelper::textEquals(appointmentsArray[j].getTimeSlot(), timeSlots[i]) &&
+                    appointmentsArray[j].getDoctorID() == selectedDoctorID &&
                     StringHelper::textEquals(appointmentsArray[j].getStatus(), "pending"))
                 {
                     isBooked = true;
@@ -1329,6 +1350,7 @@ void PatientDash::handleMouseClick(sf::RenderWindow &window)
                         {
                             if (StringHelper::textEquals(appointmentsArray[j].getDate(), selectedDate) &&
                                 StringHelper::textEquals(appointmentsArray[j].getTimeSlot(), slots[i]) &&
+                                appointmentsArray[j].getDoctorID() == selectedDoctorID &&
                                 StringHelper::textEquals(appointmentsArray[j].getStatus(), "pending"))
                             {
                                 isBooked = true;
@@ -1466,7 +1488,7 @@ void PatientDash::handleTextEntered(char32_t unicode)
     {
         return;
     }
-    // Confirm booking logic here
+    // Confirm booking logic
     if (currentBookingStep == STEP_SPECIALIZATION)
     {
         specializationInput.handleTextEntered(unicode);

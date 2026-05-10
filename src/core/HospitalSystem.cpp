@@ -374,7 +374,7 @@ Storage<Doctor> *HospitalSystem::getDoctorsBySpecialization(const char *speciali
 
     for (i = 0; i < doctors.size(); i++)
     {
-        if (StringHelper::textEqualsIgnoreCase(allDoctors[i].getSpecialization(), specialization))
+        if (StringHelper::textContainsIgnoreCase(allDoctors[i].getSpecialization(), specialization))
         {
             result->add(allDoctors[i]);
         }

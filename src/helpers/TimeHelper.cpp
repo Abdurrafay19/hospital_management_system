@@ -10,7 +10,6 @@ void TimeHelper::getTodayDate(char *buffer, int bufferSize)
 
     now = time(nullptr);
     timeInfo = localtime(&now);
-    // Return today's date in DD-MM-YYYY to match project date format
     strftime(tempBuffer, sizeof(tempBuffer), "%d-%m-%Y", timeInfo);
     StringHelper::stringCopy(buffer, tempBuffer, bufferSize);
 }
@@ -32,13 +31,11 @@ bool TimeHelper::isDateAfterToday(const char *date)
 
 bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
 {
-    // Accept loose formats and produce canonical DD-MM-YYYY
     if (input == nullptr || outBuffer == nullptr || outSize < 11)
     {
         return false;
     }
 
-    // Tokenize by '-' only (no slashes)
     char tokens[3][8];
     int tokenIndex = 0;
     int charIndex = 0;
@@ -50,7 +47,7 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
         if (c == '-')
         {
             if (charIndex == 0)
-                return false; // empty token
+                return false;
             tokens[tokenIndex][charIndex] = '\0';
             tokenIndex++;
             charIndex = 0;
@@ -68,7 +65,6 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
         }
         else if (c == ' ')
         {
-            // ignore spaces
         }
         else
         {
@@ -80,21 +76,18 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
         return false;
     tokens[tokenIndex][charIndex] = '\0';
 
-    // Determine which token is year (length==4) or position
     const char *dayTok = nullptr;
     const char *monthTok = nullptr;
     const char *yearTok = nullptr;
 
     if ((int)StringHelper::stringLength(tokens[0]) == 4)
     {
-        // YYYY-MM-DD or YYYY/M/D
         yearTok = tokens[0];
         monthTok = tokens[1];
         dayTok = tokens[2];
     }
     else if ((int)StringHelper::stringLength(tokens[2]) == 4)
     {
-        // D-M-YYYY or D/M/YYYY
         dayTok = tokens[0];
         monthTok = tokens[1];
         yearTok = tokens[2];
@@ -104,7 +97,6 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
         return false;
     }
 
-    // Zero-pad day and month to 2 digits
     char dayBuf[3] = "00";
     char monthBuf[3] = "00";
     int dlen = StringHelper::stringLength(dayTok);
@@ -147,7 +139,6 @@ bool TimeHelper::normalizeToYMD(const char *input, char *outBuffer, int outSize)
         return false;
     }
 
-    // Compose DD-MM-YYYY
     outBuffer[0] = dayBuf[0];
     outBuffer[1] = dayBuf[1];
     outBuffer[2] = '-';
@@ -186,7 +177,6 @@ int TimeHelper::compareDates(const char *date1, const char *date2)
     day1 = 0;
     day2 = 0;
 
-    // Parse date1 (DD-MM-YYYY)
     if (date1 == nullptr || date2 == nullptr)
     {
         return 0;
@@ -204,8 +194,6 @@ int TimeHelper::compareDates(const char *date1, const char *date2)
     {
         year1 = year1 * 10 + (date1[i] - '0');
     }
-
-    // Parse date2 (DD-MM-YYYY)
     for (i = 0; i < 2 && date2[i] != '\0'; i++)
     {
         day2 = day2 * 10 + (date2[i] - '0');
@@ -218,20 +206,14 @@ int TimeHelper::compareDates(const char *date1, const char *date2)
     {
         year2 = year2 * 10 + (date2[i] - '0');
     }
-
-    // Compare years
     if (year1 != year2)
     {
         return year1 > year2 ? 1 : -1;
     }
-
-    // Compare months
     if (month1 != month2)
     {
         return month1 > month2 ? 1 : -1;
     }
-
-    // Compare days
     if (day1 != day2)
     {
         return day1 > day2 ? 1 : -1;

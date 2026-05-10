@@ -42,7 +42,7 @@ private:
 public:
     HospitalSystem();
 
-    Person *login(const char *name, const char *contact, const char *password, Role role);
+    Person *login(const char *name, const char *unused, const char *password, Role role);
     bool isSessionLocked() const;
     void bookAppointment(Patient *patient, int doctorID, const char *date, const char *timeSlot);
     double cancelAppointment(Patient *patient, int appointmentID);
