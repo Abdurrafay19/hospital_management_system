@@ -1,472 +1,133 @@
-# [MediCore — Comprehensive Hospital Management System](https://github.com/Abdurrafay19/hospital_management_system)
+<div align="center">
+  <h1>🏥 MediCore</h1>
 
-![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![C++ Standard: C++17](https://img.shields.io/badge/C%2B%2B-17-blue) ![License: Educational](https://img.shields.io/badge/License-Educational-yellow)
+  <p><strong>A robust, graphical Hospital Management System built in C++ to demonstrate advanced Object-Oriented Programming principles.</strong></p>
 
-**MediCore** is a full-featured, file-persistent hospital management system built with modern C++17 and SFML 3.1.0. It provides a secure, role-based interface for managing patient appointments, medical records, prescriptions, billing, and administrative operations. Designed as a capstone Object-Oriented Programming (OOP) project emphasizing low-level memory management, custom data structures, and enterprise-grade software architecture.
-
----
-
-## 📋 Table of Contents
-
-- [Project Overview](#project-overview)
-- [Key Features](#key-features)
-- [Technology Stack](#technology-stack)
-- [Installation & Setup](#installation--setup)
-- [Project Structure](#project-structure)
-- [Architecture & Design Patterns](#architecture--design-patterns)
-- [Entity Model & Class Hierarchy](#entity-model--class-hierarchy)
-- [Core Components](#core-components)
-- [File Format Specifications](#file-format-specifications)
-- [User Workflows](#user-workflows)
-- [Build & Compilation](#build--compilation)
-- [Security Features](#security-features)
-- [Known Limitations & Future Enhancements](#known-limitations--future-enhancements)
+  <p>
+    <img alt="C++17" src="https://img.shields.io/badge/C%2B%2B-17-00599C?logo=c%2B%2B&logoColor=white" />
+    <img alt="SFML" src="https://img.shields.io/badge/SFML-3.1.0-8CC445?logo=c%2B%2B&logoColor=white" />
+    <img alt="CMake" src="https://img.shields.io/badge/CMake-3.28-064F8C?logo=cmake&logoColor=white" />
+    <img alt="Academic" src="https://img.shields.io/badge/Course-OOP_Term_Project-blue" />
+  </p>
+</div>
 
 ---
 
-## 📚 Project Overview
-
-**MediCore** is a production-ready hospital information system designed to streamline operations across three user roles:
-
-- **Patients:** Book/cancel appointments, view medical records, manage billing, top up account balance
-- **Doctors:** Manage daily appointments, write prescriptions, access patient medical history
-- **Administrators:** Oversee system-wide operations, discharge patients, generate reports, monitor security logs
-
-The system enforces strict object-oriented design principles: manual memory management, dynamic allocation for all data structures, and custom container implementation (`Storage<T>`). All data persists immediately to CSV files, ensuring system reliability across restarts.
-
----
-
-## ✨ Key Features
-
-### Authentication & Security
-- **Role-Based Access Control:** Separate login paths for Patients, Doctors, and Admins
-- **Account Lockout:** Automatic session lock after 3 consecutive failed login attempts
-- **Security Logging:** Comprehensive audit trail of all login attempts and lockouts with timestamps
-- **Password Validation:** Minimum 6-character passwords with persistent authentication
-
-### Patient Management
-- **Appointment Booking:** Search doctors by specialization (case-insensitive), select time slots (09:00–16:00), automatic balance validation
-- **Appointment Cancellation:** Full refund on cancellation with bill status updates
-- **Medical Records:** View prescriptions organized by appointment with date-based sorting
-- **Billing System:** View all bills, filter by payment status, settle outstanding amounts
-- **Account Management:** Top-up account balance with real-time updates and persistence
-
-### Doctor Workflow
-- **Appointment Management:** View today's appointments sorted by time slot
-- **Status Updates:** Mark appointments as completed or no-show with automatic billing adjustments
-- **Prescription Writing:** Generate prescriptions with medicine details and clinical notes
-- **Patient History:** Access comprehensive medical history by patient ID with complete prescription records
-
-### Administrative Operations
-- **Doctor Management:** Add new doctors, remove doctors (with constraints), manage specializations and fees
-- **Patient Oversight:** View all patients with count of unpaid bills, comprehensive statistics
-- **Appointment Auditing:** View all appointments sorted by date (newest first)
-- **Financial Management:** View unpaid bills with automatic overdue detection (>7 days past due date)
-- **Patient Discharge:** Complete patient removal with archival to discharged records file
-- **Security & Reporting:** View complete security audit log and generate daily operational reports
-
-### Data Persistence
-- **Immediate File Write:** All changes written to CSV files immediately upon action completion
-- **State Recovery:** Complete system state restored on application startup
-- **Transaction Integrity:** No data loss or corruption even on unexpected shutdown
+## 📖 Table of Contents
+- [About the Project](#-about-the-project)
+- [OOP Concepts Demonstrated](#-oop-concepts-demonstrated)
+- [Key Features](#-key-features)
+- [Tech Stack](#-tech-stack)
+- [Project Architecture](#-project-architecture)
+- [Getting Started](#-getting-started)
+- [Academic Integrity Notice](#-academic-integrity-notice)
 
 ---
 
-## 🛠️ Technology Stack
+## 🚀 About the Project
 
-| Component | Version/Details |
-|-----------|-----------------|
-| **Language** | C++17 (ISO/IEC 14882:2017) |
-| **Graphics Framework** | SFML 3.1.0 (Simple and Fast Multimedia Library) |
-| **Build System** | CMake 3.28+ |
-| **Compiler** | MSVC (Visual Studio 2022) or GCC/Clang with C++17 support |
-| **Storage** | CSV-based file persistence (no external database) |
-| **Memory Model** | Manual allocation with RAII principles |
+**MediCore** was developed as a comprehensive term project for the Object-Oriented Programming (OOP) course at FAST NUCES. 
 
-### SFML Modules
-- **Graphics:** 2D rendering, sprite management, text rendering
-- **Window:** Window management, event handling, input processing
-- **System:** Cross-platform utilities, timing, threading
+Moving beyond standard console-based assignments, this project features a full Graphical User Interface (GUI) built from scratch using SFML. It simulates a complete hospital ecosystem with role-based access control, allowing Administrators, Doctors, and Patients to interact with the system securely. All data is managed through a custom text-based local storage engine, ensuring data persistence across sessions.
+
+### 🧠 OOP Concepts Demonstrated
+This project serves as a practical implementation of core OOP pillars:
+* **Inheritance & Polymorphism:** A base `Person` entity extended by `Admin`, `Doctor`, and `Patient` classes, allowing for scalable role management.
+* **Encapsulation:** Strict separation of data and logic, with all entity attributes protected and accessed via secure getter/setter methods.
+* **Exception Handling:** A custom `HospitalException` class to gracefully manage runtime errors (e.g., invalid logins, missing data files) without crashing the application.
+* **Modularity:** Clear separation of concerns between Core Logic (`src/core`), Data Entities (`src/entities`), Helper Utilities (`src/helpers`), and the GUI (`src/ui`).
 
 ---
 
-## 📥 Installation & Setup
+### 🎯 Key Features
+* **Custom SFML GUI:** Features custom-built UI components (`UIButton`, `UITextBox`) with dynamic rendering and event polling.
+* **Role-Based Dashboards:** Unique, isolated views and permissions for `AdminDash`, `DoctorDash`, and `PatientDash`.
+* **Persistent Storage:** A robust `FileHandler` system that reads/writes appointments, bills, and user records to the `data/` directory using `.txt` files.
+* **Comprehensive Operations:** Supports booking appointments, issuing prescriptions, processing patient discharges, and generating medical bills.
+* **Security Logging:** Automated tracking of system access and critical actions via `security_log.txt`.
+
+---
+
+## 🛠 Tech Stack
+
+* **Language:** C++17
+* **Graphics & Windowing:** SFML (Simple and Fast Multimedia Library) 3.1.0
+* **Build System:** CMake (Minimum v3.28)
+* **Data Persistence:** Standard C++ File I/O (`<fstream>`)
+
+---
+
+## 🏗 Project Architecture
+
+The repository is structured to maintain clean code practices:
+
+```text
+├── assets/          # Static assets (Custom UI Fonts)
+├── data/            # Text-based database files (patients.txt, doctors.txt, etc.)
+├── src/
+│   ├── app/         # Application lifecycle management (App.cpp/hpp)
+│   ├── core/        # System orchestrators, File Handlers, and custom Exceptions
+│   ├── entities/    # OOP Data Models (Person, Doctor, Patient, Bill, etc.)
+│   ├── helpers/     # Pure utility functions (TimeHelper, StringHelper)
+│   ├── ui/          # SFML rendering logic and custom UI components
+│   └── main.cpp     # Application entry point
+└── CMakeLists.txt   # Build configuration
+
+```
+
+---
+
+## ⚙️ Getting Started
+
+The project is configured with CMake to provide a frictionless build process. **You do not need to install SFML manually**—the CMake script is configured to automatically fetch and link SFML 3.1.0 from GitHub.
 
 ### Prerequisites
 
-- **Visual Studio 2022** (or equivalent C++17 compiler)
-- **CMake 3.28+** ([download here](https://cmake.org/download/))
-- **Git** ([download here](https://git-scm.com/))
-- **Internet connection** (for SFML automatic download)
+* A C++17 compatible compiler (GCC, Clang, or MSVC)
+* CMake (v3.28 or higher)
+* Git (Required for CMake's `FetchContent` to pull SFML)
 
-### Step 1: Clone the Repository
+### Build Instructions
+
+**1. Clone the repository:**
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/SFML-OOP-Project.git
-cd SFML-OOP-Project
+git clone https://github.com/abdurrafay19/hospital_management_system.git
+cd hospital_management_system
+
 ```
 
-### Step 2: Create Build Directory
+**2. Generate the build files:**
 
 ```bash
+# Create a build directory and run CMake
 mkdir build
 cd build
+cmake ..
+
 ```
 
-### Step 3: Configure with CMake
+**3. Compile the project:**
 
 ```bash
-cmake -G "Visual Studio 17 2022" ..
+cmake --build .
+
 ```
 
-**Alternative for other compilers:**
-```bash
-# For Unix/Linux/macOS with GCC
-cmake -G "Unix Makefiles" ..
-
-# For Ninja
-cmake -G Ninja ..
-```
-
-### Step 4: Build the Project
+**4. Run the application:**
+The executable will be generated in the `bin/` directory as specified in the `CMakeLists.txt`.
 
 ```bash
-# Using Visual Studio
-cmake --build . --config Debug
+# On Windows
+./bin/Debug/MediCore.exe
 
-# Or using platform-specific commands
-# For Visual Studio:
-msbuild MediCore.sln /p:Configuration=Debug
+# On Linux/macOS
+./bin/MediCore
 
-# For Unix:
-make
-```
-
-### Step 5: Run the Application
-
-```bash
-# From the build directory
-cd bin/Debug
-./MediCore.exe          # Windows
-./MediCore              # Linux/macOS
-```
-
-### Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| CMake not found | Add CMake to system PATH or use full path: `"C:\Program Files\CMake\bin\cmake.exe"` |
-| SFML compilation timeout | Increase internet timeout or pre-build SFML |
-| Font loading errors | Ensure `assets/fonts/` directory exists with TTF font files |
-| File permission errors | Run as administrator or check write permissions on `data/` directory |
-
----
-
-## 📁 Project Structure
-
-```
-SFML-OOP-Project/
-├── CMakeLists.txt
-├── README.md
-├── assets/
-│   └── fonts/
-│       ├── font.ttf
-│       └── font-bold.ttf
-├── data/
-│   ├── patients.txt
-│   ├── doctors.txt
-│   ├── admin.txt
-│   ├── appointments.txt
-│   ├── bills.txt
-│   ├── prescriptions.txt
-│   ├── discharged.txt
-│   └── security_log.txt
-├── src/
-│   ├── main.cpp
-│   ├── entities/
-│   │   ├── Person.hpp/cpp
-│   │   ├── Patient.hpp/cpp
-│   │   ├── Doctor.hpp/cpp
-│   │   ├── Admin.hpp/cpp
-│   │   ├── Appointment.hpp/cpp
-│   │   ├── Bill.hpp/cpp
-│   │   ├── Prescription.hpp/cpp
-│   │   └── Storage.hpp/cpp
-│   ├── core/
-│   │   ├── HospitalSystem.hpp/cpp
-│   │   ├── FileHandler.hpp/cpp
-│   │   ├── HospitalException.hpp/cpp
-│   │   ├── Validator.hpp/cpp
-│   │   └── Constants.hpp
-│   ├── helpers/
-│   │   ├── StringHelper.hpp/cpp
-│   │   ├── TimeHelper.hpp/cpp
-│   │   ├── ConversionHelper.hpp/cpp
-│   │   ├── DataHelper.hpp/cpp
-│   │   ├── CharHelper.hpp/cpp
-│   │   ├── FilePathHelper.hpp/cpp
-│   │   ├── StorageHelper.hpp
-│   │   └── UIThemeHelper.hpp/cpp
-│   ├── ui/
-│   │   ├── LoginScreen.hpp/cpp
-│   │   ├── PatientDash.hpp/cpp
-│   │   ├── DoctorDash.hpp/cpp
-│   │   ├── AdminDash.hpp/cpp
-│   │   ├── UIButton.hpp/cpp
-│   │   └── UITextBox.hpp/cpp
-│   └── app/
-│       └── App.hpp/cpp
-└── build/
-    └── bin/Debug/MediCore.exe
 ```
 
 ---
 
-## 🏗️ Architecture & Design Patterns
+## ⚠️ Academic Integrity Notice
 
-### Design Principles
-
-**MediCore** adheres to SOLID principles:
-
-1. **Single Responsibility:** Each class handles one concern
-2. **Open/Closed:** Extensible via inheritance without modification
-3. **Liskov Substitution:** Derived classes honor base contracts
-4. **Interface Segregation:** Minimal, focused interfaces
-5. **Dependency Inversion:** Depends on abstractions, not implementations
-
-### Architectural Layers
-
-```
-┌─────────────────────────────────────┐
-│  UI Layer (SFML Graphics)           │
-│  LoginScreen, PatientDash, etc.     │
-└────────────────┬────────────────────┘
-                 │
-┌────────────────▼────────────────────┐
-│  Application Controller (App)       │
-│  State machine, event routing       │
-└────────────────┬────────────────────┘
-                 │
-┌────────────────▼────────────────────┐
-│  Business Logic (HospitalSystem)    │
-│  Rules, validations, relationships  │
-└────────┬───────────────────┬────────┘
-         │                   │
-    ┌────▼──────┐      ┌────▼──────┐
-    │ Entities  │      │ Helpers   │
-    │ (Models)  │      │ (Utils)   │
-    └───────────┘      └────┬──────┘
-                            │
-                 ┌──────────▼────────┐
-                 │ FileHandler I/O   │
-                 │ (CSV Persist)     │
-                 └───────────────────┘
-```
-
----
-
-## 🎯 Entity Model & Class Hierarchy
-
-### Core Classes
-
-#### **Person (Abstract Base)**
-- **Members:** `id`, `name`, `password`
-- **Purpose:** Identity and authentication foundation
-- **Inheritance:** Base for Patient, Doctor, Admin
-
-#### **Patient (Inherits Person)**
-- **Additional Members:** `age`, `gender`, `contact`, `balance`
-- **Operators:** `+=` (credit), `-=` (debit), `==` (by ID), `<<` (output)
-- **Throws:** `InsufficientFundsException` on `-=` if balance insufficient
-
-#### **Doctor (Inherits Person)**
-- **Additional Members:** `specialization`, `contact`, `fee`
-- **Operators:** `==` (by ID), `<<` (output)
-
-#### **Admin (Inherits Person)**
-- **No additional members**
-- **Purpose:** Administrative user with system-wide privileges
-
-#### **Appointment**
-- **Members:** `appointmentID`, `patientID`, `doctorID`, `date`, `timeSlot`, `status`
-- **Operators:** `==` (conflict detection), `<<` (output)
-- **Query:** `isCancelled()`
-
-#### **Bill**
-- **Members:** `billID`, `patientID`, `appointmentID`, `amount`, `status`, `date`
-- **Query:** `isPaid()`
-- **Operators:** `==` (by ID)
-
-#### **Prescription**
-- **Members:** `prescriptionID`, `appointmentID`, `patientID`, `doctorID`, `date`, `medicines`, `notes`
-
-#### **Storage<T> (Template Container)**
-- **Capacity:** Static array of 100 items
-- **Operations:** `add()`, `removeByID()`, `findByID()`, `getAll()`, `size()`
-- **Purpose:** Type-safe, size-bounded container replacing `std::vector`
-
----
-
-## 🔧 Core Components
-
-### HospitalSystem (Business Logic Hub)
-
-**Responsibilities:**
-- Manage all entity storage (6 Storage<T> containers)
-- Authenticate users (Patient, Doctor, Admin)
-- Enforce business rules (balance validation, slot availability, etc.)
-- Track login attempts and enforce lockouts
-
-**Key Methods:**
-- `Person* login(id, contact, password, role)` — Authenticate user, return Person* or nullptr
-- `bool isSessionLocked()` — Query lock status
-- `void bookAppointment(patient, doctorID, date, timeSlot)` — Create appointment with validation
-- `double cancelAppointment(patient, appointmentID)` — Cancel and refund
-- `void payBill(patient, billID)` — Mark bill as paid
-- `void topUpBalance(patient, amount)` — Credit account
-- `void dischargePatient(patientID)` — Archive and remove patient
-
-**Security Features:**
-- 3-strike login lockout with audit logging
-- Balance validation before debits
-- Conflict detection for time slots
-
-### FileHandler (Persistence Layer)
-
-**Methods:**
-- Load methods: `loadPatients()`, `loadDoctors()`, `loadAppointments()`, etc.
-- Save methods: `savePatient()`, `saveAllPatients()`, etc.
-- Security logging: `saveSecurityLogEntry()`, `loadSecurityLogLines()`
-
-**Features:**
-- CSV parsing with field validation
-- Automatic ID preservation on load
-- Append vs. overwrite modes
-
-### Exception Hierarchy
-
-```
-std::exception
-└── HospitalException
-    ├── FileNotFoundException
-    ├── InsufficientFundsException
-    ├── InvalidInputException
-    └── SlotUnavailableException
-```
-
-### Validator (Input Validation)
-
-**Methods:**
-- `isValidID()`, `isValidDate()`, `isValidContact()`, `isValidPassword()`
-- `isValidPositiveIntegerText()`, `isValidPositiveNumberText()`
-
-### Helper Utilities
-
-| Helper | Purpose |
-|--------|---------|
-| StringHelper | String operations (copy, compare, case conversion) |
-| TimeHelper | Date/time parsing and comparison |
-| ConversionHelper | Type conversions (string ↔ int/double) |
-| DataHelper | Data manipulation (splitting, sorting) |
-| FilePathHelper | File system utilities |
-| UIThemeHelper | UI styling and theming |
-
----
-
-## 📄 File Format Specifications
-
-### CSV Schema (all in `data/` directory)
-
-**patients.txt**
-```csv
-patient_id,name,age,gender,contact,password,balance
-```
-
-**doctors.txt**
-```csv
-doctor_id,name,specialization,contact,password,fee
-```
-
-**appointments.txt**
-```csv
-appointment_id,patient_id,doctor_id,date,time,status
-```
-
-**bills.txt**
-```csv
-bill_id,patient_id,appointment_id,amount,status,date
-```
-
-**prescriptions.txt**
-```csv
-prescription_id,appointment_id,patient_id,doctor_id,date,medicines,notes
-```
-
-**security_log.txt**
-```csv
-timestamp,role,entered_id,result
-```
-
----
-
-## 🔨 Build & Compilation
-
-### Quick Start (Windows)
-
-```bash
-mkdir build && cd build
-cmake -G "Visual Studio 17 2022" ..
-cmake --build . --config Debug
-cd bin\Debug
-MediCore.exe
-```
-
-### Linux/macOS
-
-```bash
-mkdir build && cd build
-cmake -G "Unix Makefiles" ..
-make -j4
-./bin/Debug/MediCore
-```
-
-### Troubleshooting
-
-| Error | Solution |
-|-------|----------|
-| `cmake: command not found` | Install CMake or add to PATH |
-| `SFML download timeout` | Pre-build SFML or increase timeout |
-| `C++17 not supported` | Update compiler (MSVC 2019+, GCC 7+) |
-
----
-
-## 🔐 Security Features
-
-- **Authentication:** Role-based login with password validation (min 6 chars)
-- **Account Lockout:** 3 failed attempts → session lock
-- **Audit Trail:** All login attempts logged to `security_log.txt`
-- **Data Integrity:** Immediate file persistence, no buffering
-- **Balance Validation:** Insufficient funds throws exception
-
----
-
-## 📋 Known Limitations & Future Enhancements
-
-### Current Limitations
-1. Single-session support (no concurrent users)
-2. Plaintext passwords (educational project)
-3. Fixed capacity: 100 items per Storage<T>
-4. CSV-based storage (slow for large datasets)
-5. No automatic backups
-
-### Recommended Enhancements
-1. Migrate to SQLite/PostgreSQL database
-2. Implement password encryption (bcrypt/Argon2)
-3. Multi-user support with session management
-4. Dynamic container with pagination
-5. Export reports to PDF/Excel
-6. Appointment reminders via SMS/Email
-7. Mobile app (React Native/Flutter)
-8. HIPAA compliance features
-
----
+This repository is public to showcase my personal academic progress and software architecture skills. If you are a current student taking an Object-Oriented Programming course, please respect your university's academic integrity and honor code policies. **Do not copy or plagiarize this code for your own academic assignments.**
